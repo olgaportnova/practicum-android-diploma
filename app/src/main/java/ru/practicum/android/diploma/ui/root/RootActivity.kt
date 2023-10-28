@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ActivityRootBinding
 
 class RootActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityRootBinding
+    private lateinit var binding: ActivityRootBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRootBinding.inflate(layoutInflater)
@@ -28,12 +28,12 @@ class RootActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
-/*        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
                 R.id.filters -> navView.visibility = View.GONE
                 else -> navView.visibility = View.VISIBLE
             }
-        }*/
+        }
     }
 
     private fun networkRequestExample(accessToken: String) {

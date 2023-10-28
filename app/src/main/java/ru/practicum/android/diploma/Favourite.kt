@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.databinding.FragmentFavouriteBinding
 
-class SearchFragment : Fragment() {
-    private  var _binding: FragmentSearchBinding? = null
+class Favourite : Fragment() {
+    private  var _binding: FragmentFavouriteBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater,container,false)
+        _binding = FragmentFavouriteBinding.inflate(inflater,container,false)
 
         // Inflate the layout for this fragment
         return binding.root

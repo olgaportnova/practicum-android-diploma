@@ -7,17 +7,25 @@
 
     <fragment
         android:id="@+id/search"
-        android:name="ru.practicum.android.diploma.SearchFragment"
+        android:name="ru.practicum.android.diploma.Search"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_to_filters"
+            app:destination="@id/filters" />
+    </fragment>
     <fragment
         android:id="@+id/favourite"
-        android:name="ru.practicum.android.diploma.FavouriteFragment"
+        android:name="ru.practicum.android.diploma.Favourite"
         android:label="FavouriteFragment"
         tools:layout="@layout/fragment_favourite"/>
     <fragment
         android:id="@+id/crew"
-        android:name="ru.practicum.android.diploma.CrewFragment"
+        android:name="ru.practicum.android.diploma.Crew"
         android:label="CrewFragment"
         tools:layout="@layout/fragment_crew"/>
+    <fragment
+        android:id="@+id/filters"
+        android:name="ru.practicum.android.diploma.Filters"
+        android:label="Filters" />
 </navigation>
