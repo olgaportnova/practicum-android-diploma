@@ -1,39 +1,30 @@
 package ru.practicum.android.diploma
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
+import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
 
-class WorkPlace : Fragment() {
-    private var _binding: FragmentWorkPlaceBinding? = null
-    private val binding:FragmentWorkPlaceBinding get() = _binding!!
+class District : Fragment() {
+    private var _binding: FragmentDistrictBinding? = null
+    private val binding:FragmentDistrictBinding get() = _binding!!
 
     private fun setUiListeners(){
         with(binding){
             navigationBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
-
-            btnChooseCountry.setOnClickListener {
-                findNavController().navigate(R.id.action_to_country)
-            }
-
-            btnChooseDistrict.setOnClickListener {
-               findNavController().navigate(R.id.action_to_district)
-            }
         }
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWorkPlaceBinding.inflate(inflater,container,false)
+        _binding = FragmentDistrictBinding.inflate(inflater,container,false)
 
         // Inflate the layout for this fragment
         return binding.root

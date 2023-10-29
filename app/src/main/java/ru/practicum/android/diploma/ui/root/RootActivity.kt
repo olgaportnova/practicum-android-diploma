@@ -32,6 +32,8 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.filters -> navView.visibility = View.GONE
                 R.id.workPlace -> navView.visibility = View.GONE
+                R.id.district -> navView.visibility = View.GONE
+                R.id.country -> navView.visibility = View.GONE
                 else -> navView.visibility = View.VISIBLE
             }
         }

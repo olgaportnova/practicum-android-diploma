@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_to_country"
             app:destination="@id/country" />
+        <action
+            android:id="@+id/action_to_district"
+            app:destination="@id/district" />
     </fragment>
 
     <fragment
@@ -50,4 +53,9 @@
         android:name="ru.practicum.android.diploma.Country"
         android:label="Country"
         tools:layout="@layout/fragment_country"/>
+    <fragment
+        android:id="@+id/district"
+        android:name="ru.practicum.android.diploma.District"
+        android:label="District"
+        tools:layout="@layout/fragment_district"/>
 </navigation>

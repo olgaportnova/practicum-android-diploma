@@ -17,4 +17,7 @@
     <!--    COUNTRY FRAGMENT NAMES    -->
     <string name="country_fragment_title">Выбор страны</string>
 
+    <!--    DISTRICT FRAGMENT NAMES    -->
+    <string name="district_fragment_title">Выбор региона</string>
+
 </resources>
