@@ -10,6 +10,11 @@
 
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    WORKPLACE FRAGMENT NAMES    -->
+    <string name="work_place_fragment_title">Выбор места работы</string>
+
+    <!--    COUNTRY FRAGMENT NAMES    -->
+    <string name="country_fragment_title">Выбор места работы</string>
+
 </resources>
