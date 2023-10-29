@@ -15,6 +15,6 @@
     <string name="work_place_fragment_title">Выбор места работы</string>
 
     <!--    COUNTRY FRAGMENT NAMES    -->
-    <string name="country_fragment_title">Выбор места работы</string>
+    <string name="country_fragment_title">Выбор страны</string>
 
 </resources>

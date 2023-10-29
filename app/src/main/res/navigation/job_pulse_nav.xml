@@ -14,6 +14,7 @@
             android:id="@+id/action_to_filters"
             app:destination="@id/filters" />
     </fragment>
+
     <fragment
         android:id="@+id/favourite"
         android:name="ru.practicum.android.diploma.Favourite"
@@ -33,9 +34,20 @@
             android:id="@+id/action_to_workPlace"
             app:destination="@id/workPlace" />
     </fragment>
+
     <fragment
         android:id="@+id/workPlace"
         android:name="ru.practicum.android.diploma.WorkPlace"
         android:label="fragment_work_place"
-        tools:layout="@layout/fragment_work_place" />
+        tools:layout="@layout/fragment_work_place" >
+        <action
+            android:id="@+id/action_to_country"
+            app:destination="@id/country" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/country"
+        android:name="ru.practicum.android.diploma.Country"
+        android:label="Country"
+        tools:layout="@layout/fragment_country"/>
 </navigation>
