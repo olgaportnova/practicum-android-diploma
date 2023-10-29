@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.ui.root
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import ru.practicum.android.diploma.BuildConfig
@@ -30,11 +31,11 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.filters -> navView.visibility = View.GONE
-                R.id.workPlace -> navView.visibility = View.GONE
-                R.id.district -> navView.visibility = View.GONE
-                R.id.country -> navView.visibility = View.GONE
-                else -> navView.visibility = View.VISIBLE
+                R.id.filters -> navView.isVisible = false
+                R.id.workPlace -> navView.isVisible = false
+                R.id.district -> navView.isVisible = false
+                R.id.country -> navView.isVisible = false
+                else -> navView.isVisible = true
             }
         }
     }
