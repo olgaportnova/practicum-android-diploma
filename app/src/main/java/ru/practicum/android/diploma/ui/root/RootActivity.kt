@@ -31,6 +31,7 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
                 R.id.filters -> navView.visibility = View.GONE
+                R.id.workPlace -> navView.visibility = View.GONE
                 else -> navView.visibility = View.VISIBLE
             }
         }

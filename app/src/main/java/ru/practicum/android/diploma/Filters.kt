@@ -9,7 +9,21 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 
 class Filters : Fragment() {
-    private lateinit var _binding: FragmentFiltersBinding
+    private var _binding: FragmentFiltersBinding? = null
+    private val binding get() = _binding!!
+
+    private fun setUiListeners() {
+        with(binding){
+            navigationBar.setNavigationOnClickListener {
+                //parentFragmentManager.setFragmentResult("key", Bundle().apply { putString("bundleKey","Возврат с фрагмента Фильтры. Можно выполнить любую функцию") })
+                findNavController().popBackStack()
+            }
+
+            btnChooseCountry.setOnClickListener {
+                findNavController().navigate(R.id.action_to_workPlace)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -19,16 +33,18 @@ class Filters : Fragment() {
 
 
         // Inflate the layout for this fragment
-        return _binding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding.navigationBar.setNavigationOnClickListener {
-            //parentFragmentManager.setFragmentResult("key", Bundle().apply { putString("bundleKey","Возврат с фрагмента Фильтры. Можно выполнить любую функцию") })
-            findNavController().popBackStack()
-        }
+
+        setUiListeners() // All listeners set
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
 }

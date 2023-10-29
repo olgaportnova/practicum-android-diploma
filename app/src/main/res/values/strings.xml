@@ -5,5 +5,11 @@
     <string name="favourite">Избранное</string>
     <string name="crew">Команда</string>
 
-    <!--    SEARCH NAMES    -->
+    <!--    SEARCH FRAGMENT NAMES     -->
+    <string name="search_fragment_title">Поиск вакансий</string>
+
+    <!--    FILTERS FRAGMENT NAMES    -->
+    <string name="filters_fragment_title">Настройки фильтрации</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

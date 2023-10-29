@@ -27,5 +27,15 @@
     <fragment
         android:id="@+id/filters"
         android:name="ru.practicum.android.diploma.Filters"
-        android:label="Filters" />
+        android:label="Filters"
+        tools:layout="@layout/fragment_filters">
+        <action
+            android:id="@+id/action_to_workPlace"
+            app:destination="@id/workPlace" />
+    </fragment>
+    <fragment
+        android:id="@+id/workPlace"
+        android:name="ru.practicum.android.diploma.WorkPlace"
+        android:label="fragment_work_place"
+        tools:layout="@layout/fragment_work_place" />
 </navigation>
