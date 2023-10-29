@@ -7,9 +7,9 @@
     <item
         android:id="@+id/favourite"
         android:title="@string/favourite"
-        android:icon="@drawable/ic_launcher_foreground" />
+        android:icon="@drawable/ic_main_favorite" />
     <item
         android:id="@+id/crew"
         android:title="@string/crew"
-        android:icon="@drawable/ic_launcher_foreground" />
+        android:icon="@drawable/ic_main_team" />
 </menu>
