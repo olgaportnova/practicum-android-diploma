@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.root.RootActivity">
+    tools:context=".root.presentation.RootActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/navigation_bar"
