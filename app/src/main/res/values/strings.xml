@@ -10,6 +10,9 @@
     <string name="hint_for_edit_text">Введите запрос</string>
     <string name="no_search_result">Не удалось получить \n список вакансий</string>
     <string name="no_internet">Нет интернета</string>
+    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+    <string name="no_found_vacancies_count">Таких вакансий нет</string>
+
 
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>

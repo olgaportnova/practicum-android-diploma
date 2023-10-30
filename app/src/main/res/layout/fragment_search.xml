@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/info_search_result_count"
-        tools:text="Найдено 286 вакансий"
+        tools:text="@string/no_found_vacancies_count"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_placeholder"
-        tools:text="Не удалось получить \n список вакансий"
+        tools:text="@string/no_search_result"
         style="@style/placeholder_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
