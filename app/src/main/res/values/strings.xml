@@ -20,4 +20,10 @@
     <!--    DISTRICT FRAGMENT NAMES    -->
     <string name="district_fragment_title">Выбор региона</string>
 
+    <!--    VACANCY DETAILS FRAGMENT NAMES    -->
+    <string name="vacancy_fragment_title">Вакансия</string>
+    <string name="similar_vacancies">Похожие вакансии</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
