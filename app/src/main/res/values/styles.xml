@@ -2,9 +2,6 @@
 <resources>
 
     <style name="item_viewholder_header_text">
-        <item name="android:layout_marginTop">@dimen/recycle_margin_top_bottom</item>
-        <item name="android:layout_marginStart">@dimen/recycle_header_margin_start</item>
-        <item name="android:layout_marginEnd">@dimen/recycle_margin_start_end</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">22sp</item>
@@ -13,8 +10,6 @@
     </style>
 
     <style name="item_viewholder_regular_text">
-        <item name="android:layout_marginStart">@dimen/recycle_header_margin_start</item>
-        <item name="android:layout_marginEnd">@dimen/recycle_margin_start_end</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
@@ -25,9 +20,22 @@
     <style name="art_work_vacancy">
         <item name="android:layout_width">@dimen/recycle_art_work_size</item>
         <item name="android:layout_height">@dimen/recycle_art_work_size</item>
-        <item name="android:layout_marginStart">@dimen/recycle_header_margin_start</item>
-        <item name="android:layout_marginTop">@dimen/recycle_margin_top_bottom</item>
     </style>
 
+    <style name="item_viewholder_text_layout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">@dimen/recycle_text_margin_start</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="item_viewholder_main_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:layout_marginVertical">9dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
 
 </resources>

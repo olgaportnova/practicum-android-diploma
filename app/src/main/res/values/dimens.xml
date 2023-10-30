@@ -4,6 +4,6 @@
     <dimen name="recycle_margin_top_bottom">9dp</dimen>
     <dimen name="recycle_margin_start_end">16dp</dimen>
     <dimen name="recycle_art_work_size">48dp</dimen>
-    <dimen name="recycle_header_margin_start">12dp</dimen>
+    <dimen name="recycle_text_margin_start">12dp</dimen>
 
 </resources>

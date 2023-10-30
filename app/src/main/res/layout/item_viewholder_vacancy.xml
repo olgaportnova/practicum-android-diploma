@@ -2,20 +2,16 @@
 <LinearLayout
     android:id="@+id/item_viewholder_vacancy"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal">
+    style="@style/item_viewholder_main_layout">
+
     <ImageView
         android:id="@+id/art_work"
         tools:src="@tools:sample/avatars"
         style="@style/art_work_vacancy" />
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        style="@style/item_viewholder_text_layout">
         <TextView
             android:id="@+id/header_vacancy"
             tools:text="Разработчик платформы данных, Санкт-Петербург"
@@ -26,10 +22,8 @@
             style="@style/item_viewholder_regular_text" />
         <TextView
             android:id="@+id/salary_vacancy"
-            android:layout_marginBottom="@dimen/recycle_margin_top_bottom"
             tools:text="Зарплата не указана"
-            style="@style/item_viewholder_regular_text"
-            android:textSize="16sp" />
+            style="@style/item_viewholder_regular_text" />
     </LinearLayout>
 
 </LinearLayout>
