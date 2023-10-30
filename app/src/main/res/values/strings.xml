@@ -7,6 +7,9 @@
 
     <!--    SEARCH FRAGMENT NAMES     -->
     <string name="search_fragment_title">Поиск вакансий</string>
+    <string name="hint_for_edit_text">Введите запрос</string>
+    <string name="no_search_result">Не удалось получить \n список вакансий</string>
+    <string name="no_internet">Нет интернета</string>
 
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>
@@ -19,5 +22,6 @@
 
     <!--    DISTRICT FRAGMENT NAMES    -->
     <string name="district_fragment_title">Выбор региона</string>
+
 
 </resources>
