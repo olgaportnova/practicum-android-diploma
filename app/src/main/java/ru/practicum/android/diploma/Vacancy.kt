@@ -29,6 +29,10 @@ class Vacancy : Fragment() {
             navigationBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
+
+            btnSimilar.setOnClickListener {
+                findNavController().navigate(R.id.action_to_similar)
+            }
         }
     }
 
