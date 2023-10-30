@@ -22,5 +22,12 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <style name="art_work_vacancy">
+        <item name="android:layout_width">@dimen/recycle_art_work_size</item>
+        <item name="android:layout_height">@dimen/recycle_art_work_size</item>
+        <item name="android:layout_marginStart">@dimen/recycle_header_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/recycle_margin_top_bottom</item>
+    </style>
+
 
 </resources>
