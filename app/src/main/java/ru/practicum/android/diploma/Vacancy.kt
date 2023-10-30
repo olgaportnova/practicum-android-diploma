@@ -1,11 +1,12 @@
 package ru.practicum.android.diploma
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,8 +21,16 @@ class Vacancy : Fragment() {
     // TODO: Rename and change types of parameters
     private var vacancy: String? = null
 
-    private lateinit var _binding:FragmentVacancyBinding
+    private lateinit var _binding: FragmentVacancyBinding
     private val binding get() = _binding!!
+
+    private fun setUiListeners() {
+        with(binding) {
+            navigationBar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +43,19 @@ class Vacancy : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentVacancyBinding.inflate(inflater,container,false)
+        _binding = FragmentVacancyBinding.inflate(inflater, container, false)
 
         vacancy?.let {
-            Toast.makeText(requireContext(),it,Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUiListeners()
     }
 
     companion object {
@@ -54,7 +68,7 @@ class Vacancy : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(vacancyModel: String,) =
+        fun newInstance(vacancyModel: String) =
             Vacancy().apply {
                 arguments = Bundle().apply {
                     putString(ARG_VACANCY, vacancyModel)

@@ -13,6 +13,10 @@ class Search : Fragment() {
     private val binding get() = _binding!!
 
     private fun setUiListeners() {
+        binding.txtTemporal.setOnClickListener {
+            openFragmentVacancy("vacancy from search")
+        }
+
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_to_filter_fragment -> {
@@ -23,6 +27,18 @@ class Search : Fragment() {
                 else -> false
             }
         }
+    }
+
+    /**
+     * Function to open required vacancy details
+     * @param vacancyToShow represent vacancy model
+     * @author Oleg
+     */
+    // TODO: change param type
+    private fun openFragmentVacancy(vacancyToShow: String) {
+        findNavController().navigate(
+            R.id.action_search_to_vacancy,
+            Bundle().apply { putString("vacancy_model", vacancyToShow) })
     }
 
     override fun onCreateView(

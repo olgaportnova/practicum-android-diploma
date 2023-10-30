@@ -35,6 +35,7 @@ class RootActivity : AppCompatActivity() {
                 R.id.workPlace -> navView.isVisible = false
                 R.id.district -> navView.isVisible = false
                 R.id.country -> navView.isVisible = false
+                R.id.vacancy -> navView.isVisible = false
                 else -> navView.isVisible = true
             }
         }
