@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/item_viewholder_vacancy"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/art_work"
+        android:layout_width="@dimen/recycle_art_work_size"
+        android:layout_height="@dimen/recycle_art_work_size"
+        tools:src="@tools:sample/avatars"
+        android:layout_marginStart="@dimen/recycle_header_margin_start"
+        android:layout_marginTop="@dimen/recycle_margin_top_bottom" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/header_vacancy"
+            tools:text="Разработчик платформы данных, Санкт-Петербург"
+            style="@style/item_viewholder_header_text" />
+        <TextView
+            android:id="@+id/company_vacancy"
+            tools:text="Маркет"
+            style="@style/item_viewholder_regular_text" />
+        <TextView
+            android:id="@+id/salary_vacancy"
+            android:layout_marginBottom="@dimen/recycle_margin_top_bottom"
+            tools:text="Зарплата не указана"
+            style="@style/item_viewholder_regular_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>
