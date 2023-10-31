@@ -16,5 +16,4 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
             }
         }
     }
-
 }
