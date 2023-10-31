@@ -17,7 +17,7 @@ abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
 
     private val backPressedCallback = object: OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            doBeforeExit()
+            exitExtraWhenSystemBackPushed()
         }
     }
 
@@ -28,10 +28,9 @@ abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
 
     /**
      * Override this fun if you need special behaviour onExit
+     * call your own exit fun via fragmentManager or navController
      */
-    open fun doBeforeExit(){
-        showMsgDialog("Standard exit")
-    }
+    abstract fun exitExtraWhenSystemBackPushed()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

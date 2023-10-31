@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
+import kotlin.random.Random
 
 const val ARG_COUNTRY_ID = "country_id_pram"
+const val KEY_DISTRICT_RESULT = "district_result"
+const val DISTRICT_NAME = "district_name_param"
+const val DISTRICT_ID = "district_id_param"
 
 /**
  * A simple [Fragment] subclass.
@@ -28,9 +33,20 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
     override fun setUiListeners(){
         with(binding){
             navigationBar.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                exitExtraWhenSystemBackPushed()
             }
         }
+    }
+
+    override fun exitExtraWhenSystemBackPushed() {
+        // Для поиска вакансии по региону необходимо передать в поисковый запрос id региона
+        // Параметр area - Регион. Необходимо передавать id из справочника /areas. Можно указать несколько значений
+        val area = Bundle().apply {
+            putInt(DISTRICT_ID, Random.nextInt(10000))
+            putString(DISTRICT_NAME,"Бутово")
+        }
+        setFragmentResult(KEY_DISTRICT_RESULT,area)
+        findNavController().popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +55,6 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
             countryId = it.getInt(ARG_COUNTRY_ID)
         }
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

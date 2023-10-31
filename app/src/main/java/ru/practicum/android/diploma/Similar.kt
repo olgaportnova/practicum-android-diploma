@@ -12,8 +12,11 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     override fun setUiListeners() {
         with(binding) {
             navigationBar.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                exitExtraWhenSystemBackPushed()
             }
         }
+    }
+    override fun exitExtraWhenSystemBackPushed() {
+        findNavController().popBackStack()
     }
 }
