@@ -1,20 +1,20 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
 
 class WorkPlace : Fragment() {
     private var _binding: FragmentWorkPlaceBinding? = null
-    private val binding:FragmentWorkPlaceBinding get() = _binding!!
+    private val binding: FragmentWorkPlaceBinding get() = _binding!!
 
-    private fun setUiListeners(){
-        with(binding){
+    private fun setUiListeners() {
+        with(binding) {
             navigationBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
@@ -24,7 +24,9 @@ class WorkPlace : Fragment() {
             }
 
             btnChooseDistrict.setOnClickListener {
-               findNavController().navigate(R.id.action_to_district)
+                findNavController().navigate(
+                    R.id.action_to_district,
+                    Bundle().apply { putInt(ARG_COUNTRY_ID, 555) })
             }
         }
 
@@ -34,7 +36,7 @@ class WorkPlace : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWorkPlaceBinding.inflate(inflater,container,false)
+        _binding = FragmentWorkPlaceBinding.inflate(inflater, container, false)
 
         // Inflate the layout for this fragment
         return binding.root
