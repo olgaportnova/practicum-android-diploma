@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
+
 const val ARG_COUNTRY_ID = "country_id_pram"
 
 /**
@@ -16,14 +18,14 @@ const val ARG_COUNTRY_ID = "country_id_pram"
  * Use the [District.newInstance] factory method to
  * create an instance of this fragment and set required param
  */
-open class District : Fragment() {
-    private var _binding: FragmentDistrictBinding? = null
-    private val binding:FragmentDistrictBinding get() = _binding!!
+open class District : DefaultFragment<FragmentDistrictBinding>() {
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentDistrictBinding =
+        FragmentDistrictBinding::inflate
 
     // TODO: Rename and change types of parameters
     private var countryId: Int? = null
 
-    private fun setUiListeners(){
+    override fun setUiListeners(){
         with(binding){
             navigationBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
@@ -38,19 +40,9 @@ open class District : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDistrictBinding.inflate(inflater,container,false)
-
-        // Inflate the layout for this fragment
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUiListeners()
 
         if (countryId==null){
             binding.navigationBar.title =resources.getString(R.string.country_fragment_title)
@@ -58,11 +50,6 @@ open class District : Fragment() {
         else{
             Toast.makeText(requireContext(),"Country id = $countryId",Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object{
