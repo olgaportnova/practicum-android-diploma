@@ -8,6 +8,13 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
 
+    <color name="grey_dark">#AEAFB4</color>
+    <color name="grey_light">#E6E8EB</color>
+    <color name="blue_main">#3772E7</color>
+    <color name="black_text">#1A1B22</color>
+
+
+
     <!-- experimental colors -->
     <color name="orange">#ff8243</color>
     <color name="haki">#87a48d</color>

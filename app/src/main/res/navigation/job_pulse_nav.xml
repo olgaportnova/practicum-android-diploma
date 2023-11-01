@@ -63,7 +63,7 @@
         tools:layout="@layout/fragment_district"/>
     <fragment
         android:id="@+id/vacancy"
-        android:name="ru.practicum.android.diploma.Vacancy"
+        android:name="ru.practicum.android.diploma.vacancy.presentation.fragment.Vacancy"
         android:label="Vacancy"
         tools:layout="@layout/fragment_vacancy">
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/similar"
-        android:name="ru.practicum.android.diploma.Similar"
+        android:name="ru.practicum.android.diploma.similar.presentation.fragment.Similar"
         android:label="fragment_similar"
         tools:layout="@layout/fragment_similar" />
     <fragment
