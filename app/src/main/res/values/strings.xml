@@ -15,6 +15,7 @@
     <string name="found_vacancies_count">Найдено %1$d вакансий</string>
 
 
+
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>
 
@@ -27,5 +28,10 @@
     <!--    DISTRICT FRAGMENT NAMES    -->
     <string name="district_fragment_title">Выбор региона</string>
 
+    <!--    VACANCY DETAILS FRAGMENT NAMES    -->
+    <string name="vacancy_fragment_title">Вакансия</string>
+
+    <!--    SIMILAR FRAGMENT NAMES    -->
+    <string name="similar_vacancies">Похожие вакансии</string>
 
 </resources>
