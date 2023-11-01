@@ -1,12 +1,17 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.data.impl.AreaRepositoryImpl
 import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
 import ru.practicum.android.diploma.filter.domain.models.Area
 import ru.practicum.android.diploma.filter.domain.models.Country
+import ru.practicum.android.diploma.filter.network.RetrofitClient
 import ru.practicum.android.diploma.util.DataResource
 
 class WorkPlaceVm:ViewModel() {
@@ -26,6 +31,20 @@ class WorkPlaceVm:ViewModel() {
 
         chooseAnotherCountry(Country(cname,-25,null, emptyList()))
         chooseAnotherDistrict(Area(26,null,"district 9", emptyList()))
+
+        //TODO: try retrofit
+        loadCountryList()
+    }
+
+    private fun loadCountryList(){
+        val api  =  RetrofitClient()
+        viewModelScope.launch(Dispatchers.IO){
+            val result = api.loadData()
+            result.forEach {
+                Log.e("LOG",it.name)
+            }
+
+        }
     }
 
     fun chooseAnotherCountry(newCountry: Country){
