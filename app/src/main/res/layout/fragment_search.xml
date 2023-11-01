@@ -13,10 +13,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/black"
-        app:titleMarginBottom="19dp"
+        app:titleTextColor="@color/black_text"
         app:titleMarginStart="16dp"
-        app:layout_gravity="center_vertical"
+        app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
 
     <EditText
@@ -25,6 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/navigation_bar"
         android:hint="@string/hint_for_edit_text"
+        android:textCursorDrawable="@drawable/custom_cursor"
         style="@style/edit_text" />
 
     <ProgressBar
@@ -57,6 +57,7 @@
     <ImageView
         android:id="@+id/image_placeholder"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:src="@drawable/placeholder_empty_result"
