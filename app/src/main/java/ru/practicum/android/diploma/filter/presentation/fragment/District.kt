@@ -24,8 +24,13 @@ const val DISTRICT_ID = "district_id_param"
  * create an instance of this fragment and set required param
  */
 open class District : DefaultFragment<FragmentDistrictBinding>() {
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentDistrictBinding =
-        FragmentDistrictBinding::inflate
+
+    override fun bindingInflater(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentDistrictBinding {
+        return FragmentDistrictBinding.inflate(inflater, container, false)
+    }
 
     // TODO: Rename and change types of parameters
     private var countryId: Int? = null

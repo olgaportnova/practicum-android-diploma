@@ -7,8 +7,13 @@ import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.databinding.FragmentSimilarBinding
 
 class Similar : DefaultFragment<FragmentSimilarBinding>() {
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentSimilarBinding =
-        FragmentSimilarBinding::inflate
+
+    override fun bindingInflater(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSimilarBinding {
+        return FragmentSimilarBinding.inflate(inflater, container, false)
+    }
 
     override fun setUiListeners() {
         with(binding) {
