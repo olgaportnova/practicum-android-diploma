@@ -87,6 +87,10 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         vm.districtChosen.observe(viewLifecycleOwner) {
             binding.btnChooseDistrict.text = it.name
         }
+
+        vm.errorMsg.observe(viewLifecycleOwner){
+            showMsgDialog(it)
+        }
     }
 
 }

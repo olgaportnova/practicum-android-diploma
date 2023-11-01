@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.handleCoroutineException
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.data.impl.AreaRepositoryImpl
 import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
@@ -21,15 +23,14 @@ class WorkPlaceVm:ViewModel() {
     private val _districtChosen = MutableLiveData<Area>()
     val districtChosen = _districtChosen as LiveData<Area>
 
-    private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl())
+    private val _errorMsg = MutableLiveData<String>()
+    val errorMsg = _errorMsg as LiveData<String>
+
+    private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
 
     init {
-        val cname = when(val countryLoad = useCaseAreaController.loadCountries()){
-            is DataResource.Data -> countryLoad.data
-            is DataResource.Empty -> countryLoad.message
-        }
 
-        chooseAnotherCountry(Country(cname,-25,null, emptyList()))
+        chooseAnotherCountry(Country("Russia",-25,null, emptyList()))
         chooseAnotherDistrict(Area(26,null,"district 9", emptyList()))
 
         //TODO: try retrofit
@@ -37,13 +38,13 @@ class WorkPlaceVm:ViewModel() {
     }
 
     private fun loadCountryList(){
-        val api  =  RetrofitClient()
-        viewModelScope.launch(Dispatchers.IO){
-            val result = api.loadData()
-            result.forEach {
-                Log.e("LOG",it.name)
-            }
 
+        val errorHandler = CoroutineExceptionHandler { _, throwable ->
+            _errorMsg.postValue(throwable.message)
+        }
+
+        viewModelScope.launch(Dispatchers.IO+errorHandler){
+            useCaseAreaController.loadCountries()
         }
     }
 
