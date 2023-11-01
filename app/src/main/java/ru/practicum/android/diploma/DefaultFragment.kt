@@ -12,8 +12,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
     private var _binding:T? = null
-    abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> T
     protected val binding:T get() = _binding!!
+
+    abstract fun bindingInflater(inflater: LayoutInflater, container: ViewGroup?): T
 
     private val backPressedCallback = object: OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -46,7 +47,7 @@ abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = bindingInflater.invoke(inflater,container,false)
+        _binding = bindingInflater(inflater,container)
 
         //requireActivity().onBackPressedDispatcher.addCallback(this.viewLifecycleOwner,this.backPressedCallback)
         return binding.root
