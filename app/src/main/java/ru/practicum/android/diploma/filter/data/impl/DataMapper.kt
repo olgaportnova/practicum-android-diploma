@@ -10,18 +10,13 @@ class DataMapper {
         return Country(
             name = apiCountry.name,
             id = apiCountry.id,
-            areas = apiCountry.areas.map { areaFromPojo(it) }
+            url = apiCountry.url
         )
     }
 
-    fun areaFromPojo(apiArea: ApiArea): Area {
-        return Area(
-            id = apiArea.id,
-            name = apiArea.name,
-            parentId = apiArea.parentId,
-            areas = apiArea.areas.map {
-                this.areaFromPojo(it)
-            }
-        )
-    }
+    fun convert(apiArea: ApiArea): Area {
+            val areas = apiArea.areas.map { convert(it) }
+            return Area(apiArea.id, apiArea.parentId, apiArea.name, areas)
+        }
+
 }

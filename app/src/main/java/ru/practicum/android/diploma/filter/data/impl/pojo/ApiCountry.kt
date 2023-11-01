@@ -7,8 +7,6 @@ data class CountryW(
     val name: String,
     @SerializedName("id")
     val id: Int,
-    @SerializedName("parentId")
-    val parentId: Int?,
-    @SerializedName("areas")
-    val areas: List<ApiArea>
+    @SerializedName("url")
+    val url: String,
 )

@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.data.impl
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -17,14 +16,11 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
             emit(DataStatus.Loading())
 
             val result = retrofitClient.loadData()
-            Log.e("LOG", result.code().toString())
+
             when (result.code()) {
                 200 -> {
-
                     result.body()?.let {
-                        //it.forEach { el -> Log.e("LOG", el.name) }
                         val lst = it.map { el -> DataMapper().countryFromPojo(el) }
-                        lst.forEach { el -> Log.e("LOG", el.name) }
                         emit(DataStatus.Content(lst))
                     }
                 }
