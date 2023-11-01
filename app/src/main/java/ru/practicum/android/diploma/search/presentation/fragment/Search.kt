@@ -14,9 +14,10 @@ class Search : Fragment() {
     private val binding get() = _binding!!
 
     private fun setUiListeners() {
-        binding.txtTemporal.setOnClickListener {
-            openFragmentVacancy("vacancy from search")
-        }
+//        //TODO: отработать нажание на item вакансии и переход
+//        binding.txtTemporal.setOnClickListener {
+//            openFragmentVacancy("vacancy from search")
+//        }
 
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
