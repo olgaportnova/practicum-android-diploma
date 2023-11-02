@@ -1,29 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!-- TODO: Update blank fragment layout -->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/navigation_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         app:title="@string/search_fragment_title"
         app:menu="@menu/search_vacancies_menu"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/black_text"
+        app:titleMarginStart="16dp"
+        app:titleTextAppearance="@style/ToolbarTitleText"
+        style="@style/toolbar_style" />
 
-    <!--TODO: Поле ниже тестовое-->
-    <TextView
-        android:id="@+id/txt_temporal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:text="При нажатии на это поле осуществляется переход на экран вакансии с передачей аргумента ВАКАНСИЯ из поиска"
+    <EditText
+        android:id="@+id/edit_text_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/navigation_bar"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:hint="@string/hint_for_edit_text"
+        android:textCursorDrawable="@drawable/custom_cursor"
+        style="@style/edit_text" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/progress_bar" />
 
+    <TextView
+        android:id="@+id/info_search_result_count"
+        tools:text="@string/no_found_vacancies_count"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
+        style="@style/information_vacancies_count" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_search_result"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_search_result_count"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        style="@style/recycle_view" />
+
+    <ImageView
+        android:id="@+id/image_placeholder"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:src="@drawable/placeholder_empty_result"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
+        style="@style/placeholder_image" />
+
+    <TextView
+        android:id="@+id/text_placeholder"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_placeholder"
+        tools:text="@string/no_search_result"
+        style="@style/placeholder_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

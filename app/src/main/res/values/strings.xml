@@ -7,6 +7,14 @@
 
     <!--    SEARCH FRAGMENT NAMES     -->
     <string name="search_fragment_title">Поиск вакансий</string>
+    <string name="no_found_vacancies_count">Таких вакансий нет</string>
+    <string name="hint_for_edit_text">Введите запрос</string>
+    <string name="no_search_result">Не удалось получить \n список вакансий</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+
+
 
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>
@@ -22,8 +30,8 @@
 
     <!--    VACANCY DETAILS FRAGMENT NAMES    -->
     <string name="vacancy_fragment_title">Вакансия</string>
-    <string name="similar_vacancies">Похожие вакансии</string>
 
     <!--    SIMILAR FRAGMENT NAMES    -->
+    <string name="similar_vacancies">Похожие вакансии</string>
 
 </resources>

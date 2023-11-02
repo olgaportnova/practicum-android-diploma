@@ -13,8 +13,12 @@ import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentWorkPlaceBinding =
-        FragmentWorkPlaceBinding::inflate
+    override fun bindingInflater(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentWorkPlaceBinding {
+        return FragmentWorkPlaceBinding.inflate(inflater, container, false)
+    }
 
     lateinit var vm: WorkPlaceVm
 
