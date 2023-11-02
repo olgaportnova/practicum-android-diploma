@@ -21,8 +21,8 @@ class WorkPlaceVm : ViewModel() {
     private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
 
     init {
-        chooseAnotherCountry(Country("Страна", -25, ""))
-        chooseAnotherDistrict(Country("Регион", -25, ""))
+        //chooseAnotherCountry(Country("Страна", -25, ""))
+        //chooseAnotherDistrict(Country("Регион", -25, ""))
     }
 
     fun chooseAnotherCountry(newCountry: Country) {

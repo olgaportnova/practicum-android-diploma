@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,7 +30,7 @@ open class DistrictVm : ViewModel() {
 
     private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
 
-    open fun loadCountryList() {
+    fun loadCountryList() {
         viewModelScope.launch {
             useCaseAreaController.loadCountries().collect {
                 when (it) {
@@ -42,6 +43,14 @@ open class DistrictVm : ViewModel() {
 
                     else -> {}
                 }
+            }
+        }
+    }
+
+    fun loadDistrictList(parentAreaId:Int){
+        viewModelScope.launch {
+            useCaseAreaController.loadDistricts(parentId = parentAreaId).collect{
+                if (it is DataStatus.Loading) _screenState.value = DistrictScreenState.Loading(null)
             }
         }
     }

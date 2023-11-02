@@ -84,6 +84,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
             vm.loadCountryList()
         } else {
             // Загрузка списка регионов производится только при наличии ненулевого id страны
+            vm.loadDistrictList(113)
             //Toast.makeText(requireContext(), "Country id = $countryId", Toast.LENGTH_SHORT).show()
         }
     }
@@ -105,7 +106,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
 
     private fun setFragmentScreenState(newScreenState: DistrictScreenState) {
         when (newScreenState) {
-            is DistrictScreenState.Loading -> binding.txtContent.text = "Load district "
+            is DistrictScreenState.Loading -> binding.txtContent.text = "Initial "
             is DistrictScreenState.ContentCountry -> adapter.changeData(newScreenState.data.map { country ->
                 Area(country.id, null, country.name, emptyList())
             })

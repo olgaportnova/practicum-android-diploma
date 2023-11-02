@@ -1,11 +1,13 @@
 package ru.practicum.android.diploma.filter.data.impl
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
+import ru.practicum.android.diploma.filter.domain.models.Area
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.network.DataStatus
 import ru.practicum.android.diploma.filter.network.RetrofitClient
@@ -27,8 +29,23 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
 
                 else -> emit(DataStatus.Error(result.code()))
             }
-        }.catch {
-            emit(DataStatus.ErrorMessage(it.message.toString()))
-        }.flowOn(Dispatchers.IO)
+        }
+            .catch { emit(DataStatus.ErrorMessage(it.message.toString())) }
+            .flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun loadDistricts(parentId: Int): Flow<DataStatus<List<Area>>> {
+        return flow {
+            emit(DataStatus.Loading())
+            val result = retrofitClient.loadDistricts(parentId)
+            Log.e("LOG",result.code().toString())
+            when(result.code()){
+                200 ->{
+                    Log.e("LOG",result.body().toString())
+                }
+            }
+        }
+            .catch { Log.e("LOG", it.message.toString()) }
+            .flowOn(Dispatchers.IO)
     }
 }
