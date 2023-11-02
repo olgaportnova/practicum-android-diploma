@@ -15,11 +15,15 @@ class WorkPlaceVm : ViewModel() {
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
 
-    fun chooseAnotherCountry(newCountry: Area) {
-        _countryChosen.value = newCountry
+    fun chooseAnotherCountry(newCountryId: Int?,newCountryName:String?) {
+        if(newCountryId!=null&&newCountryName!=null){
+            _countryChosen.value = Area(newCountryId,null,newCountryName, emptyList())
+        }
     }
 
-    fun chooseAnotherDistrict(newDistrict: Area) {
-        _districtChosen.value = newDistrict
+    fun chooseAnotherDistrict(newCountryId: Int?,newCountryName:String?) {
+        if(newCountryId!=null&&newCountryName!=null){
+            _districtChosen.value = Area(newCountryId,null,newCountryName, emptyList())
+        }
     }
 }

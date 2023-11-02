@@ -20,8 +20,12 @@ import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
 import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 
 const val ARG_COUNTRY_ID = "country_id_pram"
+
 const val KEY_DISTRICT_RESULT = "district_result"
-const val DISTRICT_DATA = "district_id_param"
+const val KEY_COUNTRY_RESULT = "area_result"
+
+const val AREA_ID = "area_id_param"
+const val AREA_NAME = "area_name_param"
 
 /**
  * A simple [Fragment] subclass.
@@ -55,11 +59,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
 
     override fun exitExtraWhenSystemBackPushed() {
         // Для поиска вакансии по региону необходимо передать в поисковый запрос id региона
-        // Параметр area - Регион. Необходимо передавать id из справочника /areas. Можно указать несколько значений
-        val area = Bundle().apply {
-            putParcelable(DISTRICT_DATA, vm.areaToSendBack)
-        }
-        setFragmentResult(KEY_DISTRICT_RESULT, area)
+        vm.getAreaBundle()?.let { setFragmentResult(KEY_DISTRICT_RESULT, it) }
         findNavController().popBackStack()
     }
 
@@ -83,7 +83,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         }
 
         // Загрузка списка регионов производится только при наличии ненулевого id страны
-        countryId?.let {vm.loadDistrictList(it) }
+        countryId?.let { vm.loadDistrictList(it) }
     }
 
     private fun setUpAdapter() {

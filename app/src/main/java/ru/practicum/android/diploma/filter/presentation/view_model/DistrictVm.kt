@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,8 @@ import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
 import ru.practicum.android.diploma.filter.domain.models.Area
 import ru.practicum.android.diploma.filter.network.DataStatus
 import ru.practicum.android.diploma.filter.network.RetrofitClient
+import ru.practicum.android.diploma.filter.presentation.fragment.AREA_ID
+import ru.practicum.android.diploma.filter.presentation.fragment.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.fragment.DistrictScreenState
 
 open class DistrictVm : ViewModel() {
@@ -31,6 +34,17 @@ open class DistrictVm : ViewModel() {
     var areaToSendBack: Area? = null
 
     private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
+
+    fun getAreaBundle(): Bundle? {
+        areaToSendBack?.let {
+            val bundle = Bundle().apply {
+                putInt(AREA_ID, it.id)
+                putString(AREA_NAME, it.name)
+            }
+            return bundle
+        }
+        return null
+    }
 
     fun loadCountryList() {
         viewModelScope.launch {
