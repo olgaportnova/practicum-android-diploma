@@ -12,24 +12,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/black_text"
-        app:titleMarginStart="16dp"
         app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favouritesRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:visibility="gone"
+        android:visibility="visible"
+        tools:listitem="@layout/item_viewholder_vacancy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/navigation_bar"
-        tools:listitem="@layout/item_viewholder_vacancy"
-        android:layout_marginTop="16dp"/>
-
+        android:layout_marginTop="@dimen/recycle_margin_start_end"
+        style="@style/recycle_view"/>
     <ImageView
         android:id="@+id/image_placeholder"
         android:visibility="visible"
@@ -39,7 +35,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/placeholder_favorite_empty"
         style="@style/placeholder_image" />
-
     <TextView
         android:id="@+id/text_placeholder"
         android:visibility="visible"
@@ -48,6 +43,5 @@
         app:layout_constraintTop_toBottomOf="@id/image_placeholder"
         tools:text="@string/empty_list_placeholder_favorite"
         style="@style/placeholder_text" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
