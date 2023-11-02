@@ -5,7 +5,7 @@ import ru.practicum.android.diploma.favorite.domain.models.Vacancy
 sealed class FavoriteState {
 
     data class Success(
-        //TODO: create vacancy model for presentation
+        //TODO: create vacancy model
         val vacancies: List<Vacancy>
     ) : FavoriteState()
 

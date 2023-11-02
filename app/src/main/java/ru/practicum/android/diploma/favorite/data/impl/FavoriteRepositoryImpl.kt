@@ -15,7 +15,8 @@ class FavoriteRepositoryImpl(
 ) : FavoriteRepository {
 
     override suspend fun insertVacancyToFavoriteList(vacancy: Vacancy) {
-        appDatabase.favoriteVacancyDao().insertVacancyToFavoriteList(vacancyConvertor.mapVacancyToEntity(vacancy))
+        appDatabase.favoriteVacancyDao()
+            .insertVacancyToFavoriteList(vacancyConvertor.mapVacancyToEntity(vacancy))
     }
 
     override suspend fun deleteVacancyFromFavoriteList(vacancy: Vacancy) {
@@ -35,7 +36,6 @@ class FavoriteRepositoryImpl(
         } else {
             //TODO обсудить с Таней, что возвращать на экран деталей если ошибка получения информации из БД
             null
-
         }
     }
 

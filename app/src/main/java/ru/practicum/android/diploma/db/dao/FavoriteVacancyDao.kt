@@ -16,8 +16,8 @@ interface FavoriteVacancyDao {
     @Delete
     suspend fun deleteVacancyFromFavoriteList(vacancy: FavoriteVacancyEntity)
 
-    // вернуть сортировку когда у нас будут готовы модели Vacancy
-  //@Query("SELECT * FROM favourite_vacancies ORDER BY timestamp DESC ")
+    // вернуть сортировку когда у нас будут готовы модели Vacancy, пока добавила query без сортировки
+    //@Query("SELECT * FROM favourite_vacancies ORDER BY timestamp DESC ")
     @Query("SELECT * FROM favorite_vacancy")
     suspend fun getAllFavouriteVacancies(): List<FavoriteVacancyEntity>
 
