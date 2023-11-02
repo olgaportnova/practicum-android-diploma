@@ -1,15 +1,18 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
+import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
@@ -45,6 +48,8 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         findNavController().popBackStack()
     }
 
+    // TODO: Разобраться с версией для правильной обработки getParcelable
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,32 +57,13 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         vm = ViewModelProvider(this)[WorkPlaceVm::class.java]
 
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
-            val areaId = bundle.getInt(DISTRICT_ID)
-            val areaName = bundle.getString(DISTRICT_NAME)
-
-            // TODO: Изменять данные надо внутри viewModel
-            vm.districtChosen.value?.let {
-                vm.chooseAnotherDistrict(
-                    it.copy(
-                        name = areaName.toString(),
-                        id = areaId
-                    )
-                )
-            }
+            val area = bundle.getParcelable(DISTRICT_DATA,Country::class.java)
+            area?.let { vm.chooseAnotherDistrict(area) }
         }
-        setFragmentResultListener(KEY_COUNTRY_RESULT) { requestKey, bundle ->
-            val areaId = bundle.getInt(COUNTRY_ID)
-            val areaName = bundle.getString(COUNTRY_NAME)
 
-            // TODO: Изменять данные надо внутри viewModel
-            vm.countryChosen.value?.let {
-                vm.chooseAnotherCountry(
-                    it.copy(
-                        name = areaName.toString(),
-                        id = areaId
-                    )
-                )
-            }
+        setFragmentResultListener(KEY_COUNTRY_RESULT) { requestKey, bundle ->
+            val area = bundle.getParcelable(COUNTRY_DATA,Country::class.java)
+            area?.let { vm.chooseAnotherCountry(area) }
         }
     }
 
