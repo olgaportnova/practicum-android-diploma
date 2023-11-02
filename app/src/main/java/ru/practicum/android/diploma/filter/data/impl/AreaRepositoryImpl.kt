@@ -8,12 +8,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.network.DataStatus
 import ru.practicum.android.diploma.filter.network.RetrofitClient
 
 class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepository {
-    override suspend fun loadCountries(): Flow<DataStatus<List<Country>>> {
+    override suspend fun loadCountries(): Flow<DataStatus<List<Area>>> {
         return flow {
             emit(DataStatus.Loading())
 
@@ -22,7 +21,7 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
             when (result.code()) {
                 200 -> {
                     result.body()?.let {
-                        val lst = it.map { el -> DataMapper().countryFromPojo(el) }
+                        val lst = it.map { el -> DataMapper().apiCountryToArea(el) }
                         emit(DataStatus.Content(lst))
                     }
                 }
@@ -44,7 +43,7 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
             when(result.code()){
                 200 ->{
                     //Log.e("LOG",result.body().toString())
-                    emit(DataStatus.Content(DataMapper().convert(result.body()!!)))
+                    emit(DataStatus.Content(DataMapper().apiAreaToArea(result.body()!!)))
                 }
             }
         }

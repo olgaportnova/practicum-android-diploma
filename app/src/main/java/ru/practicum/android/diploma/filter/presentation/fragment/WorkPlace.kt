@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
-import ru.practicum.android.diploma.filter.domain.models.Country
+import ru.practicum.android.diploma.filter.domain.models.Area
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
@@ -57,12 +57,12 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         vm = ViewModelProvider(this)[WorkPlaceVm::class.java]
 
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
-            val area = bundle.getParcelable(DISTRICT_DATA,Country::class.java)
+            val area = bundle.getParcelable(DISTRICT_DATA, Area::class.java)
             area?.let { vm.chooseAnotherDistrict(area) }
         }
 
         setFragmentResultListener(KEY_COUNTRY_RESULT) { requestKey, bundle ->
-            val area = bundle.getParcelable(COUNTRY_DATA,Country::class.java)
+            val area = bundle.getParcelable(DISTRICT_DATA, Area::class.java)
             area?.let { vm.chooseAnotherCountry(area) }
         }
     }
@@ -78,7 +78,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             binding.btnChooseDistrict.text = it.name
         }
 
-        vm.errorMsg.observe(viewLifecycleOwner){
+        vm.errorMsg.observe(viewLifecycleOwner) {
             showMsgDialog(it)
         }
     }

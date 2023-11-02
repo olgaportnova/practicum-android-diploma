@@ -16,8 +16,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
-import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
 import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 
@@ -38,7 +36,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
 
     private val adapter = AreaAdapter(mutableListOf()) {
         showMsgDialog(it.toString())
-        vm.areaToSendBack = Country(it.name, it.id, "")
+        vm.areaToSendBack = it
     }
 
     override fun bindingInflater(
@@ -107,13 +105,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
     private fun setFragmentScreenState(newScreenState: DistrictScreenState) {
         when (newScreenState) {
             is DistrictScreenState.Loading -> binding.txtContent.text = "Initial "
-            is DistrictScreenState.ContentCountry -> adapter.changeData(newScreenState.data.map { country ->
-                Area(country.id, null, country.name, emptyList())
-            })
-            is DistrictScreenState.ContentDistrict -> adapter.changeData(newScreenState.data.map { area ->
-                Area(area.id, null, area.name, emptyList())
-            })
-
+            is DistrictScreenState.Content -> adapter.changeData(newScreenState.data)
             else -> {}
         }
     }
