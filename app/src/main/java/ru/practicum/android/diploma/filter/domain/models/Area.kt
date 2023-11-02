@@ -8,4 +8,5 @@ data class Area(
     val parentId: Int?,
     val name: String,
     val areas: List<Area>
-):Parcelable
+): Parcelable
+

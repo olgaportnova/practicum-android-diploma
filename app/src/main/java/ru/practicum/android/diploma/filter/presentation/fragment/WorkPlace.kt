@@ -23,7 +23,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         return FragmentWorkPlaceBinding.inflate(inflater, container, false)
     }
 
-    lateinit var vm: WorkPlaceVm
+    private lateinit var vm: WorkPlaceVm
 
     override fun setUiListeners() {
         with(binding) {
@@ -36,9 +36,14 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             btnChooseDistrict.setOnClickListener {
+                val parentId = when(vm.countryChosen.value){
+                    null->113
+                    else-> vm.countryChosen.value!!.id
+                }
+
                 findNavController().navigate(
                     R.id.action_to_district,
-                    Bundle().apply { putInt(ARG_COUNTRY_ID, 555) })
+                    Bundle().apply { putInt(ARG_COUNTRY_ID, parentId) })
             }
         }
     }
@@ -56,13 +61,15 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         // TODO: Потом сделать через Koin by viewModel()
         vm = ViewModelProvider(this)[WorkPlaceVm::class.java]
 
+
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
             val area = bundle.getParcelable(DISTRICT_DATA, Area::class.java)
             area?.let { vm.chooseAnotherDistrict(area) }
         }
 
+
         setFragmentResultListener(KEY_COUNTRY_RESULT) { requestKey, bundle ->
-            val area = bundle.getParcelable(DISTRICT_DATA, Area::class.java)
+            val area = bundle.getParcelable(AREA_DATA, Area::class.java)
             area?.let { vm.chooseAnotherCountry(area) }
         }
     }

@@ -4,16 +4,16 @@ import android.os.Bundle
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 
-const val KEY_COUNTRY_RESULT = "country_result"
-const val COUNTRY_DATA = "country_id_param"
+const val KEY_COUNTRY_RESULT = "area_result"
+const val AREA_DATA = "area_id_param"
 class Country : District() {
     override fun exitExtraWhenSystemBackPushed() {
         // Для поиска региона необходимо название страны или ее id
         // При выходе с фрагмента передаем родительскому фрагменту параметры выбранной страны
-        val county = Bundle().apply {
-            putParcelable(COUNTRY_DATA,vm.areaToSendBack)
+        val area = Bundle().apply {
+            putParcelable(AREA_DATA,vm.areaToSendBack)
         }
-        setFragmentResult(KEY_COUNTRY_RESULT,county)
+        setFragmentResult(KEY_COUNTRY_RESULT,area)
         findNavController().popBackStack()
     }
 }

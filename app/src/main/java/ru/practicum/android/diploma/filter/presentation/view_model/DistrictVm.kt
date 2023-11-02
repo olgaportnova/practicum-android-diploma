@@ -27,7 +27,7 @@ open class DistrictVm : ViewModel() {
 
     // Параметр для передачи данных от фрагментов Country и District к фрагменту WorkPlace
     // Так как передать надо только id и name, то в целях сокращения размера передаваемых данных,
-    // выбран тип Country (без вложенных массивов данных)
+    // обязательно необходимо параметр areas обнулять
     var areaToSendBack: Area? = null
 
     private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))

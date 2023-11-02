@@ -7,7 +7,6 @@ import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
 
 class RetrofitClient {
-
     suspend fun loadData(): Response<List<ApiCountry>> {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.hh.ru/")
@@ -28,8 +27,8 @@ class RetrofitClient {
 
         val apiHH = retrofit.create(ApiHH::class.java)
 
-        //return apiHH.getDistricts(parentId)
-        return apiHH.getDistrictsB()
+        return apiHH.getDistricts(parentId)
+
 
     }
 }

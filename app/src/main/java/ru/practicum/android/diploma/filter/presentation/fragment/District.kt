@@ -35,8 +35,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
     lateinit var vm: DistrictVm
 
     private val adapter = AreaAdapter(mutableListOf()) {
-        showMsgDialog(it.toString())
-        vm.areaToSendBack = it
+        vm.areaToSendBack = it.copy(areas = emptyList())
     }
 
     override fun bindingInflater(
@@ -77,14 +76,14 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         setObservers() // Обработчики lifeData
         setUpAdapter() // Настройка адаптера для RecyclerView
 
+        // Если не был получен аргумент, меняем заголовок
         if (countryId == null) {
             binding.navigationBar.title = resources.getString(R.string.country_fragment_title)
             vm.loadCountryList()
-        } else {
-            // Загрузка списка регионов производится только при наличии ненулевого id страны
-            vm.loadDistrictList(113)
-            //Toast.makeText(requireContext(), "Country id = $countryId", Toast.LENGTH_SHORT).show()
         }
+
+        // Загрузка списка регионов производится только при наличии ненулевого id страны
+        countryId?.let {vm.loadDistrictList(it) }
     }
 
     private fun setUpAdapter() {

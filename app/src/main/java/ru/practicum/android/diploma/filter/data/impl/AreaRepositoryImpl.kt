@@ -35,14 +35,12 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
 
     override suspend fun loadDistricts(parentId: Int): Flow<DataStatus<Area>> {
         return flow {
-            // Отправка информации о старте загрузки
-            emit(DataStatus.Loading())
+            emit(DataStatus.Loading()) // Отправка информации о старте загрузки
 
             val result = retrofitClient.loadDistricts(parentId)
 
             when(result.code()){
                 200 ->{
-                    //Log.e("LOG",result.body().toString())
                     emit(DataStatus.Content(DataMapper().apiAreaToArea(result.body()!!)))
                 }
             }
