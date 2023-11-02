@@ -13,7 +13,6 @@ class InteractorModule {
             FavoriteInteractorImpl(get())
         }
 
-        factory { VacancyConvertor() }
 
     }
 

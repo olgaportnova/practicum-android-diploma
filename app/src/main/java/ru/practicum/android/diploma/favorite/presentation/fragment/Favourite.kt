@@ -80,7 +80,7 @@ class Favourite : Fragment() {
     //states for updating UI
     private fun showFavorite(listOfFavorite: List<Vacancy>) {
         with(binding) {
-            vacanciesAdapter?.items = listOfFavorite
+  //          vacanciesAdapter?.items = listOfFavorite
             favouritesRecyclerView.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE
