@@ -1,15 +1,16 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.data.impl.AreaRepositoryImpl
 import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
+import ru.practicum.android.diploma.filter.domain.models.Area
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.network.DataStatus
 import ru.practicum.android.diploma.filter.network.RetrofitClient
@@ -22,6 +23,8 @@ open class DistrictVm : ViewModel() {
     private val _screenState =
         MutableStateFlow<DistrictScreenState>(DistrictScreenState.Loading(null))
     val screenState = _screenState as StateFlow<DistrictScreenState>
+
+    private val cityList = mutableListOf<Area>()
 
     // Параметр для передачи данных от фрагментов Country и District к фрагменту WorkPlace
     // Так как передать надо только id и name, то в целях сокращения размера передаваемых данных,
@@ -47,16 +50,25 @@ open class DistrictVm : ViewModel() {
         }
     }
 
-    fun loadDistrictList(parentAreaId:Int){
+    fun loadDistrictList(parentAreaId: Int) {
         viewModelScope.launch {
-            useCaseAreaController.loadDistricts(parentId = parentAreaId).collect{
+            useCaseAreaController.loadDistricts(parentId = parentAreaId).collect {
                 if (it is DataStatus.Loading) _screenState.value = DistrictScreenState.Loading(null)
-                if(it is DataStatus.Content) {
-                    it.data?.let {area->
-                        _screenState.value = DistrictScreenState.ContentDistrict(area.areas)
-                    }
-                }
+                if (it is DataStatus.Content) loadAllCityList(it.data!!)
             }
         }
+    }
+
+    private fun loadAllCityList(parentArea: Area) {
+        cityList.clear()
+        viewModelScope.launch(Dispatchers.IO) {
+            findCityRecursive(parentArea)
+            _screenState.value = DistrictScreenState.ContentDistrict(cityList)
+        }
+    }
+
+    private fun findCityRecursive(area: Area) {
+        if (area.areas.isEmpty()) cityList.add(area)
+        else area.areas.forEach { findCityRecursive(it) }
     }
 }
