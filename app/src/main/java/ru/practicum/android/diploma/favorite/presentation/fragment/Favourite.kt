@@ -15,9 +15,9 @@ class Favourite : Fragment() {
 
     private fun setUiListeners() {
         with(binding) {
-            txtTemporal.setOnClickListener {
-                openFragmentVacancy(vacancyToShow = "Вакансия из избранного")
-            }
+//            txtTemporal.setOnClickListener {
+//                openFragmentVacancy(vacancyToShow = "Вакансия из избранного")
+//            }
 
             navigationBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
