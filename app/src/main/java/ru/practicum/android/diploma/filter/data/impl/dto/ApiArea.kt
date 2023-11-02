@@ -12,12 +12,3 @@ data class ApiArea(
     @SerializedName("areas")
     val areas: List<ApiArea>
 )
-
-data class ApiDistrictSearch(
-    val name: String,
-    val id: String,
-    val parent_id: String?,
-)
-data class CountryResponse(
-    val countries: List<ApiDistrictSearch>
-)

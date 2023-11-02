@@ -8,5 +8,5 @@ import ru.practicum.android.diploma.filter.network.DataStatus
 
 interface AreaController {
     suspend fun loadCountries(): Flow<DataStatus<List<Country>>>
-    suspend fun loadDistricts(parentId:Int): Flow<DataStatus<List<Area>>>
+    suspend fun loadDistricts(parentId:Int): Flow<DataStatus<Area>>
 }

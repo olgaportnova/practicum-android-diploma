@@ -51,6 +51,11 @@ open class DistrictVm : ViewModel() {
         viewModelScope.launch {
             useCaseAreaController.loadDistricts(parentId = parentAreaId).collect{
                 if (it is DataStatus.Loading) _screenState.value = DistrictScreenState.Loading(null)
+                if(it is DataStatus.Content) {
+                    it.data?.let {area->
+                        _screenState.value = DistrictScreenState.ContentDistrict(area.areas)
+                    }
+                }
             }
         }
     }

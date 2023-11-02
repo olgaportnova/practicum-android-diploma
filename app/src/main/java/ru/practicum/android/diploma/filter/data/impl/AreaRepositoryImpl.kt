@@ -34,14 +34,17 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
             .flowOn(Dispatchers.IO)
     }
 
-    override suspend fun loadDistricts(parentId: Int): Flow<DataStatus<List<Area>>> {
+    override suspend fun loadDistricts(parentId: Int): Flow<DataStatus<Area>> {
         return flow {
+            // Отправка информации о старте загрузки
             emit(DataStatus.Loading())
+
             val result = retrofitClient.loadDistricts(parentId)
-            Log.e("LOG",result.code().toString())
+
             when(result.code()){
                 200 ->{
-                    Log.e("LOG",result.body().toString())
+                    //Log.e("LOG",result.body().toString())
+                    emit(DataStatus.Content(DataMapper().convert(result.body()!!)))
                 }
             }
         }

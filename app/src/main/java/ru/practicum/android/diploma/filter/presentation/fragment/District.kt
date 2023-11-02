@@ -110,6 +110,9 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
             is DistrictScreenState.ContentCountry -> adapter.changeData(newScreenState.data.map { country ->
                 Area(country.id, null, country.name, emptyList())
             })
+            is DistrictScreenState.ContentDistrict -> adapter.changeData(newScreenState.data.map { area ->
+                Area(area.id, null, area.name, emptyList())
+            })
 
             else -> {}
         }
