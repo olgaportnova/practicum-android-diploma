@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.hhApi.impl
+package ru.practicum.android.diploma.hhApi
 
 import retrofit2.Response
 import retrofit2.http.GET
