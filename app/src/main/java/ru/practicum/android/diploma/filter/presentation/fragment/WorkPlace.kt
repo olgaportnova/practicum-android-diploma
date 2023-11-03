@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.DefaultFragment
+import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm

@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.DefaultFragment
+import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
 import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
