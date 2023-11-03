@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.data.impl.AreaRepositoryImpl
 import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.filter.network.DataStatus
-import ru.practicum.android.diploma.filter.network.RetrofitClient
+import ru.practicum.android.diploma.hhApi.DataStatus
+import ru.practicum.android.diploma.hhApi.RetrofitClient
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_ID
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.fragment.DistrictScreenState
