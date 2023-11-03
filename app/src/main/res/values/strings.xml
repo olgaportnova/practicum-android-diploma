@@ -42,4 +42,7 @@
     <!--    SIMILAR FRAGMENT NAMES    -->
     <string name="similar_vacancies">Похожие вакансии</string>
 
+    <!--    FAVORITE FRAGMENT NAMES    -->
+    <string name="empty_list_placeholder_favorite">Список пуст</string>
+
 </resources>

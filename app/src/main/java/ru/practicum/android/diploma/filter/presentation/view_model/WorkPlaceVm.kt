@@ -4,25 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.filter.domain.models.Country
 
-class WorkPlaceVm:ViewModel() {
-    private val _countryChosen = MutableLiveData<Country>()
-    val countryChosen = _countryChosen as LiveData<Country>
+class WorkPlaceVm : ViewModel() {
+    private val _countryChosen = MutableLiveData<Area>()
+    val countryChosen = _countryChosen as LiveData<Area>
 
     private val _districtChosen = MutableLiveData<Area>()
     val districtChosen = _districtChosen as LiveData<Area>
 
-    init {
-        chooseAnotherCountry(Country("Any",-25,null, emptyList()))
-        chooseAnotherDistrict(Area(26,null,"district 9", emptyList()))
+    private val _errorMsg = MutableLiveData<String>()
+    val errorMsg = _errorMsg as LiveData<String>
+
+    fun chooseAnotherCountry(newCountryId: Int?,newCountryName:String?) {
+        if(newCountryId!=null&&newCountryName!=null){
+            _countryChosen.value = Area(newCountryId,null,newCountryName, emptyList())
+        }
     }
 
-    fun chooseAnotherCountry(newCountry: Country){
-        _countryChosen.value = newCountry
-    }
-
-    fun chooseAnotherDistrict(newDistrict:Area){
-        _districtChosen.value = newDistrict
+    fun chooseAnotherDistrict(newCountryId: Int?,newCountryName:String?) {
+        if(newCountryId!=null&&newCountryName!=null){
+            _districtChosen.value = Area(newCountryId,null,newCountryName, emptyList())
+        }
     }
 }
