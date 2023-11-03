@@ -104,17 +104,21 @@
             <TextView
                 android:id="@+id/tvEmployerName"
                 style="@style/item_viewholder_header_text"
+                android:layout_width="0dp"
                 android:layout_marginStart="@dimen/edit_text_margin_vertical"
                 app:layout_constraintStart_toEndOf="@id/ivEmployerLogo"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Еда" />
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Едаааааааааааааааааааааааааааааааааааааааааааааааа" />
 
             <TextView
                 android:id="@+id/tvCity"
                 style="@style/item_viewholder_regular_text"
+                android:layout_width="0dp"
                 app:layout_constraintStart_toStartOf="@id/tvEmployerName"
                 app:layout_constraintTop_toBottomOf="@id/tvEmployerName"
-                tools:text="Москва" />
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Москваааааааааааааааааааааааааааааааааааааааааааа" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
