@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.filter.domain.models.Area
 
 class WorkPlaceVm : ViewModel() {
@@ -14,6 +16,11 @@ class WorkPlaceVm : ViewModel() {
 
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
+
+    init {
+        val token = BuildConfig.HH_ACCESS_TOKEN
+        Log.e("LOG",token)
+    }
 
     fun chooseAnotherCountry(newCountryId: Int?,newCountryName:String?) {
         if(newCountryId!=null&&newCountryName!=null){
