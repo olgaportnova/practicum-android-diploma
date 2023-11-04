@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
+import ru.practicum.android.diploma.filter.domain.models.Area
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
@@ -88,50 +89,18 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //binding.btnChooseAll.setBackgroundColor(requireActivity().getColor(R.color.blue_main))
-        val textColor = TypedValue()
-        requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColor, true)
-        val textColorResId = textColor.resourceId
-        val colorResource = resources.getColor(textColorResId, requireContext().theme)
-        val colorDarkGrey = resources.getColor(R.color.grey_dark, requireContext().theme)
-
         vm.countryChosen.observe(viewLifecycleOwner) {
             binding.lblChooseCountry.isVisible = it != null
 
-            if (it != null) {
-                // Если выбрана страна, устанавливаем заголовок и ставим иконку "стереть"
-                binding.txtChooseCountry.text = it.name
-                binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
-
-                // Так же устанавливаем цвет текста
-                binding.txtChooseCountry.setTextColor(colorResource)
-            } else {
-                binding.txtChooseCountry.text = getString(R.string.work_place_country_title)
-                binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow_forward_24)
-
-                // Так же устанавливаем цвет текста по default
-                binding.txtChooseCountry.setTextColor(colorDarkGrey)
-            }
+            if (it != null) setCountrySelectedState( it)
+            else setDefaultCountryState()
         }
 
         vm.districtChosen.observe(viewLifecycleOwner) {
             binding.lblChooseDistrict.isVisible = it != null
 
-            if (it != null) {
-                // Если выбран район, устанавливаем заголовок и ставим иконку "стереть"
-                binding.txtChooseDistrict.text = it.name
-                binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
-
-                // Так же устанавливаем цвет текста
-                binding.txtChooseDistrict.setTextColor(colorResource)
-            } else {
-                // Если район не выбран или стерт удаляем заголовок и ставим иконку "forward"
-                binding.txtChooseDistrict.text = getString(R.string.work_place_district_title)
-                binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow_forward_24)
-
-                // Так же устанавливаем цвет текста по default
-                binding.txtChooseDistrict.setTextColor(colorDarkGrey)
-            }
+            if (it != null) setDistrictSelectedState(it)
+            else setDefaultDistrictState()
         }
 
         vm.errorMsg.observe(viewLifecycleOwner) {
@@ -143,4 +112,35 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         }
     }
 
+    private fun getColorOnPrimary(): Int {
+        val textColor = TypedValue()
+        requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColor, true)
+        return resources.getColor(textColor.resourceId, requireContext().theme)
+    }
+
+    private fun getGreyColor() = resources.getColor(R.color.grey_dark, requireContext().theme)
+
+    private fun setCountrySelectedState(area: Area) {
+        binding.txtChooseCountry.text = area.name
+        binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
+        binding.txtChooseCountry.setTextColor(getColorOnPrimary())
+    }
+
+    private fun setDefaultCountryState() {
+        binding.txtChooseCountry.text = getString(R.string.work_place_country_title)
+        binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow_forward_24)
+        binding.txtChooseCountry.setTextColor(getGreyColor())
+    }
+
+    private fun setDistrictSelectedState(area: Area) {
+        binding.txtChooseDistrict.text = area.name
+        binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
+        binding.txtChooseDistrict.setTextColor(getColorOnPrimary())
+    }
+
+    private fun setDefaultDistrictState() {
+        binding.txtChooseDistrict.text = getString(R.string.work_place_country_title)
+        binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow_forward_24)
+        binding.txtChooseDistrict.setTextColor(getGreyColor())
+    }
 }
