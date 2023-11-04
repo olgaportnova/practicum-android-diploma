@@ -29,11 +29,11 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
                 exitExtraWhenSystemBackPushed()
             }
 
-            txtChooseCountry.setOnClickListener {
+            layoutCountry.setOnClickListener {
                 findNavController().navigate(R.id.action_to_country)
             }
 
-            txtChooseDistrict.setOnClickListener {
+            layoutDistrict.setOnClickListener {
                 val parentId = when (vm.countryChosen.value) {
                     null -> 113
                     else -> vm.countryChosen.value!!.id
