@@ -46,12 +46,12 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
             btnClrCountry.setOnClickListener {
                 // Функция вызванная с нулевыми параметрами обнуляет поле _countryChosen in viewModel
-                vm.chooseAnotherCountry(null,null)
+                vm.chooseAnotherCountry(null, null)
             }
 
             btnClrDistrict.setOnClickListener {
                 // Функция вызванная с нулевыми параметрами обнуляет поле _districtChosen in viewModel
-                vm.chooseAnotherDistrict(null,null)
+                vm.chooseAnotherDistrict(null, null)
             }
         }
     }
@@ -87,44 +87,64 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        vm.countryChosen.observe(viewLifecycleOwner) {
-            binding.lblChooseCountry.isVisible = it!=null
+        //binding.btnChooseAll.setBackgroundColor(requireActivity().getColor(R.color.blue_main))
 
-            if(it!=null) {
+        vm.countryChosen.observe(viewLifecycleOwner) {
+            binding.lblChooseCountry.isVisible = it != null
+
+            if (it != null) {
                 // Если выбрана страна, устанавливаем заголовок и ставим иконку "стереть"
                 binding.txtChooseCountry.text = it.name
                 binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
 
                 // Так же устанавливаем цвет текста
-                binding.txtChooseCountry.setTextColor(resources.getColor(R.color.blue_main,requireContext().theme))
-            }
-            else{
+                binding.txtChooseCountry.setTextColor(
+                    resources.getColor(
+                        R.color.blue_main,
+                        requireContext().theme
+                    )
+                )
+            } else {
                 binding.txtChooseCountry.text = getString(R.string.work_place_country_title)
                 binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow_forward_24)
 
                 // Так же устанавливаем цвет текста
-                binding.txtChooseCountry.setTextColor(resources.getColor(R.color.grey_dark,requireContext().theme))
+                binding.txtChooseCountry.setTextColor(
+                    resources.getColor(
+                        R.color.grey_dark,
+                        requireContext().theme
+                    )
+                )
             }
         }
 
         vm.districtChosen.observe(viewLifecycleOwner) {
-            binding.lblChooseDistrict.isVisible = it!=null
+            binding.lblChooseDistrict.isVisible = it != null
 
-            if(it!=null) {
+            if (it != null) {
                 // Если выбран район, устанавливаем заголовок и ставим иконку "стереть"
                 binding.txtChooseDistrict.text = it.name
                 binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
 
                 // Так же устанавливаем цвет текста
-                binding.txtChooseDistrict.setTextColor(resources.getColor(R.color.blue_main,requireContext().theme))
-            }
-            else{
+                binding.txtChooseDistrict.setTextColor(
+                    resources.getColor(
+                        R.color.blue_main,
+                        requireContext().theme
+                    )
+                )
+            } else {
                 // Если район не выбран или стерт удаляем заголовок и ставим иконку "forward"
                 binding.txtChooseDistrict.text = getString(R.string.work_place_district_title)
                 binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow_forward_24)
 
                 // Так же устанавливаем цвет текста
-                binding.txtChooseDistrict.setTextColor(resources.getColor(R.color.grey_dark,requireContext().theme))
+                binding.txtChooseDistrict.setTextColor(
+                    resources.getColor(
+                        R.color.grey_dark,
+                        requireContext().theme
+                    )
+                )
             }
 
         }
@@ -133,7 +153,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             showMsgDialog(it)
         }
 
-        vm.acceptChanges.observe(viewLifecycleOwner){
+        vm.acceptChanges.observe(viewLifecycleOwner) {
             binding.btnChooseAll.isVisible = it
         }
     }
