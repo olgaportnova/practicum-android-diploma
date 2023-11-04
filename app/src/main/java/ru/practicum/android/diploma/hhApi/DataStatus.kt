@@ -8,4 +8,8 @@ sealed class DataStatus<out T>(val code: Int = DEFAULT_NETWORK_RESPONSE, val dat
     class EmptyContent : DataStatus<Nothing>()
     class Error(newResponseCode: Int) : DataStatus<Nothing>(code = newResponseCode)
     class ErrorMessage(errorMessage: String) : DataStatus<Nothing>()
+
+    //Дынный класс удобно размесить в domain слое и использовать дженерик для передачи
+    //туда обертки класса Response, но его еще нет его нужно написать. Это то что обрабатывет ошибки
+    //как вот этот класс AreaRepositoryImpl примерно.
 }

@@ -32,4 +32,7 @@ class RetrofitClient {
 
 
     }
+
+    //TODO данный класс должен стать NetworkClientImpl и содержать функцию по обработке ошибок, примерно как вот тут - AreaRepositoryImpl
+    //TODO Ретрофит должен приходить в конструктор из DI
 }
