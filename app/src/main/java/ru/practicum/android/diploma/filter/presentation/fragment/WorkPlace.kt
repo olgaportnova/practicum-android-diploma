@@ -92,7 +92,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         vm.countryChosen.observe(viewLifecycleOwner) {
             binding.lblChooseCountry.isVisible = it != null
 
-            if (it != null) setCountrySelectedState( it)
+            if (it != null) setCountrySelectedState(it)
             else setDefaultCountryState()
         }
 
@@ -103,13 +103,9 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             else setDefaultDistrictState()
         }
 
-        vm.errorMsg.observe(viewLifecycleOwner) {
-            showMsgDialog(it)
-        }
+        vm.errorMsg.observe(viewLifecycleOwner) { showMsgDialog(it) }
 
-        vm.acceptChanges.observe(viewLifecycleOwner) {
-            binding.btnChooseAll.isVisible = it
-        }
+        vm.acceptChanges.observe(viewLifecycleOwner) { binding.btnChooseAll.isVisible = it }
     }
 
     private fun getColorOnPrimary(): Int {
