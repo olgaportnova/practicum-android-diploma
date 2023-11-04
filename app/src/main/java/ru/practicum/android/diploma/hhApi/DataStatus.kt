@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.filter.network
+package ru.practicum.android.diploma.hhApi
 
 const val DEFAULT_NETWORK_RESPONSE = -111
 

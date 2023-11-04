@@ -27,8 +27,15 @@
     <dimen name="regular_text_size">16sp</dimen>
     <dimen name="big_text_size">22sp</dimen>
 
-
-
-
+    <!--    VACANCY FRAGMENT     -->
+    <dimen name="margin_24">24dp</dimen>
+    <dimen name="margin_64">64dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+    <dimen name="margin_59">59dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="bold_text_size">32sp</dimen>
 
 </resources>

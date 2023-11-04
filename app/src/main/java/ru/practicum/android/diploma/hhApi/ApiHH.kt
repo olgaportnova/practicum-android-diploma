@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.filter.network
+package ru.practicum.android.diploma.hhApi
 
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,7 +15,6 @@ interface ApiHH {
 
     @GET("areas/countries")
     suspend fun getAreas(): Response<List<ApiCountry>>
-
 
     @GET("areas/{id}")
     suspend fun getDistricts(@Path("id") id: Int): Response<ApiArea>
