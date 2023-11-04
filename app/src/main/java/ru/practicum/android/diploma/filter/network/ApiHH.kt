@@ -8,6 +8,7 @@ import retrofit2.http.Query
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
+import ru.practicum.android.diploma.filter.data.impl.dto.VacancyResponse
 
 
 interface ApiHH {
@@ -19,16 +20,13 @@ interface ApiHH {
     @GET("areas/{id}")
     suspend fun getDistricts(@Path("id") id: Int): Response<ApiArea>
 
-    @GET("areas/113")
-    suspend fun getDistrictsB(): Response<ApiArea>
-
     @Headers(
-        "Authorization: ${BuildConfig.HH_ACCESS_TOKEN}",
-        "HH-User-Agent: yep4yep@gmail.com"
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("vacancies")
     suspend fun getVacancyByArea(
         @Query("perPage") perPage:Int,
         @Query("area") area:Int
-    ): Response<ApiArea>
+    ): Response<VacancyResponse>
 }
