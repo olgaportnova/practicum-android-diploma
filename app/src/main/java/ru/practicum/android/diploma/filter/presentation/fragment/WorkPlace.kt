@@ -135,7 +135,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     }
 
     private fun setDefaultDistrictState() {
-        binding.txtChooseDistrict.text = getString(R.string.work_place_country_title)
+        binding.txtChooseDistrict.text = getString(R.string.work_place_district_title)
         binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow_forward_24)
         binding.txtChooseDistrict.setTextColor(getGreyColor())
     }
