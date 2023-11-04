@@ -18,30 +18,30 @@ data class FavoriteVacancyEntity(
     val employment: String?,
     val experience: String?,
     @Embedded(prefix = "salary_")
-    val salary: Salary?,
+    val salary: SalaryEntity?,
     val description: String?,
     @ColumnInfo(name = "key_skills")
     val keySkills: List<String?>,
     @Embedded(prefix = "contacts_")
-    val contacts: Contacts?,
+    val contacts: ContactsEntity?,
     val comment: String?
 )
 
-data class Salary(
+data class SalaryEntity(
     val currency: String?,
     val from: Int?,
     val gross: Boolean?,
     val to: Int?
 )
 
-data class Contacts(
+data class ContactsEntity(
     val email: String?,
     val name: String?,
     @Embedded(prefix = "phones_")
-    val phones: Phone?
+    val phones: PhoneEntity?
 )
 
-data class Phone(
+data class PhoneEntity(
     val city: String?,
     val comment: String?,
     val country: String?,

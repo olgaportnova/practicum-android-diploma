@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.data.impl
+package ru.practicum.android.diploma.util.mappers
 
 import ru.practicum.android.diploma.search.data.impl.dto.ContactsDto
 import ru.practicum.android.diploma.search.data.impl.dto.KeySkillDto
@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.search.domain.models.Phone
 import ru.practicum.android.diploma.search.domain.models.Salary
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 
-class VacancyMapper {
+class VacancyDtoMapper {
 
     fun vacancyDtoToVacancy(vacancyDto: VacancyDto): Vacancy {
         return with(vacancyDto) {
