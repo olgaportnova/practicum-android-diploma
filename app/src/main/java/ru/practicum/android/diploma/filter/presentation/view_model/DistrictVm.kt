@@ -35,6 +35,11 @@ open class DistrictVm : ViewModel() {
 
     private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
 
+    /**
+     * Function transform [Area] into a pair of id:[Int] and name:[String]
+     * All additional info deleted from returned object
+     * @return [Bundle]
+     */
     fun getAreaBundle(): Bundle? {
         areaToSendBack?.let {
             val bundle = Bundle().apply {

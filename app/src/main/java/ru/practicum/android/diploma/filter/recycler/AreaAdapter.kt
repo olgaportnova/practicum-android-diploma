@@ -39,7 +39,6 @@ class AreaAdapter(
         }
     }
 
-
     fun interface Clickable {
         fun onClick(clickedAreaModel: Area)
     }

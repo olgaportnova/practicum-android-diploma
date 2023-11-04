@@ -33,13 +33,13 @@ const val AREA_NAME = "area_name_param"
  * create an instance of this fragment and set required param
  */
 open class District : DefaultFragment<FragmentDistrictBinding>() {
-    // TODO: Rename and change types of parameters
-    private var countryId: Int? = null
+    private var countryId: Int? = null // Считывается из аргументов в onCreate
 
     lateinit var vm: DistrictVm
 
     private val adapter = AreaAdapter(mutableListOf()) {
-        vm.areaToSendBack = it.copy(areas = emptyList())
+        vm.areaToSendBack = it
+        exitExtraWhenSystemBackPushed() // Exit after choosing required area
     }
 
     override fun bindingInflater(

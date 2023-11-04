@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.filter.network.RetrofitClient
+import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
 
 class WorkPlaceVm : ViewModel() {
     private val _countryChosen = MutableLiveData<Area>()
