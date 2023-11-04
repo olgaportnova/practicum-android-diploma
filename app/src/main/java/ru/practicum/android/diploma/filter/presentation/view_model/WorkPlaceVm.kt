@@ -12,6 +12,9 @@ class WorkPlaceVm : ViewModel() {
     private val _districtChosen = MutableLiveData<Area?>(null)
     val districtChosen = _districtChosen as LiveData<Area?>
 
+    private val _acceptChanges = MutableLiveData<Boolean>(false)
+    val acceptChanges = _acceptChanges as LiveData<Boolean>
+
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
 
@@ -19,11 +22,19 @@ class WorkPlaceVm : ViewModel() {
         if (newCountryId != null && newCountryName != null) {
             _countryChosen.value = Area(newCountryId, null, newCountryName, emptyList())
         } else _countryChosen.value = null
+
+        checkAcceptCondition()
     }
 
     fun chooseAnotherDistrict(newCountryId: Int?, newCountryName: String?) {
         if (newCountryId != null && newCountryName != null) {
             _districtChosen.value = Area(newCountryId, null, newCountryName, emptyList())
         } else _districtChosen.value = null
+
+        checkAcceptCondition()
+    }
+
+    private fun checkAcceptCondition(){
+        _acceptChanges.value = _countryChosen.value!=null &&  _districtChosen.value!=null
     }
 }

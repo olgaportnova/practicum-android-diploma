@@ -132,6 +132,10 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         vm.errorMsg.observe(viewLifecycleOwner) {
             showMsgDialog(it)
         }
+
+        vm.acceptChanges.observe(viewLifecycleOwner){
+            binding.btnChooseAll.isVisible = it
+        }
     }
 
 }
