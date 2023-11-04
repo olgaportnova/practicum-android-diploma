@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.sharedPref.impl
+package ru.practicum.android.diploma.sharedPref
 
 import ru.practicum.android.diploma.filter.data.impl.dto.ParamsFilterModelDto
 
