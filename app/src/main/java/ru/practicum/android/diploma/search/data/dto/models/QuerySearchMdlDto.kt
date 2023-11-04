@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.data.impl.dto.models
+package ru.practicum.android.diploma.search.data.dto.models
 
 data class QuerySearchMdlDto(
     val page:Int,
