@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.data.impl.dto
+package ru.practicum.android.diploma.search.data.impl.dto.models
 
 import com.google.gson.annotations.SerializedName
 data class VacancyDto(

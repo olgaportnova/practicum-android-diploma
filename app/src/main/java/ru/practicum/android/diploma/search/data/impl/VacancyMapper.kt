@@ -1,10 +1,10 @@
 package ru.practicum.android.diploma.search.data.impl
 
-import ru.practicum.android.diploma.search.data.impl.dto.ContactsDto
-import ru.practicum.android.diploma.search.data.impl.dto.KeySkillDto
-import ru.practicum.android.diploma.search.data.impl.dto.PhoneDto
-import ru.practicum.android.diploma.search.data.impl.dto.SalaryDto
-import ru.practicum.android.diploma.search.data.impl.dto.VacancyDto
+import ru.practicum.android.diploma.search.data.impl.dto.models.ContactsDto
+import ru.practicum.android.diploma.search.data.impl.dto.models.KeySkillDto
+import ru.practicum.android.diploma.search.data.impl.dto.models.PhoneDto
+import ru.practicum.android.diploma.search.data.impl.dto.models.SalaryDto
+import ru.practicum.android.diploma.search.data.impl.dto.models.VacancyDto
 import ru.practicum.android.diploma.search.domain.models.Contacts
 import ru.practicum.android.diploma.search.domain.models.Phone
 import ru.practicum.android.diploma.search.domain.models.Salary
