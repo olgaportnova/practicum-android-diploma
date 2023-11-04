@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,6 +89,11 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         //binding.btnChooseAll.setBackgroundColor(requireActivity().getColor(R.color.blue_main))
+        val textColor = TypedValue()
+        requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColor, true)
+        val textColorResId = textColor.resourceId
+        val colorResource = resources.getColor(textColorResId, requireContext().theme)
+        val colorDarkGrey = resources.getColor(R.color.grey_dark, requireContext().theme)
 
         vm.countryChosen.observe(viewLifecycleOwner) {
             binding.lblChooseCountry.isVisible = it != null
@@ -98,23 +104,13 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
                 binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
 
                 // Так же устанавливаем цвет текста
-                binding.txtChooseCountry.setTextColor(
-                    resources.getColor(
-                        R.color.blue_main,
-                        requireContext().theme
-                    )
-                )
+                binding.txtChooseCountry.setTextColor(colorResource)
             } else {
                 binding.txtChooseCountry.text = getString(R.string.work_place_country_title)
                 binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow_forward_24)
 
-                // Так же устанавливаем цвет текста
-                binding.txtChooseCountry.setTextColor(
-                    resources.getColor(
-                        R.color.grey_dark,
-                        requireContext().theme
-                    )
-                )
+                // Так же устанавливаем цвет текста по default
+                binding.txtChooseCountry.setTextColor(colorDarkGrey)
             }
         }
 
@@ -127,26 +123,15 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
                 binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
 
                 // Так же устанавливаем цвет текста
-                binding.txtChooseDistrict.setTextColor(
-                    resources.getColor(
-                        R.color.blue_main,
-                        requireContext().theme
-                    )
-                )
+                binding.txtChooseDistrict.setTextColor(colorResource)
             } else {
                 // Если район не выбран или стерт удаляем заголовок и ставим иконку "forward"
                 binding.txtChooseDistrict.text = getString(R.string.work_place_district_title)
                 binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow_forward_24)
 
-                // Так же устанавливаем цвет текста
-                binding.txtChooseDistrict.setTextColor(
-                    resources.getColor(
-                        R.color.grey_dark,
-                        requireContext().theme
-                    )
-                )
+                // Так же устанавливаем цвет текста по default
+                binding.txtChooseDistrict.setTextColor(colorDarkGrey)
             }
-
         }
 
         vm.errorMsg.observe(viewLifecycleOwner) {
