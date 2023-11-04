@@ -72,6 +72,10 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.2")
     implementation("androidx.room:room-paging:2.5.2")
 
+    // Glide
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    kapt ("com.github.bumptech.glide:compiler:4.15.1")
+
     // Сore Libraries
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
