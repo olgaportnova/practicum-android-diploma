@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.similar.presentation.fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.DefaultFragment
+import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.databinding.FragmentSimilarBinding
 
 class Similar : DefaultFragment<FragmentSimilarBinding>() {

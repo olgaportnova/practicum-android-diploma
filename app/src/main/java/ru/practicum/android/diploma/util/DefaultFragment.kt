@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma
+package ru.practicum.android.diploma.util
 
 import android.content.Context
 import android.os.Bundle
