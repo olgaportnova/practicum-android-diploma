@@ -22,18 +22,13 @@ class FiltersStorageImpl(
      * Simple function for get saved filters from storage.
      * @return ParamsFilterModelDto
      */
-    override fun getParamsFiltes(): ParamsFilterModelDto {
+    override fun getParamsFiltres(): ParamsFilterModelDto? {
         val jsonSavedParams = sharedPref.getString(KEY_SAVED_PARAMS_FILTER,null)
         val itemType = object : TypeToken<ParamsFilterModelDto>(){}.type
 
+        if (jsonSavedParams == null || jsonSavedParams == "") {
+            return null
+        }
         return gson.fromJson(jsonSavedParams,itemType)
-    }
-
-    /**
-     * Simple function for get save status filters from storage.
-     * @return Boolean
-     */
-    override fun getStateSavedFilters(): Boolean {
-        return sharedPref.getBoolean(KEY_STATUS_PARAMS_FILTER,false)
     }
 }

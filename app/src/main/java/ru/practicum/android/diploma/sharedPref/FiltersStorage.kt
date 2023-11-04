@@ -4,7 +4,5 @@ import ru.practicum.android.diploma.filter.data.impl.dto.ParamsFilterModelDto
 
 interface FiltersStorage {
 
-    fun getStateSavedFilters():Boolean
-
-    fun getParamsFiltes():ParamsFilterModelDto
+    fun getParamsFiltres():ParamsFilterModelDto?
 }
