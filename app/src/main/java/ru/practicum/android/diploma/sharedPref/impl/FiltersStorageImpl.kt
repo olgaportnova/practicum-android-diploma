@@ -12,17 +12,13 @@ class FiltersStorageImpl(
 
     companion object {
         const val KEY_SAVED_PARAMS_FILTER = "key_saved_params"
-
-        //Данный ключ для сохранения статуса, наличия, отсутствия параметров в хранилище
-        //В дальнейшем может быть использован в функции setStatusParamsFilter
-        const val KEY_STATUS_PARAMS_FILTER = "key_status_params"
     }
 
     /**
      * Simple function for get saved filters from storage.
      * @return ParamsFilterModelDto
      */
-    override fun getParamsFiltres(): ParamsFilterModelDto? {
+    override fun getParamsFilters(): ParamsFilterModelDto? {
         val jsonSavedParams = sharedPref.getString(KEY_SAVED_PARAMS_FILTER,null)
         val itemType = object : TypeToken<ParamsFilterModelDto>(){}.type
 
@@ -30,5 +26,14 @@ class FiltersStorageImpl(
             return null
         }
         return gson.fromJson(jsonSavedParams,itemType)
+    }
+
+    /**
+     * Simple function for add filters in storage.
+     */
+    override fun addParamsFilters(params:ParamsFilterModelDto) {
+         sharedPref.edit()
+             .putString(KEY_SAVED_PARAMS_FILTER,gson.toJson(params))
+             .apply()
     }
 }
