@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.data.impl
+package ru.practicum.android.diploma.search.data.dto
 
 import ru.practicum.android.diploma.search.data.dto.models.ContactsDto
 import ru.practicum.android.diploma.search.data.dto.models.KeySkillDto
@@ -66,5 +66,4 @@ class VacancyMapper {
             )
         }
     }
-
 }
