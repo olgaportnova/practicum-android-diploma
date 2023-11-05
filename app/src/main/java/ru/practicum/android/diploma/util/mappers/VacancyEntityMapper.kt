@@ -4,11 +4,6 @@ import ru.practicum.android.diploma.db.entity.ContactsEntity
 import ru.practicum.android.diploma.db.entity.FavoriteVacancyEntity
 import ru.practicum.android.diploma.db.entity.PhoneEntity
 import ru.practicum.android.diploma.db.entity.SalaryEntity
-import ru.practicum.android.diploma.search.data.impl.dto.ContactsDto
-import ru.practicum.android.diploma.search.data.impl.dto.KeySkillDto
-import ru.practicum.android.diploma.search.data.impl.dto.PhoneDto
-import ru.practicum.android.diploma.search.data.impl.dto.SalaryDto
-import ru.practicum.android.diploma.search.data.impl.dto.VacancyDto
 import ru.practicum.android.diploma.search.domain.models.Contacts
 import ru.practicum.android.diploma.search.domain.models.Phone
 import ru.practicum.android.diploma.search.domain.models.Salary
