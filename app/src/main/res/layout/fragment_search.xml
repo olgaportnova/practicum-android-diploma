@@ -48,9 +48,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view_search_result"
         android:visibility="visible"
+        tools:listitem="@layout/item_viewholder_vacancy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/info_search_result_count"
+        app:layout_constraintBottom_toTopOf="@id/progress_bar_bottom"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         style="@style/recycle_view" />
 
@@ -72,5 +74,13 @@
         app:layout_constraintTop_toBottomOf="@id/image_placeholder"
         tools:text="@string/no_search_result"
         style="@style/placeholder_text" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_bottom"
+        style="@style/progress_bar_bottom"
+        android:paddingVertical="@dimen/margin_16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
