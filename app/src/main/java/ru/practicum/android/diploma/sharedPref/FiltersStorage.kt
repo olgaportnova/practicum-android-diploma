@@ -1,10 +1,10 @@
 package ru.practicum.android.diploma.sharedPref
 
-import ru.practicum.android.diploma.filter.data.impl.dto.ParamsFilterModelDto
+import ru.practicum.android.diploma.filter.data.impl.dto.FilterDto
 
 interface FiltersStorage {
 
-    fun getParamsFilters():ParamsFilterModelDto?
+    fun getParamsFilters():FilterDto?
 
-    fun addParamsFilters(params:ParamsFilterModelDto)
+    fun addParamsFilters(params:FilterDto)
 }

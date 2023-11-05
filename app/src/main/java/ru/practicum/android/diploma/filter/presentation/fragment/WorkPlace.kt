@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
-import ru.practicum.android.diploma.filter.domain.models.Area
+import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
@@ -116,7 +116,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
     private fun getGreyColor() = resources.getColor(R.color.grey_dark, requireContext().theme)
 
-    private fun setCountrySelectedState(area: Area) {
+    private fun setCountrySelectedState(area: AreaData) {
         binding.txtChooseCountry.text = area.name
         binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
         binding.txtChooseCountry.setTextColor(getColorOnPrimary())
@@ -128,7 +128,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         binding.txtChooseCountry.setTextColor(getGreyColor())
     }
 
-    private fun setDistrictSelectedState(area: Area) {
+    private fun setDistrictSelectedState(area: AreaData) {
         binding.txtChooseDistrict.text = area.name
         binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
         binding.txtChooseDistrict.setTextColor(getColorOnPrimary())

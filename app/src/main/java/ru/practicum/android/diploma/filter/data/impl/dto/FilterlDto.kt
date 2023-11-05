@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.filter.data.impl.dto
 
-data class ParamsFilterModelDto(
+data class FilterDto(
     val idCountry: String?,
     val idArea: String?,
     val idIndustry: String?,

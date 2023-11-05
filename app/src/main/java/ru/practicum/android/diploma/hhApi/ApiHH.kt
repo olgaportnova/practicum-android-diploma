@@ -6,18 +6,18 @@ import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.BuildConfig
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
+import ru.practicum.android.diploma.filter.data.impl.dto.AreaDto
+import ru.practicum.android.diploma.filter.data.impl.dto.CountryDto
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 
 interface ApiHH {
 
     @GET("areas/countries")
-    suspend fun getAreas(): Response<List<ApiCountry>>
+    suspend fun getAreas(): Response<List<CountryDto>>
 
     @GET("areas/{id}")
-    suspend fun getDistricts(@Path("id") id:Int): Response<ApiArea>
+    suspend fun getDistricts(@Path("id") id:Int): Response<AreaDto>
 
 
     /**

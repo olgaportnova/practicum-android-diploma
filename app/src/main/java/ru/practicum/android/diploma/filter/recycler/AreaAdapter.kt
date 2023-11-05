@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ru.practicum.android.diploma.databinding.ItemViewHolderAreaBinding
-import ru.practicum.android.diploma.filter.domain.models.Area
+import ru.practicum.android.diploma.filter.domain.models.AreaData
 
 class AreaAdapter(
-    private val areaList: MutableList<Area>,
+    private val areaList: MutableList<AreaData>,
     private val onItemClickListener: Clickable
 ) : Adapter<AreaAdapter.AreaViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AreaViewHolder {
@@ -23,7 +23,7 @@ class AreaAdapter(
         holder.bindInfo(areaList[position], onItemClickListener)
     }
 
-    fun changeData(newDataList: List<Area>) {
+    fun changeData(newDataList: List<AreaData>) {
         // TODO: insert diffUtil if needed
         areaList.clear()
         areaList.addAll(newDataList)
@@ -31,7 +31,7 @@ class AreaAdapter(
     }
 
     class AreaViewHolder(val binding: ItemViewHolderAreaBinding) : ViewHolder(binding.root) {
-        fun bindInfo(area: Area, onItemClickListener: Clickable) {
+        fun bindInfo(area: AreaData, onItemClickListener: Clickable) {
             binding.txtAreaName.text = area.name
             binding.txtAreaName.setOnClickListener {
                 onItemClickListener.onClick(area)
@@ -40,6 +40,6 @@ class AreaAdapter(
     }
 
     fun interface Clickable {
-        fun onClick(clickedAreaModel: Area)
+        fun onClick(clickedAreaModel: AreaData)
     }
 }
