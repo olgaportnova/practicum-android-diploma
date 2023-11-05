@@ -8,15 +8,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.util.DataStatus
 import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
+import ru.practicum.android.diploma.util.DataStatus
 
-class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepository {
+class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaRepository {
     override suspend fun loadCountries(): Flow<DataStatus<List<Area>>> {
         return flow {
             emit(DataStatus.Loading())
 
-            val result = retrofitClient.loadData()
+            val result = networkClient.loadCountries()
 
             when (result.code()) {
                 200 -> {
@@ -37,10 +37,10 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
         return flow {
             emit(DataStatus.Loading()) // Отправка информации о старте загрузки
 
-            val result = retrofitClient.loadDistricts(parentId)
+            val result = networkClient.loadDistricts(parentId)
 
-            when(result.code()){
-                200 ->{
+            when (result.code()) {
+                200 -> {
                     emit(DataStatus.Content(DataMapper().apiAreaToArea(result.body()!!)))
                 }
             }

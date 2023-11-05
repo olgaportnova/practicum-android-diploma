@@ -9,16 +9,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.filter.data.impl.AreaRepositoryImpl
-import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
+import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.util.DataStatus
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_ID
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.fragment.DistrictScreenState
-import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
+import ru.practicum.android.diploma.util.DataStatus
 
-open class DistrictVm : ViewModel() {
+open class DistrictVm(private val useCaseAreaController: AreaController) : ViewModel() {
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
 
@@ -33,7 +31,7 @@ open class DistrictVm : ViewModel() {
     // обязательно необходимо параметр areas обнулять
     var areaToSendBack: Area? = null
 
-    private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
+    //private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
 
     /**
      * Function transform [Area] into a pair of id:[Int] and name:[String]

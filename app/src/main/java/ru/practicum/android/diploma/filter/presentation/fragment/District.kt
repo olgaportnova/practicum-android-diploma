@@ -7,17 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.util.DefaultFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
 import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
 import ru.practicum.android.diploma.filter.recycler.AreaAdapter
+import ru.practicum.android.diploma.util.DefaultFragment
 
 const val ARG_COUNTRY_ID = "country_id_pram"
 
@@ -35,7 +35,7 @@ const val AREA_NAME = "area_name_param"
 open class District : DefaultFragment<FragmentDistrictBinding>() {
     private var countryId: Int? = null // Считывается из аргументов в onCreate
 
-    lateinit var vm: DistrictVm
+    val vm: DistrictVm by viewModel()
 
     private val adapter = AreaAdapter(mutableListOf()) {
         vm.areaToSendBack = it
@@ -72,7 +72,6 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm = ViewModelProvider(this)[DistrictVm::class.java]
         setObservers() // Обработчики lifeData
         setUpAdapter() // Настройка адаптера для RecyclerView
 
