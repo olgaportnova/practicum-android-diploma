@@ -2,8 +2,8 @@ package ru.practicum.android.diploma.vacancy.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.util.DataResource
+import ru.practicum.android.diploma.util.DataStatus
 
 interface VacancyDetailsRepository {
-    suspend fun getVacancyDetails(id: Int): Flow<DataResource<Vacancy>>
+    suspend fun getVacancyDetails(id: Int): Flow<DataStatus<Vacancy>>
 }

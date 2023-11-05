@@ -2,7 +2,7 @@ package ru.practicum.android.diploma.filter.domain.interfaces
 
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.hhApi.DataStatus
+import ru.practicum.android.diploma.util.DataStatus
 
 
 interface AreaController {

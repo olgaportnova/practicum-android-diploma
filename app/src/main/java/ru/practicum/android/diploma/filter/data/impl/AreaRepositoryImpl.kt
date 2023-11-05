@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.hhApi.DataStatus
+import ru.practicum.android.diploma.util.DataStatus
 import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
 
 class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepository {
@@ -29,7 +29,7 @@ class AreaRepositoryImpl(private val retrofitClient: RetrofitClient) : AreaRepos
                 else -> emit(DataStatus.Error(result.code()))
             }
         }
-            .catch { emit(DataStatus.ErrorMessage(it.message.toString())) }
+            .catch { emit(DataStatus.Error(errorMessage = it.message.toString())) }
             .flowOn(Dispatchers.IO)
     }
 
