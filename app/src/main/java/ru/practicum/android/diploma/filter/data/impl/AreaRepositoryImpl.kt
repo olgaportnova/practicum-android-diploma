@@ -21,7 +21,7 @@ class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaReposi
             when (result.code()) {
                 200 -> {
                     result.body()?.let {
-                        val lst = it.map { el -> DataMapper().apiCountryToArea(el) }
+                        val lst = it.map { el -> CountryConverter().convertFromDto(el) }
                         emit(DataStatus.Content(lst))
                     }
                 }
@@ -41,7 +41,7 @@ class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaReposi
 
             when (result.code()) {
                 200 -> {
-                    emit(DataStatus.Content(DataMapper().apiAreaToArea(result.body()!!)))
+                    emit(DataStatus.Content(DistrictConverter().convertFromDto(result.body()!!)))
                 }
             }
         }
