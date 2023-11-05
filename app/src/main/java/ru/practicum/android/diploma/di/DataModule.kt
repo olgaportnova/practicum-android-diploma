@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.db.AppDatabase
 import ru.practicum.android.diploma.hhApi.ApiHH
-import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
+import ru.practicum.android.diploma.hhApi.impl.NetworkClientImpl
 import ru.practicum.android.diploma.sharedPref.impl.FiltersStorageImpl
 
 const val DATABASE_NAME = "favorite_vacancy"
@@ -46,7 +46,7 @@ class DataModule {
                 .create(ApiHH::class.java)
         }
 
-        single { RetrofitClient(hhApi = get(), context = get()) }
+        single { NetworkClientImpl(hhApi = get(), context = get()) }
 
         single { Gson() }
 

@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
+import ru.practicum.android.diploma.hhApi.impl.NetworkClientImpl
 import ru.practicum.android.diploma.util.DataStatus
 
-class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaRepository {
+class AreaRepositoryImpl(private val networkClient: NetworkClientImpl) : AreaRepository {
     override suspend fun loadCountries(): Flow<DataStatus<List<Area>>> {
         return flow {
             emit(DataStatus.Loading())
