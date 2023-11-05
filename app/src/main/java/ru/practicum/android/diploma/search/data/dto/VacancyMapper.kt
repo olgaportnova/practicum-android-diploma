@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.search.domain.models.Salary
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class VacancyMapper {
-
+//Duplicate VacancyDtoMapper. Will need delete.
     fun vacancyDtoToVacancy(vacancyDto: VacancyDto): Vacancy {
         return with(vacancyDto) {
             Vacancy(
