@@ -29,7 +29,6 @@ class RetrofitClient {
         val apiHH = retrofit.create(ApiHH::class.java)
 
         return apiHH.getDistricts(parentId)
-
-
     }
+
 }

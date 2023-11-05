@@ -41,4 +41,9 @@
     <dimen name="margin_20">20dp</dimen>
     <dimen name="bold_text_size">32sp</dimen>
 
+    <!--    WORKPLACE FRAGMENT     -->
+    <dimen name="work_place_icon_padding">12dp</dimen>
+    <dimen name="work_place_distance_after_toolbar">22dp</dimen>
+    <dimen name="work_place_info_margin_start">16dp</dimen>
+    <dimen name="work_place_lbl_top_margin">6dp</dimen>
 </resources>
