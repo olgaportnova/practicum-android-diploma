@@ -13,9 +13,17 @@ import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 
 interface ApiHH {
 
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
+    )
     @GET("areas/countries")
     suspend fun getAreas(): Response<List<ApiCountry>>
 
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
+    )
     @GET("areas/{id}")
     suspend fun getDistricts(@Path("id") id:Int): Response<ApiArea>
 
