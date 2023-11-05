@@ -18,8 +18,6 @@ interface ApiHH {
     @GET("areas/{id}")
     suspend fun getDistricts(@Path("id") id:Int): Response<ApiArea>
 
-    @GET("areas/113")
-    suspend fun getDistrictsB(): Response<ApiArea>
 
     /**
      * Function for get list vacancy with additional parameters in Map
