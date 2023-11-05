@@ -31,7 +31,7 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
     // обязательно необходимо параметр areas обнулять
     var areaToSendBack: Area? = null
 
-    //private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
+    //private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(NetworkClientImpl()))
 
     /**
      * Function transform [Area] into a pair of id:[Int] and name:[String]
@@ -51,6 +51,8 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
 
     fun loadCountryList() {
         viewModelScope.launch {
+            //данные названия не менял на getAreas и getDistricts соответственно. Можно поменять.
+
             useCaseAreaController.loadCountries().collect {
                 when (it) {
                     is DataStatus.Loading -> _screenState.value = DistrictScreenState.Loading(null)

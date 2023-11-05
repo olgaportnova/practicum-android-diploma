@@ -8,25 +8,27 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.Area
-import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
+import ru.practicum.android.diploma.hhApi.impl.NetworkClientImpl
 import ru.practicum.android.diploma.util.DataStatus
 
-class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaRepository {
+class AreaRepositoryImpl(private val networkClient: NetworkClientImpl) : AreaRepository {
     override suspend fun loadCountries(): Flow<DataStatus<List<Area>>> {
         return flow {
             emit(DataStatus.Loading())
 
-            val result = networkClient.loadCountries()
+            val result = networkClient.getAreas()
 
-            when (result.code()) {
+            when (result.code) {
                 200 -> {
-                    result.body()?.let {
-                        val lst = it.map { el -> DataMapper().apiCountryToArea(el) }
+                    result.data.let {
+                        //Вот тут я указал, что точно не null. Ну можно делать доп. проверку на null вначале.
+                        val lst = it!!.map { el -> DataMapper().apiCountryToArea(el) }
                         emit(DataStatus.Content(lst))
                     }
                 }
+                //можено еще добвать код для обрабоки ошибки подключения сети- 0
 
-                else -> emit(DataStatus.Error(result.code()))
+                else -> emit(DataStatus.Error(result.code))
             }
         }
             .catch { emit(DataStatus.Error(errorMessage = it.message.toString())) }
@@ -37,11 +39,11 @@ class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaReposi
         return flow {
             emit(DataStatus.Loading()) // Отправка информации о старте загрузки
 
-            val result = networkClient.loadDistricts(parentId)
+            val result = networkClient.getDistricts(parentId)
 
-            when (result.code()) {
+            when (result.code) {
                 200 -> {
-                    emit(DataStatus.Content(DataMapper().apiAreaToArea(result.body()!!)))
+                    emit(DataStatus.Content(DataMapper().apiAreaToArea(result.data!!)))
                 }
             }
         }
