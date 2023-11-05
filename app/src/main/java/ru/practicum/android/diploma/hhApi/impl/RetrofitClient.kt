@@ -1,34 +1,20 @@
 package ru.practicum.android.diploma.hhApi.impl
 
+import android.content.Context
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
 import ru.practicum.android.diploma.hhApi.ApiHH
+import ru.practicum.android.diploma.hhApi.NetworkClient
 
-class RetrofitClient {
-    suspend fun loadData(): Response<List<ApiCountry>> {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.hh.ru/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+class RetrofitClient(
+    private val hhApi: ApiHH,
+    private val context: Context
+) : NetworkClient {
+    override suspend fun loadCountries(): Response<List<ApiCountry>> =
+        hhApi.getAreas()
 
-        val apiHH = retrofit.create(ApiHH::class.java)
-
-        return apiHH.getAreas()
-
-    }
-
-    suspend fun loadDistricts(parentId: Int): Response<ApiArea> {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.hh.ru/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiHH = retrofit.create(ApiHH::class.java)
-
-        return apiHH.getDistricts(parentId)
-    }
+    override suspend fun loadDistricts(parentId: Int): Response<ApiArea> =
+        hhApi.getDistricts(parentId)
 
 }
