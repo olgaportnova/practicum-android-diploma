@@ -33,7 +33,7 @@ class NetworkClientImpl(
             if (isConnected() == false) {
                 ResponseWrapper(NO_CONNECT, data = null)
             } else {
-                val response = hhApi.getAreas()
+                val response = hhApi.getCountries()
                 if (response.code() == 200)
                     ResponseWrapper(response.code(), response.body())
                 else

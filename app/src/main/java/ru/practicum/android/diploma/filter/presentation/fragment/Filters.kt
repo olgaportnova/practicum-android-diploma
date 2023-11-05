@@ -14,7 +14,7 @@ class Filters : Fragment() {
     private val binding get() = _binding!!
 
     private fun setUiListeners() {
-        with(binding){
+        with(binding) {
             navigationBar.setNavigationOnClickListener {
                 //parentFragmentManager.setFragmentResult("key", Bundle().apply { putString("bundleKey","Возврат с фрагмента Фильтры. Можно выполнить любую функцию") })
                 findNavController().popBackStack()
@@ -22,6 +22,13 @@ class Filters : Fragment() {
 
             btnChooseCountry.setOnClickListener {
                 findNavController().navigate(R.id.action_to_workPlace)
+            }
+
+            btnChooseIndustry.setOnClickListener {
+                findNavController().navigate(R.id.action_filters_to_industry,
+                    Bundle().apply {
+                        putInt(ARG_FRAGMENT_TYPE, FragmentType.INDUSTRY.id)
+                    })
             }
         }
     }

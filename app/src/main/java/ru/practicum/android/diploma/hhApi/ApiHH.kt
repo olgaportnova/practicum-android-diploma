@@ -19,7 +19,7 @@ interface ApiHH {
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("areas/countries")
-    suspend fun getAreas(): Response<List<CountryDto>>
+    suspend fun getCountries(): Response<List<CountryDto>>
 
     @Headers(
         "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",

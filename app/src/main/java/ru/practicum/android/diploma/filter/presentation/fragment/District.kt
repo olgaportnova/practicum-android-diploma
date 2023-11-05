@@ -20,6 +20,8 @@ import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 import ru.practicum.android.diploma.util.DefaultFragment
 
 const val ARG_COUNTRY_ID = "country_id_pram"
+const val ARG_FRAGMENT_TYPE = "fragment_to_open"
+
 
 const val KEY_DISTRICT_RESULT = "district_result"
 const val KEY_COUNTRY_RESULT = "area_result"
@@ -31,9 +33,14 @@ const val AREA_NAME = "area_name_param"
  * A simple [Fragment] subclass.
  * Use the [District.newInstance] factory method to
  * create an instance of this fragment and set required param
+ * get fragmentType to access right child Fragment
+ * fragmentType==0 -> District Fragment (need to get countryId param)
+ * fragmentType==1 -> Country Fragment
+ * fragmentType==2 -> Industry Fragment
  */
 open class District : DefaultFragment<FragmentDistrictBinding>() {
     private var countryId: Int? = null // Считывается из аргументов в onCreate
+    private var fragmentType: Int? = null // Считывается из аргументов в onCreate
 
     val vm: DistrictVm by viewModel()
 
@@ -67,6 +74,7 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             countryId = it.getInt(ARG_COUNTRY_ID)
+            fragmentType = it.getInt(ARG_FRAGMENT_TYPE)
         }
     }
 
@@ -75,14 +83,23 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         setObservers() // Обработчики lifeData
         setUpAdapter() // Настройка адаптера для RecyclerView
 
-        // Если не был получен аргумент, меняем заголовок
-        if (countryId == null) {
-            binding.navigationBar.title = resources.getString(R.string.country_fragment_title)
-            vm.loadCountryList()
+        // При загрузке фрагмента анализируем его тип
+        fragmentType?.let {
+            when (it) {
+                FragmentType.DISTRICT.id -> {
+                    // Загрузка списка регионов производится только при наличии ненулевого id страны
+                    countryId?.let { id -> vm.loadDistrictList(id) }
+                }
+                FragmentType.COUNTRY.id->{
+                    binding.navigationBar.title = resources.getString(R.string.country_fragment_title)
+                    vm.loadCountryList()
+                }
+                FragmentType.INDUSTRY.id->{
+                    binding.navigationBar.title = "Industry"
+                }
+                else -> {}
+            }
         }
-
-        // Загрузка списка регионов производится только при наличии ненулевого id страны
-        countryId?.let { vm.loadDistrictList(it) }
     }
 
     private fun setUpAdapter() {
@@ -109,9 +126,12 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
     }
 
     companion object {
-        fun newInstance(countryId: Int): District {
+        fun newInstance(fragmentType: Int, countryId: Int): District {
             return District().apply {
-                arguments = Bundle().apply { putInt(ARG_COUNTRY_ID, countryId) }
+                arguments = Bundle().apply {
+                    putInt(ARG_COUNTRY_ID, countryId)
+                    putInt(ARG_FRAGMENT_TYPE, fragmentType)
+                }
             }
         }
     }
