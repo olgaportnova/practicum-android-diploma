@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.sharedPref.impl
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ru.practicum.android.diploma.filter.data.impl.dto.FilterDto
+import ru.practicum.android.diploma.filter.data.dto.FilterDto
 import ru.practicum.android.diploma.sharedPref.FiltersStorage
 
 class FiltersStorageImpl(
@@ -31,7 +31,7 @@ class FiltersStorageImpl(
     /**
      * Simple function for add filters in storage.
      */
-    override fun addParamsFilters(params:FilterDto) {
+    override fun addParamsFilters(params: FilterDto) {
          sharedPref.edit()
              .putString(KEY_SAVED_PARAMS_FILTER,gson.toJson(params))
              .apply()

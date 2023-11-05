@@ -1,6 +1,6 @@
-package ru.practicum.android.diploma.filter.data.impl.mappers
+package ru.practicum.android.diploma.filter.data.mappers
 
-import ru.practicum.android.diploma.filter.data.impl.dto.FilterDto
+import ru.practicum.android.diploma.filter.data.dto.FilterDto
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 
 object ParamsMapper {

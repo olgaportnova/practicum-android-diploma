@@ -2,8 +2,8 @@ package ru.practicum.android.diploma.hhApi.impl
 
 import android.content.Context
 import retrofit2.Response
-import ru.practicum.android.diploma.filter.data.impl.dto.AreaDto
-import ru.practicum.android.diploma.filter.data.impl.dto.CountryDto
+import ru.practicum.android.diploma.filter.data.dto.AreaDto
+import ru.practicum.android.diploma.filter.data.dto.CountryDto
 import ru.practicum.android.diploma.hhApi.ApiHH
 import ru.practicum.android.diploma.hhApi.NetworkClient
 

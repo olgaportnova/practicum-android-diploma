@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.filter.data.impl
+package ru.practicum.android.diploma.filter.data.repository
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import ru.practicum.android.diploma.filter.data.impl.mappers.CountryConverter
-import ru.practicum.android.diploma.filter.data.impl.mappers.DistrictConverter
+import ru.practicum.android.diploma.filter.data.mappers.CountryConverter
+import ru.practicum.android.diploma.filter.data.mappers.DistrictConverter
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.hhApi.impl.RetrofitClient

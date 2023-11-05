@@ -10,13 +10,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
+import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_ID
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.fragment.DistrictScreenState
 import ru.practicum.android.diploma.util.DataStatus
 
-open class DistrictVm(private val useCaseAreaController: AreaController) : ViewModel() {
+open class DistrictVm(
+    private val useCaseAreaController: AreaController,
+    private val useCaseIndustryController: IndustriesController
+) : ViewModel() {
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
 
