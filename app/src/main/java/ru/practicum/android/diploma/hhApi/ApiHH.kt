@@ -7,6 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.filter.data.dto.AreaDto
+import ru.practicum.android.diploma.filter.data.dto.Category
 import ru.practicum.android.diploma.filter.data.dto.CountryDto
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
@@ -18,6 +19,13 @@ interface ApiHH {
 
     @GET("areas/{id}")
     suspend fun getDistricts(@Path("id") id:Int): Response<AreaDto>
+
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
+    )
+    @GET("professional_roles")
+    suspend fun getIndustries(): Response<Category>
 
 
     /**

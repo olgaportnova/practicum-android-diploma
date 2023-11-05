@@ -35,7 +35,13 @@ open class DistrictVm(
     // обязательно необходимо параметр areas обнулять
     var areaToSendBack: AreaData? = null
 
-    //private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(RetrofitClient()))
+    init {
+        viewModelScope.launch {
+            useCaseIndustryController.loadIndustries().collect{
+
+            }
+        }
+    }
 
     /**
      * Function transform [AreaData] into a pair of id:[Int] and name:[String]
