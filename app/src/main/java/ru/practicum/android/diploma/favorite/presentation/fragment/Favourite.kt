@@ -14,8 +14,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavouriteBinding
 import ru.practicum.android.diploma.favorite.domain.FavoriteState
-import ru.practicum.android.diploma.favorite.domain.models.Vacancy
 import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteViewModel
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class Favourite : Fragment() {
     private var _binding: FragmentFavouriteBinding? = null

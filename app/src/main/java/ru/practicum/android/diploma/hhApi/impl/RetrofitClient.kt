@@ -29,10 +29,6 @@ class RetrofitClient {
         val apiHH = retrofit.create(ApiHH::class.java)
 
         return apiHH.getDistricts(parentId)
-
-
     }
 
-    //TODO данный класс должен стать NetworkClientImpl и содержать функцию по обработке ошибок, примерно как вот тут - AreaRepositoryImpl
-    //TODO Ретрофит должен приходить в конструктор из DI
 }

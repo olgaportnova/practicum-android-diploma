@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 
 interface ApiHH {
+
     @GET("areas/countries")
     suspend fun getAreas(): Response<List<ApiCountry>>
 

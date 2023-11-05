@@ -1,11 +1,11 @@
 package ru.practicum.android.diploma.favorite.domain
 
-import ru.practicum.android.diploma.favorite.domain.models.Vacancy
+import ru.practicum.android.diploma.search.domain.models.Vacancy
+
 
 sealed class FavoriteState {
 
     data class Success(
-        //TODO: create vacancy model
         val vacancies: List<Vacancy>
     ) : FavoriteState()
 

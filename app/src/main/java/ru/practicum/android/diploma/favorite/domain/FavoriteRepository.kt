@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.favorite.domain
 
 import kotlinx.coroutines.flow.Flow
-import ru.practicum.android.diploma.favorite.domain.models.Vacancy
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 interface FavoriteRepository {
 
