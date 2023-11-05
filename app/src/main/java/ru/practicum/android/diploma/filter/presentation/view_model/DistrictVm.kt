@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
-import ru.practicum.android.diploma.filter.domain.models.Area
+import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_ID
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.fragment.DistrictScreenState
@@ -24,12 +24,12 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
         MutableStateFlow<DistrictScreenState>(DistrictScreenState.Loading(null))
     val screenState = _screenState as StateFlow<DistrictScreenState>
 
-    private val cityList = mutableListOf<Area>()
+    private val cityList = mutableListOf<AreaData>()
 
     // Параметр для передачи данных от фрагментов Country и District к фрагменту WorkPlace
     // Так как передать надо только id и name, то в целях сокращения размера передаваемых данных,
     // обязательно необходимо параметр areas обнулять
-    var areaToSendBack: Area? = null
+    var areaToSendBack: AreaData? = null
 
     //private val useCaseAreaController = AreaControllerImpl(AreaRepositoryImpl(NetworkClientImpl()))
 
@@ -74,7 +74,7 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
         }
     }
 
-    private fun loadAllCityList(parentArea: Area) {
+    private fun loadAllCityList(parentArea: AreaData) {
         cityList.clear()
         viewModelScope.launch(Dispatchers.IO) {
             findCityRecursive(parentArea)
@@ -82,7 +82,7 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
         }
     }
 
-    private fun findCityRecursive(area: Area) {
+    private fun findCityRecursive(area: AreaData) {
         if (area.areas.isEmpty()) cityList.add(area)
         else area.areas.forEach { findCityRecursive(it) }
     }

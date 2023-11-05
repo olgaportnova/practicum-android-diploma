@@ -5,14 +5,18 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
+import ru.practicum.android.diploma.filter.data.dto.AreaDto
+import ru.practicum.android.diploma.filter.data.dto.Category
+import ru.practicum.android.diploma.filter.data.dto.CountryDto
 import ru.practicum.android.diploma.hhApi.ApiHH
 import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.hhApi.dto.ResponseWrapper
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
+import ru.practicum.android.diploma.util.DataStatus
 
 class NetworkClientImpl(
     private val hhApi: ApiHH,
@@ -23,7 +27,7 @@ class NetworkClientImpl(
         const val NO_CONNECT = 0
     }
 
-    override suspend fun getAreas(): ResponseWrapper<List<ApiCountry>> {
+    override suspend fun getAreas(): ResponseWrapper<List<CountryDto>> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
@@ -38,7 +42,7 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getDistricts(id: Int): ResponseWrapper<ApiArea> {
+    override suspend fun getDistricts(id: Int): ResponseWrapper<AreaDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
@@ -96,6 +100,10 @@ class NetworkClientImpl(
                     ResponseWrapper(response.code(), data = null)
             }
         }
+    }
+
+    override suspend fun loadIndustries(): Flow<DataStatus<List<Category>>> {
+        return flow {  }
     }
 
 

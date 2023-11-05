@@ -10,25 +10,25 @@ import ru.practicum.android.diploma.filter.data.mappers.CountryConverter
 import ru.practicum.android.diploma.filter.data.mappers.DistrictConverter
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.AreaData
-import ru.practicum.android.diploma.hhApi.impl.RetrofitClient
+import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.util.DataStatus
 
-class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaRepository {
+class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaRepository {
     override suspend fun loadCountries(): Flow<DataStatus<List<AreaData>>> {
         return flow {
             emit(DataStatus.Loading())
 
-            val result = networkClient.loadCountries()
+            val result = networkClient.getAreas()
 
-            when (result.code()) {
+            when (result.code) {
                 200 -> {
-                    result.body()?.let {
+                    result.data?.let {
                         val lst = it.map { el -> CountryConverter().convertFromDto(el) }
                         emit(DataStatus.Content(lst))
                     }
                 }
 
-                else -> emit(DataStatus.Error(result.code()))
+                else -> emit(DataStatus.Error(result.code))
             }
         }
             .catch { emit(DataStatus.Error(errorMessage = it.message.toString())) }
@@ -39,11 +39,11 @@ class AreaRepositoryImpl(private val networkClient: RetrofitClient) : AreaReposi
         return flow {
             emit(DataStatus.Loading()) // Отправка информации о старте загрузки
 
-            val result = networkClient.loadDistricts(parentId)
+            val result = networkClient.getDistricts(parentId)
 
-            when (result.code()) {
+            when (result.code) {
                 200 -> {
-                    emit(DataStatus.Content(DistrictConverter().convertFromDto(result.body()!!)))
+                    emit(DataStatus.Content(DistrictConverter().convertFromDto(result.data!!)))
                 }
             }
         }

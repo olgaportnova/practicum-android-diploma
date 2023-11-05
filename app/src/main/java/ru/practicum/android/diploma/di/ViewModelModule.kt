@@ -10,7 +10,7 @@ class ViewModelModule {
     val viewModelModule = module {
         viewModel { FavoriteViewModel(favoriteInteractor = get()) }
 
-        viewModel {DistrictVm(useCaseAreaController = get(), useCaseIndustryController = get())}
+        viewModel {DistrictVm(useCaseAreaController = get())}
     }
 
 }
