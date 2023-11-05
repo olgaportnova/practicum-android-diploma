@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.hhApi
 
-import retrofit2.Response
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
 import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
 import ru.practicum.android.diploma.hhApi.dto.ResponseWrapper
@@ -17,9 +16,4 @@ interface NetworkClient {
     suspend fun getSimilarVacancy(id:String): ResponseWrapper<AnswerVacancyListDto>
 
     suspend fun getVacancyDetails(id:String):ResponseWrapper<VacancyDto>
-
-
-    //suspend fun loadCountries(): Response<List<ApiCountry>>
-    //suspend fun loadDistricts(parentId: Int): Response<ApiArea>
-
 }

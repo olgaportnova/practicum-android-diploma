@@ -99,13 +99,6 @@ class NetworkClientImpl(
     }
 
 
-    /*
-     override suspend fun loadCountries(): Response<List<ApiCountry>> =
-         hhApi.getAreas()
-
-     override suspend fun loadDistricts(parentId: Int): Response<ApiArea> =
-         hhApi.getDistricts(parentId)*/
-
     @SuppressLint("ServiceCast")
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
