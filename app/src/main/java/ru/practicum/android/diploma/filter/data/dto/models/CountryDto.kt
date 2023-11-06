@@ -1,8 +1,8 @@
-package ru.practicum.android.diploma.filter.data.impl.dto
+package ru.practicum.android.diploma.filter.data.dto.models
 
 import com.google.gson.annotations.SerializedName
 
-data class ApiCountry(
+data class CountryDto(
     @SerializedName("name")
     val name: String,
     @SerializedName("id")

@@ -5,16 +5,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.hhApi.NetworkClient
-import ru.practicum.android.diploma.search.data.dto.VacancyMapper
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DataStatus
+import ru.practicum.android.diploma.util.mappers.VacancyDtoMapper
 import ru.practicum.android.diploma.vacancy.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.vacancy.data.dto.VacancyDetailsResponse
 import ru.practicum.android.diploma.vacancy.domain.repository.VacancyDetailsRepository
 
 class VacancyDetailsRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val vacancyMapper: VacancyMapper,
+    private val vacancyMapper: VacancyDtoMapper,
     private val context: Context,
 ) : VacancyDetailsRepository {
 
@@ -42,6 +42,7 @@ class VacancyDetailsRepositoryImpl(
                     )
                 )
             }
+
         }
     }
 
