@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
+import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 
 class Search : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: SearchViewModel by viewModel()
 
     private fun setUiListeners() {
 //        //TODO: отработать нажание на item вакансии и переход
@@ -53,9 +58,25 @@ class Search : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUiListeners()
+
+//Тестовая модель для запросов
+        val modelTest = QuerySearchMdl(
+            page = 0,
+            perPage = 20,
+            text = "разработчик",
+            area = "113",
+            parentArea = "2112",
+            industry = null,
+            currency = "EUR",
+            salary = 1000,
+            onlyWithSalary = true,
+        )
+        //Тестовая фукнция запроса. Сейчас в коменте т.к. запускалась при запуске фрагмента.
+       // viewModel.getTestRequest(modelTest)
     }
 
 

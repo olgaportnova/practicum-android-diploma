@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.db.AppDatabase
 import ru.practicum.android.diploma.hhApi.ApiHH
 import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.hhApi.impl.NetworkClientImpl
+import ru.practicum.android.diploma.sharedPref.FiltersStorage
 import ru.practicum.android.diploma.sharedPref.impl.FiltersStorageImpl
 
 const val DATABASE_NAME = "favorite_vacancy"
@@ -59,6 +60,10 @@ class DataModule {
         }
 
         single<NetworkClient> { NetworkClientImpl(hhApi = get(), context = get()) }
+
+        single<FiltersStorage> {
+           FiltersStorageImpl(get(),get())
+        }
 
         single { Gson() }
 

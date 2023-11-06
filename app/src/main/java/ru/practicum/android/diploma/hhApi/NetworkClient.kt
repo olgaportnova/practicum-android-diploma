@@ -12,7 +12,7 @@ interface NetworkClient {
 
     suspend fun getDistricts(id: Int): ResponseWrapper<AreaDto>
 
-    suspend fun getVacancies(options: Map<String, Any>): ResponseWrapper<AnswerVacancyListDto>
+    suspend fun getVacancies(options: HashMap<String, Any>): ResponseWrapper<AnswerVacancyListDto>
 
     suspend fun getSimilarVacancy(id: String): ResponseWrapper<AnswerVacancyListDto>
 

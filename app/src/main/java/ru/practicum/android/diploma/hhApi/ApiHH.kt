@@ -46,7 +46,7 @@ interface ApiHH {
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("vacancies")
-    suspend fun getVacancies(@QueryMap options: Map<String, Any>): Response<AnswerVacancyListDto>
+    suspend fun getVacancies(@QueryMap options: HashMap<String, Any>): Response<AnswerVacancyListDto>
 
 
     /**

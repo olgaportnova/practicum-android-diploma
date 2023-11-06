@@ -7,6 +7,7 @@ import ru.practicum.android.diploma.filter.presentation.view_model.CountryVm
 import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
 import ru.practicum.android.diploma.filter.presentation.view_model.IndustryVm
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
+import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 
 class ViewModelModule {
 
@@ -20,6 +21,10 @@ class ViewModelModule {
         viewModel { IndustryVm(industriesController = get()) }
 
         viewModel { WorkPlaceVm() }
+
+        viewModel{
+            SearchViewModel(searchInteractor = get())
+        }
     }
 
 }

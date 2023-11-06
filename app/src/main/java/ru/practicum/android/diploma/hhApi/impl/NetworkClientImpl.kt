@@ -70,7 +70,7 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getVacancies(options: Map<String, Any>): ResponseWrapper<AnswerVacancyListDto> {
+    override suspend fun getVacancies(options: HashMap<String, Any>): ResponseWrapper<AnswerVacancyListDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {

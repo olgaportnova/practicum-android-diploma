@@ -1,23 +1,33 @@
-package ru.practicum.android.diploma.search.data.dto
+package ru.practicum.android.diploma.util.mappers
 
 import ru.practicum.android.diploma.search.data.dto.models.ContactsDto
+import ru.practicum.android.diploma.search.data.dto.models.ContactsDtoTest
 import ru.practicum.android.diploma.search.data.dto.models.KeySkillDto
+import ru.practicum.android.diploma.search.data.dto.models.KeySkillDtoTest
 import ru.practicum.android.diploma.search.data.dto.models.PhoneDto
+import ru.practicum.android.diploma.search.data.dto.models.PhoneDtoTest
 import ru.practicum.android.diploma.search.data.dto.models.SalaryDto
+import ru.practicum.android.diploma.search.data.dto.models.SalaryDtoTest
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
+import ru.practicum.android.diploma.search.data.dto.models.VacancyDtoTest
 import ru.practicum.android.diploma.search.domain.models.Contacts
+import ru.practicum.android.diploma.search.domain.models.ContactsTest
 import ru.practicum.android.diploma.search.domain.models.Phone
+import ru.practicum.android.diploma.search.domain.models.PhoneTest
 import ru.practicum.android.diploma.search.domain.models.Salary
+import ru.practicum.android.diploma.search.domain.models.SalaryTest
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.search.domain.models.VacancyForTests
 
-class VacancyMapper {
-//Duplicate VacancyDtoMapper. Will need delete.
-    fun vacancyDtoToVacancy(vacancyDto: VacancyDto): Vacancy {
-        return with(vacancyDto) {
-            Vacancy(
+class VacancyDtoMapperTest {
+
+    fun vacancyDtoToVacancy(vacancyDtoTest: VacancyDtoTest): VacancyForTests {
+        return with(vacancyDtoTest) {
+            VacancyForTests(
                 id = id,
                 vacancyName = vacancyName,
                 companyName = employer.name,
+                alternateUrl = alternateUrl,
                 logoUrl = logo?.small,
                 city = area.name,
                 employment = employment?.name,
@@ -31,9 +41,9 @@ class VacancyMapper {
         }
     }
 
-    private fun createSalary(salaryDto: SalaryDto?): Salary? {
-        return salaryDto?.let {
-            Salary(
+    private fun createSalary(salaryDtoTest: SalaryDtoTest?): SalaryTest? {
+        return salaryDtoTest?.let {
+            SalaryTest(
                 currency = it.currency,
                 from = it.from,
                 gross = it.gross,
@@ -42,23 +52,23 @@ class VacancyMapper {
         }
     }
 
-    private fun extractKeySkills(keySkills: List<KeySkillDto>?): List<String?> {
+    private fun extractKeySkills(keySkills: List<KeySkillDtoTest>?): List<String?> {
         return keySkills?.map { it.name } ?: emptyList()
     }
 
-    private fun createContacts(contactsDto: ContactsDto?): Contacts? {
-        return contactsDto?.let {
-            Contacts(
+    private fun createContacts(contactsDtoTest: ContactsDtoTest?): ContactsTest? {
+        return contactsDtoTest?.let {
+            ContactsTest(
                 email = it.email,
                 name = it.name,
-                phones = createPhone(it.phones)
+                phones = it.phones?.map { createPhone(it) }
             )
         }
     }
 
-    private fun createPhone(phoneDto: PhoneDto?): Phone? {
-        return phoneDto?.let {
-            Phone(
+    private fun createPhone(phoneDtoTest: PhoneDtoTest?): PhoneTest? {
+        return phoneDtoTest?.let {
+            PhoneTest(
                 city = it.city,
                 comment = it.comment,
                 country = it.country,
@@ -66,4 +76,5 @@ class VacancyMapper {
             )
         }
     }
+
 }

@@ -6,5 +6,5 @@ data class AnswerVacancyList(
     val found: Int,
     val maxPages:Int,
     val currentPages:Int,
-    val listVacancy:List<Vacancy>
+    val listVacancy:List<VacancyForTests>
 )
