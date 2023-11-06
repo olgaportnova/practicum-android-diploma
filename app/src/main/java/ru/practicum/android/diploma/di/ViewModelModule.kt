@@ -6,6 +6,7 @@ import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteVie
 import ru.practicum.android.diploma.filter.presentation.view_model.CountryVm
 import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
 import ru.practicum.android.diploma.filter.presentation.view_model.IndustryVm
+import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 
 class ViewModelModule {
 
@@ -17,6 +18,8 @@ class ViewModelModule {
         viewModel { CountryVm(areaController = get()) }
 
         viewModel { IndustryVm(industriesController = get()) }
+
+        viewModel { WorkPlaceVm() }
     }
 
 }

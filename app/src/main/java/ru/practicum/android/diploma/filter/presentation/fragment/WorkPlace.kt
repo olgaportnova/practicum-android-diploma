@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
 import ru.practicum.android.diploma.filter.domain.models.AreaData
@@ -21,14 +21,13 @@ import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
+    private val vm: WorkPlaceVm by viewModel()
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentWorkPlaceBinding {
         return FragmentWorkPlaceBinding.inflate(inflater, container, false)
     }
-
-    private lateinit var vm: WorkPlaceVm
 
     override fun setUiListeners() {
         with(binding) {
@@ -65,14 +64,14 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
     override fun exitExtraWhenSystemBackPushed() {
         // TODO: Вызвать сохранение модели данных фильтра в sharedPrefs
+
+        // Exit back
         findNavController().popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Потом сделать через Koin by viewModel()
-        vm = ViewModelProvider(this)[WorkPlaceVm::class.java]
 
 
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
