@@ -5,5 +5,5 @@ import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.vacancy.domain.models.SearchResult
 
 interface VacancyDetailsInteractor {
-    suspend fun getVacancyDetails(id: Int): Flow<SearchResult<Vacancy?, String?>>
+    suspend fun getVacancyDetails(id: String): Flow<SearchResult<Vacancy?, Int?>>
 }
