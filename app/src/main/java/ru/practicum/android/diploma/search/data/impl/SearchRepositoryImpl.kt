@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.search.data.impl
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.filter.domain.models.ParamsFilterModel
 import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.search.data.dto.models.QuerySearchMdlDto
@@ -8,18 +9,21 @@ import ru.practicum.android.diploma.search.domain.SearchRepositry
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.sharedPref.FiltersStorage
-import ru.practicum.android.diploma.util.mappers.QuerySearchDtoMapper
+import ru.practicum.android.diploma.util.mappers.AnswerSearchDtoMapper
+import ru.practicum.android.diploma.util.mappers.QuerySearchMapper
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
     private val filtersStorage: FiltersStorage
 ) : SearchRepositry {
     override suspend fun doRequestSearch(searchRequest: QuerySearchMdl): Flow<AnswerVacancyList> {
-        val mapped = QuerySearchDtoMapper.qrSearchMdlToQrSearchMdlDto(searchRequest)
+        val mapped = QuerySearchMapper.qrSearchMdlToQrSearchMdlDto(searchRequest)
 
-        createQueryMap(mapped)
-
-
+        return flow {
+            val response = networkClient.getVacancies(createQueryMap(mapped)).data
+            if(response != null)
+            emit(AnswerSearchDtoMapper.answSearchDtoInSearch(response))
+        }
     }
 
     override fun getParamsFilters(): ParamsFilterModel? {

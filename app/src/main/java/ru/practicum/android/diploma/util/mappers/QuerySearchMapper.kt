@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.util.mappers
 import ru.practicum.android.diploma.search.data.dto.models.QuerySearchMdlDto
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 
-object QuerySearchDtoMapper {
+object QuerySearchMapper {
 
     fun qrSearchMdlToQrSearchMdlDto(model:QuerySearchMdl): QuerySearchMdlDto{
         return with(model){
