@@ -26,6 +26,7 @@
 
     <dimen name="regular_text_size">16sp</dimen>
     <dimen name="big_text_size">22sp</dimen>
+    <dimen name="super_big_text_size">32sp</dimen>
     <dimen name="corners_radius_art_work_vacancy">12dp</dimen>
 
 

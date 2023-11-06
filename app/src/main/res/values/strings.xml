@@ -56,4 +56,11 @@
     <!--    FAVORITE FRAGMENT NAMES    -->
     <string name="empty_list_placeholder_favorite">Список пуст</string>
 
+    <!--    TEAM FRAGMENT NAMES    -->
+    <string name="team_header">Над приложением работали</string>
+    <string name="team_oleg">Олег Венедиктов</string>
+    <string name="team_mike">Михаил Храмцов</string>
+    <string name="team_tanya">Татьяна Руль</string>
+    <string name="team_olga">Ольга Бадосова</string>
+
 </resources>
