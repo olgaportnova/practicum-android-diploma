@@ -12,6 +12,11 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
 import ru.practicum.android.diploma.filter.domain.models.AreaData
+import ru.practicum.android.diploma.filter.presentation.util.AREA_ID
+import ru.practicum.android.diploma.filter.presentation.util.AREA_NAME
+import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
+import ru.practicum.android.diploma.filter.presentation.util.KEY_COUNTRY_RESULT
+import ru.practicum.android.diploma.filter.presentation.util.KEY_DISTRICT_RESULT
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 import ru.practicum.android.diploma.util.DefaultFragment
 

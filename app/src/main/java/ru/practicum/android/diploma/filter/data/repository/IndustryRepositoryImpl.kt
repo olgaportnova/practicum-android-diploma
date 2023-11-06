@@ -12,9 +12,21 @@ class IndustryRepositoryImpl(private val networkClient: NetworkClient) : Industr
         return flow {
             emit(DataStatus.Loading())
 
-            val response = networkClient.getIndustries()
-            val profs = response.data?.categories
+            val result = networkClient.getIndustries()
+            when (result.code) {
+                200 -> {
+                    result.data?.let {
+                        if (it.categories.isEmpty()) emit(DataStatus.EmptyContent())
+                        else {
+                            val lst = it.categories
+                            emit(DataStatus.Content(lst))
+                        }
+                    }
+                }
 
+                0 -> emit(DataStatus.NoConnecting())
+                else -> emit(DataStatus.Error(result.code))
+            }
         }
     }
 }

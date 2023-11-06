@@ -23,11 +23,14 @@ class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaReposit
             when (result.code) {
                 200 -> {
                     result.data?.let {
-                        val lst = it.map { el -> CountryConverter().convertFromDto(el) }
-                        emit(DataStatus.Content(lst))
+                        if (it.isEmpty()) emit(DataStatus.EmptyContent())
+                        else{
+                            val lst = it.map { el -> CountryConverter().convertFromDto(el) }
+                            emit(DataStatus.Content(lst))
+                        }
                     }
                 }
-
+                0->emit(DataStatus.NoConnecting())
                 else -> emit(DataStatus.Error(result.code))
             }
         }
