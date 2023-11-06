@@ -12,13 +12,8 @@ import ru.practicum.android.diploma.util.mappers.QuerySearchMapper
 
 class SearchInteractorImpl(private val searchRepository: SearchRepositry) : SearchInteractor {
 
-    val testModelRequest = QuerySearchMdl(
-        0,
-        perPage = 20,
-        text = "разработчик",
-    )
 
-suspend fun getTestRequest(request: QuerySearchMdl) : Flow<AnswerVacancyList> {
+suspend override fun  getTestRequest(request: QuerySearchMdl) : Flow<AnswerVacancyList> {
     return searchRepository.doRequestSearch(request)
 }
 }
