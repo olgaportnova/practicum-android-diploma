@@ -1,14 +1,13 @@
-package ru.practicum.android.diploma.filter.presentation.view_model
+package ru.practicum.android.diploma.filter.presentation.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.practicum.android.diploma.filter.data.dto.models.Category
 import ru.practicum.android.diploma.filter.domain.models.AbstarctData
 import ru.practicum.android.diploma.filter.domain.models.AreaData
-import ru.practicum.android.diploma.filter.presentation.util.ScreenState
+import ru.practicum.android.diploma.filter.domain.models.RoleData
 
 open class DefaultViewModel : ViewModel() {
     val _errorMsg = MutableLiveData<String>()
@@ -20,8 +19,10 @@ open class DefaultViewModel : ViewModel() {
 
     var dataToSendBack: AbstarctData? = null
 
+    protected val fullDataList = mutableListOf<AbstarctData>()
+
     fun areaToAbstract(area: AreaData) = AbstarctData(area.id, area.name)
 
-    fun professionToAbstract(category: Category) = AbstarctData(category.id,category.name)
+    fun roleToAbstract(role: RoleData) = AbstarctData(role.id, role.name)
 
 }

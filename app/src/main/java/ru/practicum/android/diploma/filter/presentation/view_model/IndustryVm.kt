@@ -1,8 +1,11 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
+import ru.practicum.android.diploma.filter.domain.models.CategoryData
+import ru.practicum.android.diploma.filter.presentation.util.DefaultViewModel
 import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.util.DataStatus
 
@@ -11,17 +14,28 @@ class IndustryVm(private val industriesController: IndustriesController) : Defau
     init {
         loadIndustries()
     }
-    private fun loadIndustries(){
+
+    private fun loadIndustries() {
         viewModelScope.launch {
-            industriesController.getIndustries().collect{
+            industriesController.getIndustries().collect {
                 when (it) {
                     is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
-                    is DataStatus.Content -> _screenState.value = ScreenState.Content(it.data!!.map { category->
-                        professionToAbstract(category)
-                    })
+                    is DataStatus.Content -> loadAllRoles(it.data!!)
                     else -> {}
                 }
             }
+        }
+    }
+
+    private fun loadAllRoles(categories: List<CategoryData>) {
+        fullDataList.clear()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            categories.forEach {
+                it.roles.forEach { role -> fullDataList.add(roleToAbstract(role)) }
+            }
+
+            _screenState.value = ScreenState.Content(fullDataList)
         }
     }
 }

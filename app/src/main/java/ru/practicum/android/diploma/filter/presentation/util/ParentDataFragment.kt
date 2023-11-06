@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
-import ru.practicum.android.diploma.filter.presentation.view_model.DefaultViewModel
 import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 import ru.practicum.android.diploma.util.DefaultFragment
 
@@ -58,10 +57,10 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
         }
     }
 
-    open fun observeFlowScreenState(){
+    open fun observeFlowScreenState() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                vm?.screenState?.collect{
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm?.screenState?.collect {
                     setFragmentScreenState(it)
                 }
             }

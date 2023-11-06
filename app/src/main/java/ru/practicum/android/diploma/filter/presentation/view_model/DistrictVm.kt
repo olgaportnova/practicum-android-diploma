@@ -5,12 +5,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.models.AreaData
+import ru.practicum.android.diploma.filter.presentation.util.DefaultViewModel
 import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.util.DataStatus
 
 open class DistrictVm(private val areaController: AreaController) : DefaultViewModel() {
-    private val cityList = mutableListOf<AreaData>()
-
 
 
     fun loadDistrictList(parentAreaId: Int) {
@@ -23,18 +22,16 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
     }
 
     private fun loadAllCityList(parentArea: AreaData) {
-        cityList.clear()
+        fullDataList.clear()
         viewModelScope.launch(Dispatchers.IO) {
             findCityRecursive(parentArea) // Рекурсивно заполняем лист городами
 
-            _screenState.value = ScreenState.Content(cityList.map {
-                areaToAbstract(it)
-            })
+            _screenState.value = ScreenState.Content(fullDataList)
         }
     }
 
     private fun findCityRecursive(area: AreaData) {
-        if (area.areas.isEmpty()) cityList.add(area)
+        if (area.areas.isEmpty()) fullDataList.add(areaToAbstract(area))
         else area.areas.forEach { findCityRecursive(it) }
     }
 }
