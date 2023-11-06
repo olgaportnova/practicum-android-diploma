@@ -9,34 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavouriteBinding
 import ru.practicum.android.diploma.favorite.domain.FavoriteState
 import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteViewModel
+import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class Favourite : Fragment() {
     private var _binding: FragmentFavouriteBinding? = null
     private val binding get() = _binding!!
     private val viewModel: FavoriteViewModel by viewModel()
-
-
-    //TODO: отработать нажатие на элемент recycle view -> переход на экран с деталями вакансии
-//    private fun setUiListeners() {
-//        with(binding) {
-////            txtTemporal.setOnClickListener {
-////                openFragmentVacancy(vacancyToShow = "Вакансия из избранного")
-////            }
-//        }
-//    }
-//
-//    private fun openFragmentVacancy(vacancyToShow: String) {
-//        findNavController().navigate(
-//            R.id.action_favourite_to_vacancy,
-//            Bundle().apply { putString("vacancy_model", vacancyToShow) })
-//    }
+    private lateinit var adapter: VacancyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +37,7 @@ class Favourite : Fragment() {
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//       setUiListeners()
-        // create adapter && привязать к binding
+        initRecyclerView()
 
       lifecycleScope.launch {
           repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -62,11 +49,25 @@ class Favourite : Fragment() {
         viewModel.getAllFavoriteVacancies()
     }
 
+    private fun initRecyclerView() {
+        adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
+            override fun onItemClick(vacancy: Vacancy) {
+                openFragmentVacancy(vacancyToShow = "vacancy")
+            }
+        })
+        binding.favouritesRecyclerView.adapter = adapter
+        binding.favouritesRecyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun openFragmentVacancy(vacancyToShow: String) {
+        findNavController().navigate(
+            R.id.action_favourite_to_vacancy,
+            Bundle().apply { putString("vacancy_model", vacancyToShow) })
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        // обнулить adapter
     }
 
     private fun updateUI(state: FavoriteState) {
@@ -77,10 +78,10 @@ class Favourite : Fragment() {
         }
     }
 
-    //states for updating UI
+
     private fun showFavorite(listOfFavorite: List<Vacancy>) {
         with(binding) {
-  //         TODO: добавить обновление адаптера когда будет создан
+            adapter.updateList(listOfFavorite)
             favouritesRecyclerView.visibility = View.VISIBLE
             imagePlaceholder.visibility = View.GONE
             textPlaceholder.visibility = View.GONE

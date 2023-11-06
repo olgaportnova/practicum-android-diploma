@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.favorite.recycle_view
 
 import android.content.Context
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -13,7 +14,7 @@ import java.util.Currency
 import java.util.Locale
 
 class VacancyViewHolder(
-    private val binding: ItemViewholderVacancyBinding,
+    private val binding: ItemViewholderVacancyBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(vacancy: Vacancy) {

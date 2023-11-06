@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.filter.domain.models
 
-data class ParamsFilterModel(
+data class FilterData(
     val idCountry: String?,
     val idArea:String?,
     val idIndustry:String?,

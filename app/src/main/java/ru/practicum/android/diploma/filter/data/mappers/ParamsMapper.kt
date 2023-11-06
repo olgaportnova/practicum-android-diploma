@@ -1,11 +1,12 @@
-package ru.practicum.android.diploma.filter.data.impl.dto
+package ru.practicum.android.diploma.filter.data.mappers
 
-import ru.practicum.android.diploma.filter.domain.models.ParamsFilterModel
+import ru.practicum.android.diploma.filter.data.dto.models.FilterDto
+import ru.practicum.android.diploma.filter.domain.models.FilterData
 
 object ParamsMapper {
 
-    fun paramsModelInParamsModelDto(model:ParamsFilterModel): ParamsFilterModelDto {
-        return ParamsFilterModelDto(
+    fun paramsModelInParamsModelDto(model:FilterData): FilterDto {
+        return FilterDto(
             idCountry = model.idCountry,
             idArea =  model.idArea,
             idIndustry = model.idIndustry,
@@ -19,8 +20,8 @@ object ParamsMapper {
         )
     }
 
-    fun paramsModelDtoInParamsModel(model:ParamsFilterModelDto):ParamsFilterModel{
-        return ParamsFilterModel(
+    fun paramsModelDtoInParamsModel(model: FilterDto):FilterData{
+        return FilterData(
             idCountry = model.idCountry,
             idArea =  model.idArea,
             idIndustry = model.idIndustry,
