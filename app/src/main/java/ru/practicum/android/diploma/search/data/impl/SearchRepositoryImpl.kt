@@ -17,30 +17,32 @@ class SearchRepositoryImpl(
     private val filtersStorage: FiltersStorage
 ) : SearchRepositry {
     override suspend fun doRequestSearch(searchRequest: QuerySearchMdl): Flow<AnswerVacancyList> {
+
         val mapped = QuerySearchMapper.qrSearchMdlToQrSearchMdlDto(searchRequest)
+        val response = networkClient.getVacancies(createQueryMap(mapped)).data
 
         return flow {
-            val response = networkClient.getVacancies(createQueryMap(mapped)).data
-            if(response != null){
-                emit(AnswerSearchDtoMapper.answSearchDtoInSearch(response))
-            }
+
+            emit(AnswerSearchDtoMapper.answSearchDtoInSearch(response!!))
+
         }
-    }
+}
+
 
     override fun getParamsFilters(): ParamsFilterModel? {
         TODO("Not yet implemented")
     }
 
-    private fun createQueryMap(searchRequest: QuerySearchMdlDto): Map<String,Any>{
+    private fun createQueryMap(searchRequest: QuerySearchMdlDto): HashMap<String,Any>{
         val options: HashMap<String,Any> = HashMap()
 
          options["page"] = searchRequest.page
          options["per_page"] = searchRequest.perPage
          options["text"] = searchRequest.text
          if(searchRequest.area != null)
-             options["area_id"] = searchRequest.area
+             options["area"] = searchRequest.area
          if(searchRequest.parentArea != null)
-             options["area_id"] = searchRequest.parentArea
+             options["parent"] = searchRequest.parentArea
          if(searchRequest.industry != null)
              options["industry"] = searchRequest.industry
          if(searchRequest.currency != null)

@@ -63,11 +63,17 @@ class Search : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUiListeners()
 
+//Тестовая модель для запросов
         val modelTest = QuerySearchMdl(
             page = 0,
             perPage = 20,
-            text = "разработчик"
-
+            text = "разработчик",
+            area = "113",
+            parentArea = "2112",
+            industry = null,
+            currency = "EUR",
+            salary = 1000,
+            onlyWithSalary = true,
         )
         viewModel.getTestRequest(modelTest)
     }
