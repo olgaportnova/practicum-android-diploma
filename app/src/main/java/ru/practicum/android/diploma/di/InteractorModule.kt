@@ -9,7 +9,6 @@ import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
 import ru.practicum.android.diploma.search.domain.SearchInteractor
 import ru.practicum.android.diploma.search.domain.impl.SearchInteractorImpl
-import ru.practicum.android.diploma.search.presentation.fragment.Search
 
 class InteractorModule {
 
