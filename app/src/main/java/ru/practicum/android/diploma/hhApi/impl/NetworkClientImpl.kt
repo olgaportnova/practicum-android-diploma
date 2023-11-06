@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.hhApi.dto.ResponseWrapper
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
+import ru.practicum.android.diploma.vacancy.data.dto.VacancyDetailsRequest
 
 class NetworkClientImpl(
     private val hhApi: ApiHH,
@@ -83,17 +84,21 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getVacancyDetails(id: String): ResponseWrapper<VacancyDto> {
+    override suspend fun getVacancyDetails(dto: Any): ResponseWrapper<VacancyDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
-                ResponseWrapper(NO_CONNECT, data = null)
+                ResponseWrapper(code = NO_CONNECT, data = null)
+            }
+
+            if(dto !is VacancyDetailsRequest){
+                ResponseWrapper(code = 400, data = null)
             } else {
-                val response = hhApi.getVacancyDetails(id)
-                if (response.code() == 200)
-                    ResponseWrapper(response.code(), response.body())
+                val response = hhApi.getVacancyDetails(dto.id)
+                if (response.code == 200)
+                    ResponseWrapper(code = response.code, data = response.result)
                 else
-                    ResponseWrapper(response.code(), data = null)
+                    ResponseWrapper(code = response.code, data = null)
             }
         }
     }
