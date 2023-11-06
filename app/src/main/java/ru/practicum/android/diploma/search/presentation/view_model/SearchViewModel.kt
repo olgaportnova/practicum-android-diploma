@@ -8,7 +8,6 @@ import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
-
  fun getTestRequest(request: QuerySearchMdl){
      viewModelScope.launch {
          searchInteractor.getTestRequest(request)

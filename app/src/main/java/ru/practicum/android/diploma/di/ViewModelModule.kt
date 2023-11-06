@@ -14,7 +14,7 @@ class ViewModelModule {
         viewModel{DistrictVm(useCaseAreaController = get())}
 
         viewModel{
-            SearchViewModel(get())
+            SearchViewModel(searchInteractor = get())
         }
     }
 

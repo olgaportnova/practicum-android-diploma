@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.db.AppDatabase
 import ru.practicum.android.diploma.hhApi.ApiHH
+import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.hhApi.impl.NetworkClientImpl
 import ru.practicum.android.diploma.sharedPref.impl.FiltersStorageImpl
 
@@ -57,7 +58,7 @@ class DataModule {
                 .create(ApiHH::class.java)
         }
 
-        single { NetworkClientImpl(hhApi = get(), context = get()) }
+        single<NetworkClient>{ NetworkClientImpl(hhApi = get(), context = get()) }
 
         single { Gson() }
 
