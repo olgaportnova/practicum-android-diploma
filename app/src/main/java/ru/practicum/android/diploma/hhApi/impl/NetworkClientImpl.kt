@@ -6,8 +6,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
+import ru.practicum.android.diploma.filter.data.dto.models.AreaDto
+import ru.practicum.android.diploma.filter.data.dto.models.CountryDto
+import ru.practicum.android.diploma.filter.data.dto.models.CategoryResponse
 import ru.practicum.android.diploma.hhApi.ApiHH
 import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.hhApi.dto.ResponseWrapper
@@ -23,13 +24,13 @@ class NetworkClientImpl(
         const val NO_CONNECT = 0
     }
 
-    override suspend fun getAreas(): ResponseWrapper<List<ApiCountry>> {
+    override suspend fun getAreas(): ResponseWrapper<List<CountryDto>> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
                 ResponseWrapper(NO_CONNECT, data = null)
             } else {
-                val response = hhApi.getAreas()
+                val response = hhApi.getCountries()
                 if (response.code() == 200)
                     ResponseWrapper(response.code(), response.body())
                 else
@@ -38,7 +39,7 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getDistricts(id: Int): ResponseWrapper<ApiArea> {
+    override suspend fun getDistricts(id: Int): ResponseWrapper<AreaDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
@@ -96,6 +97,13 @@ class NetworkClientImpl(
                     ResponseWrapper(response.code(), data = null)
             }
         }
+    }
+
+    override suspend fun getIndustries(): ResponseWrapper<CategoryResponse> {
+        val response = hhApi.getIndustries()
+
+        return if (response.code() == 200) ResponseWrapper(response.code(), response.body())
+        else ResponseWrapper(response.code(), data = null)
     }
 
 

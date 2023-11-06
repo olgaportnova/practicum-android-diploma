@@ -6,8 +6,9 @@ import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.BuildConfig
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiArea
-import ru.practicum.android.diploma.filter.data.impl.dto.ApiCountry
+import ru.practicum.android.diploma.filter.data.dto.models.AreaDto
+import ru.practicum.android.diploma.filter.data.dto.models.CountryDto
+import ru.practicum.android.diploma.filter.data.dto.models.CategoryResponse
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 
@@ -18,19 +19,26 @@ interface ApiHH {
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("areas/countries")
-    suspend fun getAreas(): Response<List<ApiCountry>>
+    suspend fun getCountries(): Response<List<CountryDto>>
 
     @Headers(
         "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("areas/{id}")
-    suspend fun getDistricts(@Path("id") id:Int): Response<ApiArea>
+    suspend fun getDistricts(@Path("id") id: Int): Response<AreaDto>
+
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
+    )
+    @GET("professional_roles")
+    suspend fun getIndustries(): Response<CategoryResponse>
 
 
     /**
      * Function for get list vacancy with additional parameters in Map
-     * @param Map where String - key, Any - type for String and Int value.
+     * @param options where String - key, Any - type for String and Int value.
      * @return [Response<T>]
      */
     @Headers(
@@ -43,7 +51,7 @@ interface ApiHH {
 
     /**
      * Function for get similar vacancy
-     * @param String
+     * @param id
      * @return [Response]
      */
     @Headers(
@@ -51,7 +59,7 @@ interface ApiHH {
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("vacancies/{vacancy_id}/similar_vacancies")
-    suspend fun getSimilarVacancy(@Path("vacancy_id") id:String):Response<AnswerVacancyListDto>
+    suspend fun getSimilarVacancy(@Path("vacancy_id") id: String): Response<AnswerVacancyListDto>
 
 
     /**
@@ -64,5 +72,5 @@ interface ApiHH {
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("vacancies/{vacancy_id}")
-    suspend fun getVacancyDetails(@Path("vacancy_id")id:String):Response<VacancyDto>
+    suspend fun getVacancyDetails(@Path("vacancy_id") id: String): Response<VacancyDto>
 }

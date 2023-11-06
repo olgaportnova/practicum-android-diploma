@@ -3,14 +3,14 @@ package ru.practicum.android.diploma.filter.presentation.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.practicum.android.diploma.filter.domain.models.Area
+import ru.practicum.android.diploma.filter.domain.models.AreaData
 
 class WorkPlaceVm : ViewModel() {
-    private val _countryChosen = MutableLiveData<Area?>(null)
-    val countryChosen = _countryChosen as LiveData<Area?>
+    private val _countryChosen = MutableLiveData<AreaData?>(null)
+    val countryChosen = _countryChosen as LiveData<AreaData?>
 
-    private val _districtChosen = MutableLiveData<Area?>(null)
-    val districtChosen = _districtChosen as LiveData<Area?>
+    private val _districtChosen = MutableLiveData<AreaData?>(null)
+    val districtChosen = _districtChosen as LiveData<AreaData?>
 
     private val _acceptChanges = MutableLiveData<Boolean>(false)
     val acceptChanges = _acceptChanges as LiveData<Boolean>
@@ -20,7 +20,7 @@ class WorkPlaceVm : ViewModel() {
 
     fun chooseAnotherCountry(newCountryId: Int?, newCountryName: String?) {
         if (newCountryId != null && newCountryName != null) {
-            _countryChosen.value = Area(newCountryId, null, newCountryName, emptyList())
+            _countryChosen.value = AreaData(newCountryId, null, newCountryName, emptyList())
         } else _countryChosen.value = null
 
         checkAcceptCondition()
@@ -28,7 +28,7 @@ class WorkPlaceVm : ViewModel() {
 
     fun chooseAnotherDistrict(newCountryId: Int?, newCountryName: String?) {
         if (newCountryId != null && newCountryName != null) {
-            _districtChosen.value = Area(newCountryId, null, newCountryName, emptyList())
+            _districtChosen.value = AreaData(newCountryId, null, newCountryName, emptyList())
         } else _districtChosen.value = null
 
         checkAcceptCondition()

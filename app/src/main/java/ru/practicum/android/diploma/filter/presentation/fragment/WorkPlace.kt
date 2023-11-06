@@ -7,23 +7,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.util.DefaultFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
-import ru.practicum.android.diploma.filter.domain.models.Area
+import ru.practicum.android.diploma.filter.domain.models.AreaData
+import ru.practicum.android.diploma.filter.presentation.util.AREA_ID
+import ru.practicum.android.diploma.filter.presentation.util.AREA_NAME
+import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
+import ru.practicum.android.diploma.filter.presentation.util.KEY_COUNTRY_RESULT
+import ru.practicum.android.diploma.filter.presentation.util.KEY_DISTRICT_RESULT
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
+import ru.practicum.android.diploma.util.DefaultFragment
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
+    private val vm: WorkPlaceVm by viewModel()
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentWorkPlaceBinding {
         return FragmentWorkPlaceBinding.inflate(inflater, container, false)
     }
-
-    private lateinit var vm: WorkPlaceVm
 
     override fun setUiListeners() {
         with(binding) {
@@ -60,14 +64,14 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
     override fun exitExtraWhenSystemBackPushed() {
         // TODO: Вызвать сохранение модели данных фильтра в sharedPrefs
+
+        // Exit back
         findNavController().popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Потом сделать через Koin by viewModel()
-        vm = ViewModelProvider(this)[WorkPlaceVm::class.java]
 
 
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
@@ -116,7 +120,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
     private fun getGreyColor() = resources.getColor(R.color.grey_dark, requireContext().theme)
 
-    private fun setCountrySelectedState(area: Area) {
+    private fun setCountrySelectedState(area: AreaData) {
         binding.txtChooseCountry.text = area.name
         binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
         binding.txtChooseCountry.setTextColor(getColorOnPrimary())
@@ -128,7 +132,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         binding.txtChooseCountry.setTextColor(getGreyColor())
     }
 
-    private fun setDistrictSelectedState(area: Area) {
+    private fun setDistrictSelectedState(area: AreaData) {
         binding.txtChooseDistrict.text = area.name
         binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
         binding.txtChooseDistrict.setTextColor(getColorOnPrimary())

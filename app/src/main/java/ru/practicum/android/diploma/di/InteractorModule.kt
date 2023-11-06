@@ -4,7 +4,9 @@ import org.koin.dsl.module
 import ru.practicum.android.diploma.favorite.domain.FavoriteInteractor
 import ru.practicum.android.diploma.favorite.domain.impl.FavoriteInteractorImpl
 import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
+import ru.practicum.android.diploma.filter.domain.impl.IndustriesControllerImpl
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
+import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
 
 class InteractorModule {
 
@@ -15,6 +17,8 @@ class InteractorModule {
 
         //Работа с api: загрузка локаций районов и профессий
         single<AreaController> { AreaControllerImpl(areaRepo = get()) }
+
+        single<IndustriesController> { IndustriesControllerImpl(industryRepo = get()) }
 
     }
 

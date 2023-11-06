@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_to_workPlace"
             app:destination="@id/workPlace" />
+        <action
+            android:id="@+id/action_filters_to_industry"
+            app:destination="@id/industry" />
     </fragment>
 
     <fragment
@@ -79,5 +82,10 @@
         android:id="@+id/country"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.Country"
         android:label="Country"
+        tools:layout="@layout/fragment_district"/>
+    <fragment
+        android:id="@+id/industry"
+        android:name="ru.practicum.android.diploma.filter.presentation.fragment.Industry"
+        android:label="Industry"
         tools:layout="@layout/fragment_district"/>
 </navigation>
