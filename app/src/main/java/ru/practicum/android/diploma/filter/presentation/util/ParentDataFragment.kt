@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -45,6 +46,10 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
         with(binding) {
             navigationBar.setNavigationOnClickListener {
                 exitExtraWhenSystemBackPushed()
+            }
+
+            txtSearch.doOnTextChanged { text, start, before, count ->
+                vm?.searchInputData(text)?.let { adapter.changeData(it) }
             }
         }
     }
@@ -95,9 +100,12 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
 
     private fun setFragmentScreenState(newScreenState: ScreenState) {
         when (newScreenState) {
-            is ScreenState.Loading -> binding.txtContent.text = "Initial "
+            is ScreenState.Loading -> {
+
+            }
             is ScreenState.Content -> adapter.changeData(newScreenState.data)
             is ScreenState.Error -> showMsgDialog(newScreenState.exception)
+            else->{}
         }
     }
 

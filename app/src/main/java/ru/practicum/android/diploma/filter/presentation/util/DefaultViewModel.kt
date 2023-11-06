@@ -25,4 +25,14 @@ open class DefaultViewModel : ViewModel() {
 
     fun roleToAbstract(role: RoleData) = AbstarctData(role.id, role.name)
 
+    fun searchInputData(inputText:CharSequence?):List<AbstarctData>{
+        return if (inputText.isNullOrBlank()){
+            fullDataList
+        } else {
+            fullDataList.filter {
+                it.name.contains(other = inputText, ignoreCase = true)
+            }
+        }
+    }
+
 }
