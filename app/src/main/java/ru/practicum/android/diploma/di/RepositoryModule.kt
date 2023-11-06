@@ -7,6 +7,8 @@ import ru.practicum.android.diploma.filter.data.repository.AreaRepositoryImpl
 import ru.practicum.android.diploma.filter.data.repository.IndustryRepositoryImpl
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustryRepository
+import ru.practicum.android.diploma.sharedPref.FiltersStorage
+import ru.practicum.android.diploma.sharedPref.impl.FiltersStorageImpl
 import ru.practicum.android.diploma.util.mappers.VacancyEntityMapper
 
 class RepositoryModule {
@@ -23,6 +25,8 @@ class RepositoryModule {
         factory<AreaRepository> { AreaRepositoryImpl(networkClient = get()) }
 
         factory<IndustryRepository> { IndustryRepositoryImpl(networkClient = get()) }
+
+        factory<FiltersStorage> { FiltersStorageImpl(sharedPref = get(), gson = get()) }
 
         factory { VacancyEntityMapper() }
 

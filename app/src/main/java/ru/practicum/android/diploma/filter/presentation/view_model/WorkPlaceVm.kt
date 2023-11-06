@@ -3,9 +3,10 @@ package ru.practicum.android.diploma.filter.presentation.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.practicum.android.diploma.filter.domain.interfaces.FiltersController
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 
-class WorkPlaceVm : ViewModel() {
+class WorkPlaceVm(filtersController: FiltersController) : ViewModel() {
     private val _countryChosen = MutableLiveData<AreaData?>(null)
     val countryChosen = _countryChosen as LiveData<AreaData?>
 
