@@ -27,7 +27,7 @@ class Filters : Fragment() {
             btnChooseIndustry.setOnClickListener {
                 findNavController().navigate(R.id.action_filters_to_industry,
                     Bundle().apply {
-                        putInt(ARG_FRAGMENT_TYPE, FragmentType.INDUSTRY.id)
+
                     })
             }
         }

@@ -13,7 +13,7 @@ import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_ID
 import ru.practicum.android.diploma.filter.presentation.fragment.AREA_NAME
-import ru.practicum.android.diploma.filter.presentation.fragment.DistrictScreenState
+import ru.practicum.android.diploma.filter.presentation.fragment.ScreenState
 import ru.practicum.android.diploma.util.DataStatus
 
 open class DistrictVm(private val useCaseAreaController: AreaController) : ViewModel() {
@@ -21,8 +21,8 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
     val errorMsg = _errorMsg as LiveData<String>
 
     private val _screenState =
-        MutableStateFlow<DistrictScreenState>(DistrictScreenState.Loading(null))
-    val screenState = _screenState as StateFlow<DistrictScreenState>
+        MutableStateFlow<ScreenState>(ScreenState.Loading(null))
+    val screenState = _screenState as StateFlow<ScreenState>
 
     private val cityList = mutableListOf<AreaData>()
 
@@ -51,13 +51,13 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
 
     fun loadCountryList() {
         viewModelScope.launch {
-            //данные названия не менял на getAreas и getDistricts соответственно. Можно поменять.
+            //Данные названия не менял на getAreas и getDistricts соответственно. Можно поменять.
 
             useCaseAreaController.loadCountries().collect {
                 when (it) {
-                    is DataStatus.Loading -> _screenState.value = DistrictScreenState.Loading(null)
+                    is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
                     is DataStatus.Content -> _screenState.value =
-                        DistrictScreenState.Content(it.data!!)
+                        ScreenState.Content(it.data!!)
 
                     else -> {}
                 }
@@ -68,7 +68,7 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
     fun loadDistrictList(parentAreaId: Int) {
         viewModelScope.launch {
             useCaseAreaController.loadDistricts(parentId = parentAreaId).collect {
-                if (it is DataStatus.Loading) _screenState.value = DistrictScreenState.Loading(null)
+                if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(null)
                 if (it is DataStatus.Content) loadAllCityList(it.data!!)
             }
         }
@@ -78,7 +78,7 @@ open class DistrictVm(private val useCaseAreaController: AreaController) : ViewM
         cityList.clear()
         viewModelScope.launch(Dispatchers.IO) {
             findCityRecursive(parentArea)
-            _screenState.value = DistrictScreenState.Content(cityList)
+            _screenState.value = ScreenState.Content(cityList)
         }
     }
 

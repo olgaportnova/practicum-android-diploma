@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.sharedPref.impl
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ru.practicum.android.diploma.filter.data.dto.FilterDto
+import ru.practicum.android.diploma.filter.data.dto.models.FilterDto
 import ru.practicum.android.diploma.sharedPref.FiltersStorage
 
 class FiltersStorageImpl(

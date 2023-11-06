@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.filter.data.dto
+package ru.practicum.android.diploma.filter.data.dto.models
 
 data class Category(
     val id: String,

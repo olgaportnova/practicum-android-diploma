@@ -5,18 +5,15 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.filter.data.dto.AreaDto
-import ru.practicum.android.diploma.filter.data.dto.Category
-import ru.practicum.android.diploma.filter.data.dto.CountryDto
+import ru.practicum.android.diploma.filter.data.dto.models.AreaDto
+import ru.practicum.android.diploma.filter.data.dto.models.CountryDto
+import ru.practicum.android.diploma.filter.data.dto.models.CategoryResponse
 import ru.practicum.android.diploma.hhApi.ApiHH
 import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.hhApi.dto.ResponseWrapper
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
-import ru.practicum.android.diploma.util.DataStatus
 
 class NetworkClientImpl(
     private val hhApi: ApiHH,
@@ -102,8 +99,11 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun loadIndustries(): Flow<DataStatus<List<Category>>> {
-        return flow {  }
+    override suspend fun getIndustries(): ResponseWrapper<CategoryResponse> {
+        val response = hhApi.getIndustries()
+
+        return if (response.code() == 200) ResponseWrapper(response.code(), response.body())
+        else ResponseWrapper(response.code(), data = null)
     }
 
 

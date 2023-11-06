@@ -32,10 +32,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             layoutCountry.setOnClickListener {
-                findNavController().navigate(R.id.action_to_country,
-                    Bundle().apply {
-                    putInt(ARG_FRAGMENT_TYPE, FragmentType.COUNTRY.id)
-                })
+                findNavController().navigate(R.id.action_to_country)
             }
 
             layoutDistrict.setOnClickListener {
@@ -46,10 +43,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
                 findNavController().navigate(
                     R.id.action_to_district,
-                    Bundle().apply {
-                        putInt(ARG_COUNTRY_ID, parentId)
-                        putInt(ARG_FRAGMENT_TYPE, FragmentType.DISTRICT.id)
-                    })
+                    Bundle().apply { putInt(ARG_COUNTRY_ID, parentId) })
             }
 
             btnClrCountry.setOnClickListener {

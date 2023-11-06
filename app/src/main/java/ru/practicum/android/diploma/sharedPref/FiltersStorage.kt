@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.sharedPref
 
-import ru.practicum.android.diploma.filter.data.dto.FilterDto
+import ru.practicum.android.diploma.filter.data.dto.models.FilterDto
 
 interface FiltersStorage {
 

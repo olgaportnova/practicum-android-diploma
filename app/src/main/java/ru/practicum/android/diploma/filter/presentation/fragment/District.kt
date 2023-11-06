@@ -20,8 +20,6 @@ import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 import ru.practicum.android.diploma.util.DefaultFragment
 
 const val ARG_COUNTRY_ID = "country_id_pram"
-const val ARG_FRAGMENT_TYPE = "fragment_to_open"
-
 
 const val KEY_DISTRICT_RESULT = "district_result"
 const val KEY_COUNTRY_RESULT = "area_result"
@@ -74,7 +72,6 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             countryId = it.getInt(ARG_COUNTRY_ID)
-            fragmentType = it.getInt(ARG_FRAGMENT_TYPE)
         }
     }
 
@@ -84,23 +81,16 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         setUpAdapter() // Настройка адаптера для RecyclerView
 
         // При загрузке фрагмента анализируем его тип
-        fragmentType?.let {
-            when (it) {
-                FragmentType.DISTRICT.id -> {
-                    // Загрузка списка регионов производится только при наличии ненулевого id страны
-                    countryId?.let { id -> vm.loadDistrictList(id) }
-                }
-                FragmentType.COUNTRY.id->{
-                    binding.navigationBar.title = resources.getString(R.string.country_fragment_title)
-                    vm.loadCountryList()
-                }
-                FragmentType.INDUSTRY.id->{
-                    binding.navigationBar.title = "Industry"
-                }
-                else -> {}
-            }
+
+        if (countryId != null) {
+            // Загрузка списка регионов производится только при наличии ненулевого id страны
+            countryId?.let { id -> vm.loadDistrictList(id) }
+        } else {
+            binding.navigationBar.title = resources.getString(R.string.country_fragment_title)
+            vm.loadCountryList()
         }
     }
+
 
     private fun setUpAdapter() {
         binding.areaRecycler.adapter = adapter
@@ -117,20 +107,19 @@ open class District : DefaultFragment<FragmentDistrictBinding>() {
         }
     }
 
-    private fun setFragmentScreenState(newScreenState: DistrictScreenState) {
+    private fun setFragmentScreenState(newScreenState: ScreenState) {
         when (newScreenState) {
-            is DistrictScreenState.Loading -> binding.txtContent.text = "Initial "
-            is DistrictScreenState.Content -> adapter.changeData(newScreenState.data)
+            is ScreenState.Loading -> binding.txtContent.text = "Initial "
+            is ScreenState.Content -> adapter.changeData(newScreenState.data)
             else -> {}
         }
     }
 
     companion object {
-        fun newInstance(fragmentType: Int, countryId: Int): District {
+        fun newInstance(countryId: Int): District {
             return District().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COUNTRY_ID, countryId)
-                    putInt(ARG_FRAGMENT_TYPE, fragmentType)
                 }
             }
         }
