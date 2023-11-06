@@ -75,7 +75,8 @@ class Search : Fragment() {
             salary = 1000,
             onlyWithSalary = true,
         )
-        viewModel.getTestRequest(modelTest)
+        //Тестовая фукнция запроса. Сейчас в коменте т.к. запускалась при запуске фрагмента.
+       // viewModel.getTestRequest(modelTest)
     }
 
 

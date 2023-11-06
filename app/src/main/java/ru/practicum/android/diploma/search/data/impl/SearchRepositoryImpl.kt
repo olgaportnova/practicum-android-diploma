@@ -2,7 +2,7 @@ package ru.practicum.android.diploma.search.data.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.filter.domain.models.ParamsFilterModel
+import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.hhApi.NetworkClient
 import ru.practicum.android.diploma.search.data.dto.models.QuerySearchMdlDto
 import ru.practicum.android.diploma.search.domain.SearchRepositry
@@ -29,7 +29,7 @@ class SearchRepositoryImpl(
 }
 
 
-    override fun getParamsFilters(): ParamsFilterModel? {
+    override fun getParamsFilters(): FilterData? {
         TODO("Not yet implemented")
     }
 
