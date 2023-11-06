@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
+import ru.practicum.android.diploma.filter.domain.models.AbstarctData
 import ru.practicum.android.diploma.filter.domain.models.CategoryData
 import ru.practicum.android.diploma.filter.presentation.util.DefaultViewModel
 import ru.practicum.android.diploma.filter.presentation.util.ScreenState
@@ -32,7 +33,8 @@ class IndustryVm(private val industriesController: IndustriesController) : Defau
 
         viewModelScope.launch(Dispatchers.IO) {
             categories.forEach {
-                it.roles.forEach { role -> fullDataList.add(roleToAbstract(role)) }
+                fullDataList.add(AbstarctData(it.id,it.name))
+                //it.roles.forEach { role -> fullDataList.add(roleToAbstract(role)) }
             }
 
             _screenState.value = ScreenState.Content(fullDataList)
