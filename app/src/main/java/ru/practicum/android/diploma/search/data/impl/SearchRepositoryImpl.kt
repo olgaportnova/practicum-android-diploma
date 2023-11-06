@@ -21,8 +21,9 @@ class SearchRepositoryImpl(
 
         return flow {
             val response = networkClient.getVacancies(createQueryMap(mapped)).data
-            if(response != null)
-            emit(AnswerSearchDtoMapper.answSearchDtoInSearch(response))
+            if(response != null){
+                emit(AnswerSearchDtoMapper.answSearchDtoInSearch(response))
+            }
         }
     }
 
