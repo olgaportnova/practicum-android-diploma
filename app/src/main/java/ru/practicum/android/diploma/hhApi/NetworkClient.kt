@@ -16,7 +16,7 @@ interface NetworkClient {
 
     suspend fun getSimilarVacancy(id: String): ResponseWrapper<AnswerVacancyListDto>
 
-    suspend fun getVacancyDetails(id: String): ResponseWrapper<VacancyDto>
+    suspend fun getVacancyDetails(dto: Any): ResponseWrapper<VacancyDto>
 
     suspend fun getIndustries(): ResponseWrapper<CategoryResponse>
 }

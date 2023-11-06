@@ -7,6 +7,8 @@ import ru.practicum.android.diploma.filter.domain.impl.AreaControllerImpl
 import ru.practicum.android.diploma.filter.domain.impl.IndustriesControllerImpl
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
+import ru.practicum.android.diploma.vacancy.domain.impl.VacancyDetailsInteractorImpl
+import ru.practicum.android.diploma.vacancy.domain.interactor.VacancyDetailsInteractor
 
 class InteractorModule {
 
@@ -19,6 +21,10 @@ class InteractorModule {
         single<AreaController> { AreaControllerImpl(areaRepo = get()) }
 
         single<IndustriesController> { IndustriesControllerImpl(industryRepo = get()) }
+
+        single<VacancyDetailsInteractor> {
+            VacancyDetailsInteractorImpl(repository = get())
+        }
 
     }
 
