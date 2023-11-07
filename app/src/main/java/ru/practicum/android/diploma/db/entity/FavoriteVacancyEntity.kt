@@ -12,6 +12,8 @@ data class FavoriteVacancyEntity(
     val id: Int,
     val vacancyName: String,
     val companyName: String,
+    @ColumnInfo(name = "alternate_url")
+    val alternateUrl:String?,
     @ColumnInfo(name = "logo_url")
     val logoUrl: String?,
     val city: String?,
@@ -37,8 +39,7 @@ data class SalaryEntity(
 data class ContactsEntity(
     val email: String?,
     val name: String?,
-    @Embedded(prefix = "phones_")
-    val phones: PhoneEntity?
+    val phones: List<PhoneEntity?>?
 )
 
 data class PhoneEntity(
