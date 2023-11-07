@@ -6,8 +6,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemViewholderVacancyBinding
-import ru.practicum.android.diploma.search.domain.models.SalaryTest
-import ru.practicum.android.diploma.search.domain.models.VacancyForTests
+import ru.practicum.android.diploma.search.domain.models.Salary
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 import java.text.NumberFormat
 import java.util.Currency
 import java.util.Locale
@@ -16,7 +16,7 @@ class VacancyViewHolder(
     private val binding: ItemViewholderVacancyBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(vacancy: VacancyForTests) {
+    fun bind(vacancy: Vacancy) {
 
         with(binding) {
             headerVacancy.text = "${vacancy.vacancyName}${
@@ -35,7 +35,7 @@ class VacancyViewHolder(
 
     }
 
-    private fun formSalary(salary: SalaryTest?, context: Context): String {
+    private fun formSalary(salary: Salary?, context: Context): String {
         salary ?: return context.getString(R.string.salary_not_indicated)
 
         return when {

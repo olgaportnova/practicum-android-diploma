@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.ItemViewholderVacancyBinding
-import ru.practicum.android.diploma.search.domain.models.VacancyForTests
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class VacancyAdapter(
-    private val vacancyList: ArrayList<VacancyForTests>,
+    private val vacancyList: ArrayList<Vacancy>,
     private var onClickListener: OnClickListener
 ) : RecyclerView.Adapter<VacancyViewHolder>() {
 
@@ -27,10 +27,10 @@ class VacancyAdapter(
     }
 
     interface OnClickListener {
-        fun onItemClick(vacancy: VacancyForTests)
+        fun onItemClick(vacancy: Vacancy)
     }
 
-    fun updateList(newVacancyList: List<VacancyForTests>) {
+    fun updateList(newVacancyList: List<Vacancy>) {
         val diffResult = DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))
         vacancyList.clear()
         vacancyList.addAll(newVacancyList)

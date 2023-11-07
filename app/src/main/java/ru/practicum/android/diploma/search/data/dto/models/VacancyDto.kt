@@ -5,6 +5,8 @@ data class VacancyDto(
     val id: Int,
     @SerializedName("name")
     val vacancyName: String,
+    @SerializedName("alternate_url")
+    val alternateUrl:String?,
     val employer: EmployerDto,
     @SerializedName("logo_urls")
     val logo: LogoDto?,
@@ -29,7 +31,7 @@ data class SalaryDto(
 data class ContactsDto(
     val email: String?,
     val name: String?,
-    val phones: PhoneDto?
+    val phones: List<PhoneDto?>?
 )
 
 data class PhoneDto(

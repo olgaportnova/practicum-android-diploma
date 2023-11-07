@@ -19,7 +19,6 @@ import ru.practicum.android.diploma.favorite.domain.FavoriteState
 import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteViewModel
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.domain.models.VacancyForTests
 
 class Favourite : Fragment() {
     private var _binding: FragmentFavouriteBinding? = null
@@ -52,7 +51,7 @@ class Favourite : Fragment() {
 
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
-            override fun onItemClick(vacancy: VacancyForTests) {
+            override fun onItemClick(vacancy: Vacancy) {
                 openFragmentVacancy(vacancyToShow = "vacancy")
             }
         })
@@ -80,7 +79,7 @@ class Favourite : Fragment() {
     }
 
 
-    private fun showFavorite(listOfFavorite: List<VacancyForTests>) {
+    private fun showFavorite(listOfFavorite: List<Vacancy>) {
         with(binding) {
             adapter.updateList(listOfFavorite)
             favouritesRecyclerView.visibility = View.VISIBLE

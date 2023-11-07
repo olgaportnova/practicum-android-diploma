@@ -4,16 +4,16 @@ import ru.practicum.android.diploma.db.entity.ContactsEntity
 import ru.practicum.android.diploma.db.entity.FavoriteVacancyEntity
 import ru.practicum.android.diploma.db.entity.PhoneEntity
 import ru.practicum.android.diploma.db.entity.SalaryEntity
-import ru.practicum.android.diploma.search.domain.models.ContactsTest
-import ru.practicum.android.diploma.search.domain.models.PhoneTest
-import ru.practicum.android.diploma.search.domain.models.SalaryTest
-import ru.practicum.android.diploma.search.domain.models.VacancyForTests
+import ru.practicum.android.diploma.search.domain.models.Contacts
+import ru.practicum.android.diploma.search.domain.models.Phone
+import ru.practicum.android.diploma.search.domain.models.Salary
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class VacancyEntityMapper {
 
-    fun vacancyEntityToVacancy(vacancyEntity: FavoriteVacancyEntity): VacancyForTests {
+    fun vacancyEntityToVacancy(vacancyEntity: FavoriteVacancyEntity): Vacancy {
         return with(vacancyEntity) {
-            VacancyForTests(
+            Vacancy(
                 id = id,
                 vacancyName = vacancyName,
                 companyName = companyName,
@@ -31,9 +31,9 @@ class VacancyEntityMapper {
         }
     }
 
-    private fun createSalary(salaryEntity: SalaryEntity?): SalaryTest? {
+    private fun createSalary(salaryEntity: SalaryEntity?): Salary? {
         return salaryEntity?.let {
-            SalaryTest(
+            Salary(
                 currency = it.currency,
                 from = it.from,
                 gross = it.gross,
@@ -42,9 +42,9 @@ class VacancyEntityMapper {
         }
     }
 
-    private fun createContacts(contactsEntity: ContactsEntity?): ContactsTest? {
+    private fun createContacts(contactsEntity: ContactsEntity?): Contacts? {
         return contactsEntity?.let {
-            ContactsTest(
+            Contacts(
                 email = it.email,
                 name = it.name,
                 phones = it.phones?.map { createPhone(it) }
@@ -52,9 +52,9 @@ class VacancyEntityMapper {
         }
     }
 
-    private fun createPhone(phoneEntity: PhoneEntity?): PhoneTest? {
+    private fun createPhone(phoneEntity: PhoneEntity?): Phone? {
         return phoneEntity?.let {
-            PhoneTest(
+            Phone(
                 city = it.city,
                 comment = it.comment,
                 country = it.country,
@@ -65,7 +65,7 @@ class VacancyEntityMapper {
 
 
 
-    fun vacancyVacancyToEntity(vacancy: VacancyForTests): FavoriteVacancyEntity {
+    fun vacancyVacancyToEntity(vacancy: Vacancy): FavoriteVacancyEntity {
         return with(vacancy) {
             FavoriteVacancyEntity(
                 id = id,
@@ -85,7 +85,7 @@ class VacancyEntityMapper {
         }
     }
 
-    private fun createSalaryEntity(salary: SalaryTest?): SalaryEntity? {
+    private fun createSalaryEntity(salary: Salary?): SalaryEntity? {
         return salary?.let {
             SalaryEntity(
                 currency = it.currency,
@@ -96,7 +96,7 @@ class VacancyEntityMapper {
         }
     }
 
-    private fun createContactsEntity(contacts: ContactsTest?): ContactsEntity? {
+    private fun createContactsEntity(contacts: Contacts?): ContactsEntity? {
         return contacts?.let {
             ContactsEntity(
                 email = it.email,
@@ -106,7 +106,7 @@ class VacancyEntityMapper {
         }
     }
 
-    private fun createPhoneEntity(phone: PhoneTest?): PhoneEntity? {
+    private fun createPhoneEntity(phone: Phone?): PhoneEntity? {
         return phone?.let {
             PhoneEntity(
                 city = it.city,

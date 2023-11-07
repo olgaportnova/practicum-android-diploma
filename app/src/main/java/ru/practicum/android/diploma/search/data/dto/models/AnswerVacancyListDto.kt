@@ -9,5 +9,5 @@ data class AnswerVacancyListDto(
     @SerializedName("page")
     val currentPages:Int,
     @SerializedName("items")
-    val listVacancy:List<VacancyDtoTest>
+    val listVacancy:List<VacancyDto>
 )
