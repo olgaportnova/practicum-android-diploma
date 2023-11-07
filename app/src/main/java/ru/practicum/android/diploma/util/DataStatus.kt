@@ -8,4 +8,5 @@ sealed class DataStatus<out T>(val code: Int = DEFAULT_NETWORK_RESPONSE, val dat
     class EmptyContent: DataStatus<Nothing>()
     class Error(newResponseCode:Int = DEFAULT_NETWORK_RESPONSE,errorMessage:String = "Error") : DataStatus<Nothing>(code = newResponseCode)
     class NoConnecting(): DataStatus<Nothing>()
+    class Default: DataStatus<Nothing>()
 }

@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.util.DataStatus
 
-interface SearchRepositry {
+interface SearchRepository {
 
     suspend fun doRequestSearch(searchRequest:QuerySearchMdl): Flow<DataStatus<AnswerVacancyList>>
 

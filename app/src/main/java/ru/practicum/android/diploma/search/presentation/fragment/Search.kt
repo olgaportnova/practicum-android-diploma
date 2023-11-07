@@ -18,6 +18,10 @@ class Search : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
+    init {
+
+    }
+
     private fun setUiListeners() {
 //        //TODO: отработать нажание на item вакансии и переход
 //        binding.txtTemporal.setOnClickListener {
@@ -30,24 +34,10 @@ class Search : Fragment() {
                     findNavController().navigate(R.id.action_to_filters)
                     true
                 }
-
                 else -> false
             }
         }
     }
-
-    /**
-     * Function to open required vacancy details
-     * @param vacancyToShow represent vacancy model
-     * @author Oleg
-     */
-    // TODO: change param type
-    private fun openFragmentVacancy(vacancyToShow: String) {
-        findNavController().navigate(
-            R.id.action_search_to_vacancy,
-            Bundle().apply { putString("vacancy_model", vacancyToShow) })
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,21 +52,6 @@ class Search : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUiListeners()
-
-//Тестовая модель для запросов
-        val modelTest = QuerySearchMdl(
-            page = 0,
-            perPage = 20,
-            text = "разработчик",
-            area = "113",
-            parentArea = "2112",
-            industry = null,
-            currency = "EUR",
-            salary = 1000,
-            onlyWithSalary = true,
-        )
-        //Тестовая фукнция запроса. Сейчас в коменте т.к. запускалась при запуске фрагмента.
-       // viewModel.getTestRequest(modelTest)
     }
 
 
@@ -84,5 +59,18 @@ class Search : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
+    /**
+     * Function to open required vacancy details
+     * @param vacancyToShow represent vacancy model
+     * @author Oleg
+     */
+    // TODO: change param type
+    private fun openFragmentVacancy(vacancyToShow: String) {
+        findNavController().navigate(
+            R.id.action_search_to_vacancy,
+            Bundle().apply { putString("vacancy_model", vacancyToShow) })
+    }
+
 
 }
