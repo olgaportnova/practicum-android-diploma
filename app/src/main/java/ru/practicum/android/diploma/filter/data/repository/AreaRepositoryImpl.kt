@@ -11,6 +11,7 @@ import ru.practicum.android.diploma.filter.data.mappers.DistrictConverter
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.hhApi.NetworkClient
+import ru.practicum.android.diploma.hhApi.dto.RequestWrapper
 import ru.practicum.android.diploma.util.DataStatus
 
 class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaRepository {
@@ -42,7 +43,7 @@ class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaReposit
         return flow {
             emit(DataStatus.Loading()) // Отправка информации о старте загрузки
 
-            val result = networkClient.getDistricts(parentId)
+            val result = networkClient.getDistricts(RequestWrapper(parentId))
 
             when (result.code) {
                 200 -> {

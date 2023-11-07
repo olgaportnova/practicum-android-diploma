@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.data.mappers.CountryConverter
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.hhApi.NetworkClient
+import ru.practicum.android.diploma.hhApi.dto.RequestWrapper
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.Vacancy
@@ -26,7 +27,7 @@ class SimilarRepositoryImpl(
         return flow {
             emit(DataStatus.Loading())
 
-            val result = networkClient.getSimilarVacancy(id)
+            val result = networkClient.getSimilarVacancy(RequestWrapper(id))
 
             when (result.code) {
                 200 -> {

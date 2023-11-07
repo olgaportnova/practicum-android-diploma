@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.hhApi.NetworkClient
+import ru.practicum.android.diploma.hhApi.dto.RequestWrapper
 import ru.practicum.android.diploma.search.data.dto.models.QuerySearchMdlDto
 import ru.practicum.android.diploma.search.domain.SearchRepositry
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
@@ -19,7 +20,7 @@ class SearchRepositoryImpl(
     override suspend fun doRequestSearch(searchRequest: QuerySearchMdl): Flow<AnswerVacancyList> {
 
         val mapped = QuerySearchMapper.qrSearchMdlToQrSearchMdlDto(searchRequest)
-        val response = networkClient.getVacancies(createQueryMap(mapped)).data
+        val response = networkClient.getVacancies(RequestWrapper(createQueryMap(mapped))).data
 
         return flow {
 
