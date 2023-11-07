@@ -21,9 +21,7 @@ class ViewModelModule {
 
         viewModel { WorkPlaceVm(filtersController = get()) }
 
-        viewModel{
-            SearchViewModel(searchInteractor = get())
-        }
+        //viewModel{            SearchViewModel(searchInteractor = get())        }
     }
 
 }

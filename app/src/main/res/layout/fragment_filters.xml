@@ -10,9 +10,15 @@
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+
+        app:titleTextAppearance="@style/ToolbarTitleText"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIconTint="?attr/colorOnPrimary"
         app:navigationIcon="@drawable/baseline_arrow_back_24"
-        app:title="@string/filters_fragment_title" />
+        app:title="@string/filters_fragment_title"
+
+
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- TODO: Update blank fragment layout -->
 

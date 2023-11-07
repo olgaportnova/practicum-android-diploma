@@ -36,6 +36,6 @@ class WorkPlaceVm(filtersController: FiltersController) : ViewModel() {
     }
 
     private fun checkAcceptCondition(){
-        _acceptChanges.value = _countryChosen.value!=null &&  _districtChosen.value!=null
+        _acceptChanges.value = _countryChosen.value!=null ||  _districtChosen.value!=null
     }
 }

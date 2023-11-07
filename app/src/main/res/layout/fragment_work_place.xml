@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        style="@style/ToolbarTitleText"
         app:titleTextAppearance="@style/ToolbarTitleText"
-        app:titleTextColor="@color/black_text"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIconTint="?attr/colorOnPrimary"
 
         app:titleMarginStart="0dp"
         app:titleCentered="false"
