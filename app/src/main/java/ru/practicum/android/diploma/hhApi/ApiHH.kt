@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.filter.data.dto.models.AreaDto
 import ru.practicum.android.diploma.filter.data.dto.models.CountryDto
 import ru.practicum.android.diploma.filter.data.dto.models.CategoryResponse
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
-import ru.practicum.android.diploma.vacancy.data.dto.VacancyDetailsResponse
+import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 
 interface ApiHH {
 
@@ -72,5 +72,5 @@ interface ApiHH {
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
     )
     @GET("vacancies/{vacancy_id}")
-    suspend fun getVacancyDetails(@Path("vacancy_id") id: String): VacancyDetailsResponse
+    suspend fun getVacancyDetails(@Path("vacancy_id") id: String): Response<VacancyDto>
 }

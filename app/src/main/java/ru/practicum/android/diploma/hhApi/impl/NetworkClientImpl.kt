@@ -11,10 +11,10 @@ import ru.practicum.android.diploma.filter.data.dto.models.CountryDto
 import ru.practicum.android.diploma.filter.data.dto.models.CategoryResponse
 import ru.practicum.android.diploma.hhApi.ApiHH
 import ru.practicum.android.diploma.hhApi.NetworkClient
+import ru.practicum.android.diploma.hhApi.dto.RequestWrapper
 import ru.practicum.android.diploma.hhApi.dto.ResponseWrapper
 import ru.practicum.android.diploma.search.data.dto.models.AnswerVacancyListDto
 import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
-import ru.practicum.android.diploma.vacancy.data.dto.VacancyDetailsRequest
 
 class NetworkClientImpl(
     private val hhApi: ApiHH,
@@ -39,14 +39,14 @@ class NetworkClientImpl(
             }
         }
     }
-
-    override suspend fun getDistricts(id: Int): ResponseWrapper<AreaDto> {
+    //id: Int
+    override suspend fun getDistricts(id:RequestWrapper<Int>): ResponseWrapper<AreaDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
                 ResponseWrapper(NO_CONNECT, data = null)
             } else {
-                val response = hhApi.getDistricts(id)
+                val response = hhApi.getDistricts(id.query)
                 if (response.code() == 200)
                     ResponseWrapper(response.code(), response.body())
                 else
@@ -55,13 +55,13 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getSimilarVacancy(id: String): ResponseWrapper<AnswerVacancyListDto> {
+    override suspend fun getSimilarVacancy(id:RequestWrapper<String>): ResponseWrapper<AnswerVacancyListDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
                 ResponseWrapper(NO_CONNECT, data = null)
             } else {
-                val response = hhApi.getSimilarVacancy(id)
+                val response = hhApi.getSimilarVacancy(id.query)
                 if (response.code() == 200)
                     ResponseWrapper(response.code(), response.body())
                 else
@@ -70,13 +70,13 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getVacancies(options: HashMap<String, Any>): ResponseWrapper<AnswerVacancyListDto> {
+    override suspend fun getVacancies(options: RequestWrapper<HashMap<String, Any>>): ResponseWrapper<AnswerVacancyListDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
                 ResponseWrapper(NO_CONNECT, data = null)
             } else {
-                val response = hhApi.getVacancies(options)
+                val response = hhApi.getVacancies(options.query)
                 if (response.code() == 200)
                     ResponseWrapper(response.code(), response.body())
                 else
@@ -85,21 +85,17 @@ class NetworkClientImpl(
         }
     }
 
-    override suspend fun getVacancyDetails(dto: Any): ResponseWrapper<VacancyDto> {
+    override suspend fun getVacancyDetails(id:RequestWrapper<String>): ResponseWrapper<VacancyDto> {
         return withContext(Dispatchers.IO) {
 
             if (isConnected() == false) {
                 ResponseWrapper(code = NO_CONNECT, data = null)
-            }
-
-            if(dto !is VacancyDetailsRequest){
-                ResponseWrapper(code = 400, data = null)
             } else {
-                val response = hhApi.getVacancyDetails(dto.id)
-                if (response.code == 200)
-                    ResponseWrapper(code = response.code, data = response.result)
+                val response = hhApi.getVacancyDetails(id.query)
+                if (response.code() == 200)
+                    ResponseWrapper(code = response.code(), data = response.body())
                 else
-                    ResponseWrapper(code = response.code, data = null)
+                    ResponseWrapper(code = response.code(), data = response.body())
             }
         }
     }
