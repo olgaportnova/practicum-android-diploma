@@ -6,6 +6,7 @@ import ru.practicum.android.diploma.db.AppDatabase
 import ru.practicum.android.diploma.db.entity.FavoriteVacancyEntity
 import ru.practicum.android.diploma.favorite.domain.FavoriteRepository
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.search.domain.models.VacancyForTests
 import ru.practicum.android.diploma.util.mappers.VacancyEntityMapper
 
 
@@ -14,22 +15,22 @@ class FavoriteRepositoryImpl(
     private val vacancyConvertor: VacancyEntityMapper
 ) : FavoriteRepository {
 
-    override suspend fun insertVacancyToFavoriteList(vacancy: Vacancy) {
+    override suspend fun insertVacancyToFavoriteList(vacancy: VacancyForTests) {
         appDatabase.favoriteVacancyDao()
             .insertVacancyToFavoriteList(vacancyConvertor.vacancyVacancyToEntity(vacancy))
     }
 
-    override suspend fun deleteVacancyFromFavoriteList(vacancy: Vacancy) {
+    override suspend fun deleteVacancyFromFavoriteList(vacancy: VacancyForTests) {
         appDatabase.favoriteVacancyDao()
             .deleteVacancyFromFavoriteList(vacancyConvertor.vacancyVacancyToEntity(vacancy))
     }
 
-    override fun getAllFavouriteVacancies(): Flow<List<Vacancy>> = flow {
+    override fun getAllFavouriteVacancies(): Flow<List<VacancyForTests>> = flow {
         val favoriteVacancies = appDatabase.favoriteVacancyDao().getAllFavouriteVacancies()
         emit(convertFromVacancyEntityToVacancy(favoriteVacancies))
     }
 
-    override suspend fun getFavouriteVacancyById(id: Int): Vacancy? {
+    override suspend fun getFavouriteVacancyById(id: Int): VacancyForTests? {
         val favoriteVacancyEntity = appDatabase.favoriteVacancyDao().getFavouriteVacancyById(id)
         return if (favoriteVacancyEntity != null) {
             vacancyConvertor.vacancyEntityToVacancy(favoriteVacancyEntity)
@@ -43,7 +44,7 @@ class FavoriteRepositoryImpl(
         return appDatabase.favoriteVacancyDao().doesVacancyInFavoriteList(id)
     }
 
-    private fun convertFromVacancyEntityToVacancy(listOfEntities: List<FavoriteVacancyEntity>): List<Vacancy> {
+    private fun convertFromVacancyEntityToVacancy(listOfEntities: List<FavoriteVacancyEntity>): List<VacancyForTests> {
         return listOfEntities.map { vacancy -> vacancyConvertor.vacancyEntityToVacancy(vacancy) }
     }
 

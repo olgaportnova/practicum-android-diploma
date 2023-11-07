@@ -1,14 +1,13 @@
 package ru.practicum.android.diploma.favorite.recycle_view
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemViewholderVacancyBinding
-import ru.practicum.android.diploma.search.domain.models.Salary
-import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.search.domain.models.SalaryTest
+import ru.practicum.android.diploma.search.domain.models.VacancyForTests
 import java.text.NumberFormat
 import java.util.Currency
 import java.util.Locale
@@ -17,7 +16,7 @@ class VacancyViewHolder(
     private val binding: ItemViewholderVacancyBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(vacancy: Vacancy) {
+    fun bind(vacancy: VacancyForTests) {
 
         with(binding) {
             headerVacancy.text = "${vacancy.vacancyName}${
@@ -36,7 +35,7 @@ class VacancyViewHolder(
 
     }
 
-    private fun formSalary(salary: Salary?, context: Context): String {
+    private fun formSalary(salary: SalaryTest?, context: Context): String {
         salary ?: return context.getString(R.string.salary_not_indicated)
 
         return when {
@@ -72,12 +71,18 @@ class VacancyViewHolder(
     }
 
     private fun getCurrencySymbol(currencyCode: String): String {
-        return try {
-            Currency.getInstance(currencyCode).symbol
-        } catch (e: IllegalArgumentException) {
-            currencyCode
+        //TODO: сделать обработку рубля красивей
+        if (currencyCode == "RUR" || currencyCode == "RUB") {
+            return "₽"
+        } else {
+            return try {
+                Currency.getInstance(currencyCode).symbol
+            } catch (e: IllegalArgumentException) {
+                currencyCode
+            }
         }
     }
 
+    }
 
-}
+
