@@ -1,15 +1,22 @@
 package ru.practicum.android.diploma.search.presentation.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
+import ru.practicum.android.diploma.search.presentation.states.StateFilters
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 
 class Search : Fragment() {
@@ -18,9 +25,6 @@ class Search : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    init {
-
-    }
 
     private fun setUiListeners() {
 //        //TODO: отработать нажание на item вакансии и переход
@@ -49,9 +53,28 @@ class Search : Fragment() {
     }
 
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUiListeners()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.stateFilters.collect{
+                    renderFiltersUi(it)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.stateSearch.collect{
+                    renderSearchUi(it)
+                }
+            }
+        }
+
+        viewModel.getParamsFilters()
     }
 
 
@@ -72,5 +95,19 @@ class Search : Fragment() {
             Bundle().apply { putString("vacancy_model", vacancyToShow) })
     }
 
+    private fun renderFiltersUi(state:StateFilters){
+        when(state){
+            StateFilters.NO_USE_FILTERS -> {renderNoFilters()}
+            StateFilters.USE_FILTERS -> {renderUseFilters()}
+        }
+    }
+
+    private fun renderNoFilters(){
+        binding.navigationBar.setNavigationIcon(R.drawable.ic_filters)
+    }
+
+    private fun renderUseFilters(){
+        binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
+    }
 
 }
