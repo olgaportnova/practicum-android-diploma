@@ -1,10 +1,14 @@
 package ru.practicum.android.diploma.similar.presentation.fragment
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.databinding.FragmentSimilarBinding
+import ru.practicum.android.diploma.favorite.domain.FavoriteState
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class Similar : DefaultFragment<FragmentSimilarBinding>() {
 
@@ -25,4 +29,6 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     override fun exitExtraWhenSystemBackPushed() {
         findNavController().popBackStack()
     }
+
+
 }
