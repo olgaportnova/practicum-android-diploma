@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.practicum.android.diploma.filter.domain.models.AbstarctData
+import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.domain.models.RoleData
 
@@ -17,16 +17,40 @@ open class DefaultViewModel : ViewModel() {
         MutableStateFlow<ScreenState>(ScreenState.Loading(null))
     val screenState = _screenState as StateFlow<ScreenState>
 
-    var dataToSendBack: AbstarctData? = null
+    var dataToSendBack: AbstractData? = null
 
-    protected val fullDataList = mutableListOf<AbstarctData>()
+    private var _itemPosToUpdate = MutableLiveData<Int>()
+    val itemPosToUpdate = _itemPosToUpdate as LiveData<Int>
 
-    fun areaToAbstract(area: AreaData) = AbstarctData(area.id, area.name)
+    private var previouslySelectedItemPos: Int? = null
 
-    fun roleToAbstract(role: RoleData) = AbstarctData(role.id, role.name)
+    val fullDataList = mutableListOf<AbstractData>()
 
-    fun searchInputData(inputText:CharSequence?):List<AbstarctData>{
-        return if (inputText.isNullOrBlank()){
+    fun areaToAbstract(area: AreaData) = AbstractData(area.id, area.name)
+
+    fun roleToAbstract(role: RoleData) = AbstractData(role.id, role.name)
+
+    fun selectItemInDataList(selectedData: AbstractData) {
+        if (fullDataList.isNotEmpty()) {
+            val selectedItemIndex = fullDataList.indexOf(selectedData) // Поиск позиции в списке
+            if (selectedItemIndex != -1) {
+                // Снимаем выделение с предыдущего выделенного элемента
+                previouslySelectedItemPos?.let {
+                    if (it < fullDataList.size) fullDataList[it].isSelected = false
+                    _itemPosToUpdate.value = it
+                }
+
+                // Устанавливаем выделение на выбранный элемент
+                fullDataList[selectedItemIndex].isSelected = true
+                _itemPosToUpdate.value = selectedItemIndex
+
+                previouslySelectedItemPos = selectedItemIndex
+            }
+        }
+    }
+
+    fun searchInputData(inputText: CharSequence?): List<AbstractData> {
+        return if (inputText.isNullOrBlank()) {
             fullDataList
         } else {
             fullDataList.filter {

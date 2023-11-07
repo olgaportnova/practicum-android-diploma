@@ -10,8 +10,4 @@ data class AreaData(
     val areas: List<AreaData>
 ): Parcelable
 
-data class AbstarctData(
-    val id:Int,
-    val name: String
-)
 

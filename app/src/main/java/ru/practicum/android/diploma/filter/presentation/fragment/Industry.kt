@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.filter.presentation.util.INDUSTRY_NAME
 import ru.practicum.android.diploma.filter.presentation.util.KEY_INDUSTRY_RESULT
 import ru.practicum.android.diploma.filter.presentation.util.ParentDataFragment
 import ru.practicum.android.diploma.filter.presentation.view_model.IndustryVm
+import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 
 class Industry : ParentDataFragment() {
     override val vm: IndustryVm by viewModel()
@@ -17,6 +18,8 @@ class Industry : ParentDataFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.navigationBar.title = "Индустрия"
+        adapter.setAdapterType(AreaAdapter.CATEGORIES)
+        adapter.setNewItemClickListener() { vm.selectItemInDataList(it) }
     }
 
     override fun exitExtraWhenSystemBackPushed() {
@@ -33,5 +36,4 @@ class Industry : ParentDataFragment() {
             }
         }
     }
-
 }

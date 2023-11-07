@@ -30,7 +30,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     protected var paramCountryId: Int? = null // Считывается из аргументов в onCreate
     open val vm: DefaultViewModel? = null
 
-    private val adapter = AreaAdapter(mutableListOf()) {
+    protected var adapter = AreaAdapter(mutableListOf()) {
         vm?.dataToSendBack = it
         exitExtraWhenSystemBackPushed() // Exit after choosing required area
     }
@@ -55,9 +55,12 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     }
 
     open fun setObservers() {
-        vm?.let {
+        vm?.let { it ->
             with(it) {
                 errorMsg.observe(viewLifecycleOwner) { msg -> showMsgDialog(msg) }
+                itemPosToUpdate.observe(viewLifecycleOwner){item->
+                    adapter.notifyItemChanged(item)
+                }
             }
         }
     }
