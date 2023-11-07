@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.favorite.recycle_view
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -72,12 +71,18 @@ class VacancyViewHolder(
     }
 
     private fun getCurrencySymbol(currencyCode: String): String {
-        return try {
-            Currency.getInstance(currencyCode).symbol
-        } catch (e: IllegalArgumentException) {
-            currencyCode
+        //TODO: сделать обработку рубля красивей
+        if (currencyCode == "RUR" || currencyCode == "RUB") {
+            return "₽"
+        } else {
+            return try {
+                Currency.getInstance(currencyCode).symbol
+            } catch (e: IllegalArgumentException) {
+                currencyCode
+            }
         }
     }
 
+    }
 
-}
+

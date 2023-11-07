@@ -17,6 +17,7 @@ class VacancyEntityMapper {
                 id = id,
                 vacancyName = vacancyName,
                 companyName = companyName,
+                alternateUrl = alternateUrl,
                 logoUrl = logoUrl,
                 city = city,
                 employment = employment,
@@ -46,7 +47,7 @@ class VacancyEntityMapper {
             Contacts(
                 email = it.email,
                 name = it.name,
-                phones = createPhone(it.phones)
+                phones = it.phones?.map { createPhone(it) }
             )
         }
     }
@@ -70,6 +71,7 @@ class VacancyEntityMapper {
                 id = id,
                 vacancyName = vacancyName,
                 companyName = companyName,
+                alternateUrl = alternateUrl,
                 logoUrl = logoUrl,
                 city = city,
                 employment = employment,
@@ -99,7 +101,7 @@ class VacancyEntityMapper {
             ContactsEntity(
                 email = it.email,
                 name = it.name,
-                phones = createPhoneEntity(it.phones)
+                phones = it.phones?.map { createPhoneEntity(it) }
             )
         }
     }
