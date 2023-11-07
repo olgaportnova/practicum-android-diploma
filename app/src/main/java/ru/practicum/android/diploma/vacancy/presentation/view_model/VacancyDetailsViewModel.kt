@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.util.DataStatus
 import ru.practicum.android.diploma.vacancy.domain.interactor.VacancyDetailsInteractor
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 
@@ -21,50 +21,27 @@ class VacancyDetailsViewModel(
         MutableStateFlow<VacancyDetailsScreenState>(VacancyDetailsScreenState.Loading)
     val screenState = _screenState as StateFlow<VacancyDetailsScreenState>
 
-
-
     fun getVacancyDetails(vacancyId: String) {
-        if (vacancyId.isNotEmpty()) {
-            //_screenState.value = VacancyDetailsScreenState.Loading
-
-            viewModelScope.launch {
-                vacancyDetailsInteractor
-                    .getVacancyDetails(vacancyId)
-                    .collect { pair ->
-                        processResult(pair.result, pair.error)
-                    }
-            }
-        }
-    }
-
-    /*fun getVacancyDetails(vacancyId: String) {
         viewModelScope.launch {
             vacancyDetailsInteractor.getVacancyDetails(vacancyId).collect {
-                if (it is DataStatus.Loading) _screenState.value = VacancyDetailsScreenState.Loading
-                if (it is DataStatus.Content) _screenState.value = VacancyDetailsScreenState.Content(it.data!!)
-            }
-        }
-    }*/
+                when (it) {
+                    is DataStatus.Loading -> _screenState.value = VacancyDetailsScreenState.Loading
 
-    private fun processResult(foundVacancy: Vacancy?, errorMessage: Int?) {
+                    is DataStatus.Content -> {
+                        _screenState.value =
+                            VacancyDetailsScreenState.Content(it.data!!)
+                        Log.d("VAC found", it.data.toString())
+                    }
 
-        when {
-            errorMessage != null -> {
-                _screenState.value =
-                    VacancyDetailsScreenState.Error(
-                        errorMessage = application.getString(
-                            R.string.server_error
-                        )
-                    )
-            }
+                    is DataStatus.NoConnecting -> _screenState.value = VacancyDetailsScreenState.Error
 
-            else -> {
-                _screenState.value = VacancyDetailsScreenState.Content(foundVacancy = foundVacancy)
-                Log.d("VAC found", foundVacancy.toString())
+                    is DataStatus.Error -> _screenState.value = VacancyDetailsScreenState.Error
+
+                    else -> {}
+                }
             }
         }
     }
-
 
     /*fun shareVacancy(vacancyUrl: String) {
         sharingInteractor.shareVacancy(vacancyUrl)
@@ -89,7 +66,4 @@ class VacancyDetailsViewModel(
         favoriteInteractor.doesVacancyInFavoriteList()
     }*/
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
 }

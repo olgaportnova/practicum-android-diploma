@@ -1,6 +1,8 @@
 package ru.practicum.android.diploma.vacancy.presentation.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +28,9 @@ import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.vacancy.presentation.view_model.VacancyDetailsViewModel
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
 
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,7 +46,6 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
     private val vacancyDetailsViewModel by viewModel<VacancyDetailsViewModel>()
 
-    //private var vacancyModel: String? = null
     private var vacancyId: String? = null
     private var vacancy: Vacancy? = null
     private var paramVacancyId: String? = null
@@ -63,41 +67,27 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
     }
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*lifecycleScope.launch {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vacancyDetailsViewModel.screenState.collect {
+                    Log.d("VAC state", it.toString())
                     updateUI(it)
+
                 }
             }
-        }*/
+        }
 
-        /*if (paramVacancyId != null) {
+        if (paramVacancyId != null) {
             paramVacancyId?.let { id -> vacancyDetailsViewModel.getVacancyDetails(id) }
-        }*/
+        }
 
-        vacancyId = "85455501"
+        vacancyId = "87470720"
 
         vacancyDetailsViewModel.getVacancyDetails(vacancyId!!)
-
-        /*vacancy = ru.practicum.android.diploma.search.domain.models.Vacancy(
-            id = 111,
-            vacancyName = "developer",
-            companyName = "Yandex",
-            logoUrl = "",
-            city = "SPb",
-            employment = "00.00-00.00",
-            experience = "100",
-            salary = Salary("Rub", 100, false, 500),
-            description = "qeq3e3eqeqeqqqadaddadwdde",
-            keySkills = mutableListOf("svfgrdhhhdh"),
-            contacts = Contacts("szgssgsgg","dhdhhhdfh", Phone("182", "sss", "7", "000000")),
-            comment = "comment"
-        )*/
-
-        fillVacancyDetails(vacancy)
 
         setUiListeners()
 
@@ -107,8 +97,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         when (state) {
             is VacancyDetailsScreenState.Loading -> showLoading()
             is VacancyDetailsScreenState.Content -> showContent(state.foundVacancy)
-            is VacancyDetailsScreenState.Error -> showError(state.errorMessage)
-
+            is VacancyDetailsScreenState.Error -> showError()
         }
     }
 
@@ -154,8 +143,8 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
     private fun showLoading() {
         binding.apply {
             ProgressBar.isVisible = true
-            tvPlaceholderServerError.isVisible = false
             ivPlaceholderServerError.isVisible = false
+            tvPlaceholderServerError.isVisible = false
             tvVacancyName.isVisible = false
             tvSalary.isVisible = false
             EmployerCard.isVisible = false
@@ -163,39 +152,40 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         }
     }
 
-
-    private fun showError(errorMessage: String) {
+    private fun showError() {
         binding.apply {
-            tvPlaceholderServerError.isVisible = true
             ivPlaceholderServerError.isVisible = true
+            tvPlaceholderServerError.isVisible = true
             ProgressBar.isVisible = false
-            tvPlaceholderServerError.isVisible = false
-            ivPlaceholderServerError.isVisible = false
             tvVacancyName.isVisible = false
             tvSalary.isVisible = false
             EmployerCard.isVisible = false
             VacancyDetails.isVisible = false
         }
-
     }
-
 
     private fun showContent(vacancy: Vacancy?) {
         binding.apply {
-            tvPlaceholderServerError.isVisible = false
             ivPlaceholderServerError.isVisible = false
+            tvPlaceholderServerError.isVisible = false
             ProgressBar.isVisible = false
+            tvVacancyName.isVisible = true
+            tvSalary.isVisible = true
+            EmployerCard.isVisible = true
+            VacancyDetails.isVisible = true
             fillVacancyDetails(vacancy)
         }
     }
 
     private fun fillVacancyDetails(vacancy: Vacancy?) {
 
+        Log.d("VAC logo url", vacancy?.logoUrl.toString())
+
         binding.apply {
 
             tvVacancyName.text = vacancy?.vacancyName
 
-            tvSalary.text = vacancy?.salary.toString()
+            tvSalary.text = formSalary(vacancy?.salary)
 
             Glide.with(requireContext())
                 .load(vacancy?.logoUrl)
@@ -221,24 +211,83 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 }
 
             if (vacancy?.keySkills.isNullOrEmpty()) {
+                tvKeySkills.isVisible = false
                 tvKeySkillsValue.isVisible = false
             } else {
-                tvKeySkillsValue.text = vacancy?.keySkills.toString()
+                var keySkills = ""
+                vacancy?.keySkills?.forEach { keySkill ->
+                    keySkills += "• ${keySkill}\n"
+                }
+                tvKeySkillsValue.text = keySkills
             }
 
-            if (vacancy?.contacts == null) {
-                ContactsContainer.isVisible = false
-            } else {
+            if (
+                vacancy?.contacts?.name?.isNotEmpty() == true ||
+                vacancy?.contacts?.email?.isNotEmpty() == true ||
+                vacancy?.contacts?.phones?.toString()?.isNotEmpty() == true
+            ) {
+                ContactsContainer.isVisible = true
+            }
+            if (vacancy?.contacts?.name?.isNotEmpty() == true) {
                 tvContactPersonValue.text = vacancy.contacts.name
-
+                tvContactPerson.isVisible = true
+                tvContactPersonValue.isVisible = true
+            }
+            if (vacancy?.contacts?.email?.isNotEmpty() == true) {
                 tvContactEmailValue.text = vacancy.contacts.email
-
-                tvPhoneNumberValue.text = vacancy.contacts.phones?.number
-
+                tvContactEmail.isVisible = true
+                tvContactEmailValue.isVisible = true
             }
 
             tvCommentValue.text = vacancy?.comment
 
+        }
+    }
+
+    private fun formSalary(salary: Salary?): String {
+        salary ?: return requireContext().getString(R.string.salary_not_indicated)
+
+        return when {
+            salary.from != null && salary.to != null && salary.currency != null ->
+                requireContext().getString(
+                    R.string.salary_from_to,
+                    formatNumberWithSpaces(salary.from),
+                    formatNumberWithSpaces(salary.to),
+                    getCurrencySymbol(salary.currency)
+                )
+
+            salary.from != null && salary.currency != null ->
+                requireContext().getString(
+                    R.string.salary_from,
+                    formatNumberWithSpaces(salary.from),
+                    getCurrencySymbol(salary.currency)
+                )
+
+            salary.to != null && salary.currency != null ->
+                requireContext().getString(
+                    R.string.salary_to,
+                    formatNumberWithSpaces(salary.to),
+                    getCurrencySymbol(salary.currency)
+                )
+
+            else -> requireContext().getString(R.string.salary_not_indicated)
+        }
+    }
+
+    private fun formatNumberWithSpaces(number: Int): String {
+        val formatter = NumberFormat.getNumberInstance(Locale.FRENCH)
+        return formatter.format(number)
+    }
+
+    private fun getCurrencySymbol(currencyCode: String): String {
+        return if (currencyCode == "RUR" || currencyCode == "RUB") {
+            "₽"
+        } else {
+            try {
+                Currency.getInstance(currencyCode).symbol
+            } catch (e: IllegalArgumentException) {
+                currencyCode
+            }
         }
     }
 

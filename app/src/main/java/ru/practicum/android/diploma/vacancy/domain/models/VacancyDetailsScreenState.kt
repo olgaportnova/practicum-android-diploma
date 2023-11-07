@@ -5,11 +5,7 @@ import ru.practicum.android.diploma.search.domain.models.Vacancy
 sealed interface VacancyDetailsScreenState {
     object Loading : VacancyDetailsScreenState
 
-    //object Error : VacancyDetailsScreenState
-
-    data class Error(
-        val errorMessage: String
-    ) : VacancyDetailsScreenState
+    object Error : VacancyDetailsScreenState
 
     data class Content(
         val foundVacancy: Vacancy?
