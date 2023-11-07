@@ -43,6 +43,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/ibShare"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_28"
@@ -50,6 +51,7 @@
                     android:src="@drawable/ic_share" />
 
                 <ImageButton
+                    android:id="@+id/ibFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_20"
@@ -106,18 +108,18 @@
                 style="@style/item_viewholder_header_text"
                 android:layout_width="0dp"
                 android:layout_marginStart="@dimen/edit_text_margin_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ivEmployerLogo"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Едаааааааааааааааааааааааааааааааааааааааааааааааа" />
 
             <TextView
                 android:id="@+id/tvCity"
                 style="@style/item_viewholder_regular_text"
                 android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tvEmployerName"
                 app:layout_constraintTop_toBottomOf="@id/tvEmployerName"
-                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Москваааааааааааааааааааааааааааааааааааааааааааа" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -296,7 +298,13 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+            <TextView
+                android:id="@+id/tvSimilarVacanciesButton"
+                style="@style/big_blue_button"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_24"
+                android:text="@string/similar_vacancies"
+                app:layout_constraintTop_toBottomOf="@id/ContactsContainer" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -307,7 +315,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/navigationBar"
             tools:visibility="gone" />
 
         <ImageView
