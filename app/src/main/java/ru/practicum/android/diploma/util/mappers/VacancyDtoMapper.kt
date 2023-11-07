@@ -18,6 +18,7 @@ class VacancyDtoMapper {
                 id = id,
                 vacancyName = vacancyName,
                 companyName = employer.name,
+                alternateUrl = alternateUrl,
                 logoUrl = logo?.small,
                 city = area.name,
                 employment = employment?.name,
@@ -51,7 +52,7 @@ class VacancyDtoMapper {
             Contacts(
                 email = it.email,
                 name = it.name,
-                phones = createPhone(it.phones)
+                phones = it.phones?.map { createPhone(it) }
             )
         }
     }

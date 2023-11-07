@@ -5,7 +5,7 @@ import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 
 object AnswerSearchDtoMapper {
     fun answSearchDtoInSearch(answerModel: AnswerVacancyListDto): AnswerVacancyList {
-        val vacancyDtoMapper = VacancyDtoMapperTest()
+        val vacancyDtoMapper = VacancyDtoMapper()
 
         return with(answerModel) {
             AnswerVacancyList(

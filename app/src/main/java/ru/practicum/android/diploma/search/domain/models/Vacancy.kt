@@ -4,6 +4,7 @@ data class Vacancy(
     val id: Int,
     val vacancyName: String,
     val companyName: String,
+    val alternateUrl:String?,
     val logoUrl: String?,
     val city: String?,
     val employment: String?,
@@ -25,7 +26,7 @@ data class Salary(
 data class Contacts(
     val email: String?,
     val name: String?,
-    val phones: Phone?
+    val phones: List<Phone?>?
 )
 
 data class Phone(

@@ -63,4 +63,7 @@
     <string name="team_tanya">Татьяна Руль</string>
     <string name="team_olga">Ольга Бадосова</string>
 
+    <!--    ERRORS MESSAGES   -->
+    <string name="error_get_data_empty">Error get data. Your data is empty.</string>
+
 </resources>
