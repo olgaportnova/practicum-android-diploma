@@ -31,6 +31,8 @@ class SearchRepositoryImpl(
 
         return flow {
 
+            emit(DataStatus.Loading())
+
             val mapped = QuerySearchMapper.qrSearchMdlToQrSearchMdlDto(searchRequest)
             val response = networkClient.getVacancies(RequestWrapper(createQueryMap(mapped)))
 
@@ -47,11 +49,11 @@ class SearchRepositoryImpl(
                    }
                }
                 else->{
-                    emit(DataStatus.Error(response.code, R.string.error_sever_log.toString()))
+                    emit(DataStatus.Error(response.code))
                 }
             }
 
-        }.catch { emit(DataStatus.Error(errorMessage = R.string.error_app_search_log.toString())) }
+        }.catch { emit(DataStatus.Error()) }
     }
 
 

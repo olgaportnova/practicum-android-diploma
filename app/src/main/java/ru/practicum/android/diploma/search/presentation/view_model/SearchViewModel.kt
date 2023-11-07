@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.search.domain.SearchInteractor
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
@@ -23,10 +24,40 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
         viewModelScope.launch {
             searchInteractor.doRequestSearch(modelForQuery).collect{
+                 when(it){
+                   is DataStatus.Content -> {
+                       _stateSearch.value = DataStatus.Content(it.data!!)
+                   }
+                   is DataStatus.Loading ->{
+                       _stateSearch.value = DataStatus.Loading()
+                   }
+                   is DataStatus.Error -> {
+                       if (it.code == 0)
+                       _stateSearch.value  = DataStatus.Error(errorMessage = R.string.error_app_search_log.toString())
+                       else
+                       _stateSearch.value = DataStatus.Error(errorMessage = "${R.string.error_sever_log} ${it.code}")
+                   }
+                   is DataStatus.EmptyContent -> {
+                       _stateSearch.value = DataStatus.EmptyContent()
+                   }
+                   is DataStatus.NoConnecting ->{
+                       _stateSearch.value = DataStatus.NoConnecting()
+                   }
+                   is DataStatus.Default ->{
+                       _stateSearch.value = DataStatus.Default()
+                   }
 
+                 }
             }
         }
 
+    }
+
+    fun getParamsFilters(){
+        val params = searchInteractor.getParamsFilters()
+
+        if(params == null) _stateFilters.value = StateFilters.NO_USE_FILTERS
+        else _stateFilters.value = StateFilters.USE_FILTERS
     }
 
 }
