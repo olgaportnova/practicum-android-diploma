@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,9 +16,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.presentation.states.StateFilters
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
+import ru.practicum.android.diploma.util.DataStatus
 
 class Search : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -100,6 +103,33 @@ class Search : Fragment() {
             StateFilters.NO_USE_FILTERS -> {renderNoFilters()}
             StateFilters.USE_FILTERS -> {renderUseFilters()}
         }
+    }
+
+    private fun renderSearchUi(state:DataStatus<AnswerVacancyList>){
+        when(state){
+            is DataStatus.Default -> { renderSearchDefaultUi() }
+            is DataStatus.Error -> { renderSearchErrorUi(state.code)}
+            is DataStatus.Loading -> {renderSearchLoadingUi()}
+            is DataStatus.NoConnecting -> {renderSearchNoConnectingUi()}
+            is DataStatus.Content -> {renderSearchContentUi(state.data)}
+            is DataStatus.EmptyContent -> {renderSearchEmptyUi()}
+        }
+    }
+
+    private fun renderSearchDefaultUi(){
+        binding.infoSearchResultCount.isVisible = false
+        binding.recycleViewSearchResult.isVisible = false
+        binding.progressBar.isVisible = false
+        binding.progressBarBottom.isVisible = false
+        binding.imagePlaceholder.isVisible = false
+        binding.infoSearchResultCount.isVisible = false
+        binding.textPlaceholder.isVisible = false
+        //Доделать версту. Доавить стейты: нет интернета, ошибка сервера. Добавить плейсхолдер по дифолту.
+
+    }
+    private fun renderSearchContentUi(data:AnswerVacancyList){
+        binding.recycleViewSearchResult.isVisible = true
+
     }
 
     private fun renderNoFilters(){

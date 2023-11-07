@@ -46,6 +46,9 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
                    is DataStatus.Default ->{
                        _stateSearch.value = DataStatus.Default()
                    }
+                   else -> {
+                       _stateSearch.value = DataStatus.Default()
+                   }
 
                  }
             }
