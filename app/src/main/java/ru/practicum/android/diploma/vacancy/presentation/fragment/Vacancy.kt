@@ -129,7 +129,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             tvSimilarVacanciesButton.setOnClickListener {
                 findNavController().navigate(R.id.action_to_similar, Bundle().apply {
                     putString(
-                        ARG_VACANCY, vacancyId
+                        ARG_VACANCY, paramVacancyId
                     )
                 })
             }
