@@ -3,6 +3,8 @@ package ru.practicum.android.diploma.search.presentation.view_model
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -16,12 +18,18 @@ import ru.practicum.android.diploma.util.DataStatus
 
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY_ML = 2000L
+    }
+
+
     val _stateFilters = MutableStateFlow<StateFilters>(StateFilters.NoUseFilters)
     val stateFilters = _stateFilters as StateFlow<StateFilters>
 
     val _stateSearch = MutableStateFlow<DataStatus<AnswerVacancyList>>(DataStatus.Default())
     val stateSearch = _stateSearch as StateFlow<DataStatus<AnswerVacancyList>>
 
+    private var searchJob: Job? = null
     fun doRequestSearch(modelForQuery: QuerySearchMdl){
 
         viewModelScope.launch {
@@ -60,6 +68,16 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
         if(params == null) _stateFilters.value = StateFilters.NoUseFilters
         else _stateFilters.value = StateFilters.UseFilters(params)
+    }
+
+    fun searchDebounce(modelForQuery: QuerySearchMdl){
+
+       searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY_ML)
+            doRequestSearch(modelForQuery)
+        }
     }
 
 }
