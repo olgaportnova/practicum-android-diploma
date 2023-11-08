@@ -11,4 +11,6 @@ sealed class FavoriteState {
 
     object EmptyList : FavoriteState()
     object Error : FavoriteState()
+    object Loading : FavoriteState()
+    object NoInternet : FavoriteState()
 }
