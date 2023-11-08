@@ -34,7 +34,7 @@ import java.util.Locale
 
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_VACANCY = "vacancy_id"
+private const val ARG_VACANCY = "vacancy_model"
 
 /**
  * A simple [Fragment] subclass.
@@ -84,10 +84,6 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         if (paramVacancyId != null) {
             paramVacancyId?.let { id -> vacancyDetailsViewModel.getVacancyDetails(id) }
         }
-
-        vacancyId = "87470720"
-
-        vacancyDetailsViewModel.getVacancyDetails(vacancyId!!)
 
         setUiListeners()
 
