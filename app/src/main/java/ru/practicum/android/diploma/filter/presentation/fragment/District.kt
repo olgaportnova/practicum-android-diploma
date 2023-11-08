@@ -34,8 +34,11 @@ open class District : ParentDataFragment() {
             // Загрузка списка регионов производится только при наличии ненулевого id страны
             paramCountryId?.let { id -> vm.loadDistrictList(id) }
         }
-        //adapter.setAdapterType(AreaAdapter.CATEGORIES)
-        adapter.setNewItemClickListener() { vm.selectItemInDataList(it) }
+
+        adapter.setNewItemClickListener() {
+            vm.dataToSendBack = it
+            vm.selectItemInDataList(it)
+        }
     }
 
     companion object {

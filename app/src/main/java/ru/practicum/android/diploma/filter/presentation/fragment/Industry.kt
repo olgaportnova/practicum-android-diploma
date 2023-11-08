@@ -19,7 +19,9 @@ class Industry : ParentDataFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.navigationBar.title = "Индустрия"
         adapter.setAdapterType(AreaAdapter.CATEGORIES)
-        adapter.setNewItemClickListener() { vm.selectItemInDataList(it) }
+        adapter.setNewItemClickListener() {
+            vm.dataToSendBack = it
+            vm.selectItemInDataList(it) }
     }
 
     override fun exitExtraWhenSystemBackPushed() {

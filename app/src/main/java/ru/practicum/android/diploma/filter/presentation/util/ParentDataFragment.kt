@@ -51,8 +51,11 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             }
 
             txtSearch.doOnTextChanged { text, start, before, count ->
-                //vm?.searchInputData(text)?.let { adapter.changeData(it) }
                 vm?.searchInputData(text)
+            }
+
+            btnChooseAll.setOnClickListener {
+                exitExtraWhenSystemBackPushed()
             }
         }
     }
