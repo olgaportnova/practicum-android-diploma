@@ -50,7 +50,8 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             }
 
             txtSearch.doOnTextChanged { text, start, before, count ->
-                vm?.searchInputData(text)?.let { adapter.changeData(it) }
+                //vm?.searchInputData(text)?.let { adapter.changeData(it) }
+                vm?.searchInputData(text)
             }
         }
     }
@@ -108,10 +109,19 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     private fun setFragmentScreenState(newScreenState: ScreenState) {
         when (newScreenState) {
             is ScreenState.Loading -> {
-
+                binding.areaRecycler.isVisible=true
+                binding.btnChooseAll.setText("Loading")
             }
 
-            is ScreenState.Content -> adapter.changeData(newScreenState.data)
+            is ScreenState.Content -> {
+                adapter.changeData(newScreenState.data)
+                binding.areaRecycler.isVisible=true
+                binding.btnChooseAll.setText("Recycler")
+            }
+            is ScreenState.EmptyContent ->{
+                binding.areaRecycler.isVisible=false
+                binding.btnChooseAll.setText("EmptyContent")
+            }
             is ScreenState.Error -> showMsgDialog(newScreenState.exception)
             else -> {}
         }

@@ -17,6 +17,7 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
             areaController.loadDistricts(parentId = parentAreaId).collect {
                 if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(null)
                 if (it is DataStatus.Content) loadAllCityList(it.data!!)
+
             }
         }
     }
@@ -26,7 +27,8 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
         viewModelScope.launch(Dispatchers.IO) {
             findCityRecursive(parentArea) // Рекурсивно заполняем лист городами
 
-            _screenState.value = ScreenState.Content(fullDataList)
+            //_screenState.value = ScreenState.Content(fullDataList)
+            changeRecyclerContent(fullDataList)
         }
     }
 

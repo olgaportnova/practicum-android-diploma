@@ -47,7 +47,7 @@
         android:layout_marginHorizontal="@dimen/work_place_info_margin_start"
 
         android:layout_marginVertical="40dp"
-        android:visibility="gone"
+        android:visibility="visible"
         style="@style/big_blue_button"
 
         android:text="@string/btn_choose_title"
