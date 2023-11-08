@@ -75,6 +75,7 @@ class Favourite : Fragment() {
             is FavoriteState.Success -> showFavorite(state.vacancies)
             is FavoriteState.EmptyList -> showEmpty()
             is FavoriteState.Error -> showError()
+            else -> {}
         }
     }
 
