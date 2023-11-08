@@ -14,7 +14,7 @@ import ru.practicum.android.diploma.util.DataStatus
 
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
-    val _stateFilters = MutableStateFlow<StateFilters>(StateFilters.NO_USE_FILTERS)
+    val _stateFilters = MutableStateFlow<StateFilters>(StateFilters.NoUseFilters)
     val stateFilters = _stateFilters as StateFlow<StateFilters>
 
     val _stateSearch = MutableStateFlow<DataStatus<AnswerVacancyList>>(DataStatus.Default())
@@ -59,8 +59,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     fun getParamsFilters(){
         val params = searchInteractor.getParamsFilters()
 
-        if(params == null) _stateFilters.value = StateFilters.NO_USE_FILTERS
-        else _stateFilters.value = StateFilters.USE_FILTERS
+        if(params == null) _stateFilters.value = StateFilters.NoUseFilters
+        else _stateFilters.value = StateFilters.UseFilters(params)
     }
 
 }

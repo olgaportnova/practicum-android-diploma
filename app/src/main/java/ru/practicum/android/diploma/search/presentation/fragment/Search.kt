@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
+import ru.practicum.android.diploma.search.presentation.SavedFilters
 import ru.practicum.android.diploma.search.presentation.states.StateFilters
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 import ru.practicum.android.diploma.util.DataStatus
@@ -27,6 +28,10 @@ class Search : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModel()
+
+    private val _paramsFilter:SavedFilters? = null
+    private val paramsFilter get() = _paramsFilter!!
+
 
 
     private fun setUiListeners() {
@@ -117,17 +122,18 @@ class Search : Fragment() {
     }
 
     private fun renderSearchDefaultUi(){
-        binding.infoSearchResultCount.isVisible = false
-        binding.recycleViewSearchResult.isVisible = false
-        binding.progressBar.isVisible = false
-        binding.progressBarBottom.isVisible = false
-        binding.imagePlaceholder.isVisible = false
-        binding.infoSearchResultCount.isVisible = false
-        binding.textPlaceholder.isVisible = false
-        //Доделать версту. Доавить стейты: нет интернета, ошибка сервера. Добавить плейсхолдер по дифолту.
+        with(binding){
+        infoSearchResultCount.isVisible = false
+        recycleViewSearchResult.isVisible = false
+        progressBar.isVisible = false
+        progressBarBottom.isVisible = false
+        imagePlaceholder.setImageResource(R.drawable.placeholder_start_of_search)
+        imagePlaceholder.isVisible = true
+        textPlaceholder.isVisible = false
+        }
 
     }
-    private fun renderSearchContentUi(data:AnswerVacancyList){
+    private fun renderSearchContentUi(data:AnswerVacancyList?){
         binding.recycleViewSearchResult.isVisible = true
 
     }
