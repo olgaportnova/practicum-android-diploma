@@ -8,7 +8,9 @@ import ru.practicum.android.diploma.filter.data.repository.IndustryRepositoryImp
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaRepository
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustryRepository
 import ru.practicum.android.diploma.search.data.impl.SearchRepositoryImpl
-import ru.practicum.android.diploma.search.domain.SearchRepository
+import ru.practicum.android.diploma.search.domain.SearchRepositry
+import ru.practicum.android.diploma.similar.data.impl.SimilarRepositoryImpl
+import ru.practicum.android.diploma.similar.domain.SimilarRepository
 import ru.practicum.android.diploma.util.mappers.VacancyEntityMapper
 import ru.practicum.android.diploma.vacancy.data.impl.VacancyDetailsRepositoryImpl
 import ru.practicum.android.diploma.vacancy.domain.repository.VacancyDetailsRepository
@@ -40,6 +42,10 @@ class RepositoryModule {
 
         single<SearchRepository> {
             SearchRepositoryImpl(networkClient = get(), filtersStorage = get())
+        }
+
+        single<SimilarRepository> {
+            SimilarRepositoryImpl(networkClient = get(), converter = get())
         }
 
     }
