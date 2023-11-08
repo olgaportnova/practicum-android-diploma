@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.search.presentation.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -67,7 +68,6 @@ class Search : Fragment() {
                 else -> false
             }
         }
-
         binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
     }
 
@@ -260,8 +260,9 @@ class Search : Fragment() {
     }
 
     private fun renderNoFilters() {
-     //binding.navigationBar.setNavigationIcon(R.drawable.ic_filters)
-     //TODO Fix bug for icon
+
+   //  val itemMenu = binding.navigationBar.menu.getItem(R.drawable.ic_filters)
+   //TODO Fix bug for icon
     }
 
     private fun renderUseFilters(content: FilterData) {
