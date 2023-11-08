@@ -2,6 +2,8 @@ package ru.practicum.android.diploma.search.presentation.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -246,5 +248,29 @@ class Search : Fragment() {
     private fun renderUseFilters(content: FilterData) {
         binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
     //TODO:Logic get SH data
+    }
+
+    private fun getTextWatcherForSearch():TextWatcher{
+        return object :TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.editTextSearch.set
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                TODO("Not yet implemented")
+            }
+        }
+    }
+
+    private fun hideIcDellText(text: CharSequence?): Int{
+        return if (text.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
     }
 }
