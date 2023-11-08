@@ -16,7 +16,7 @@ class VacancyViewHolder(
     private val binding: ItemViewholderVacancyBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(vacancy: Vacancy) {
+    fun bind(vacancy: Vacancy, onClickListener: VacancyAdapter.OnClickListener) {
 
         with(binding) {
             headerVacancy.text = "${vacancy.vacancyName}${
@@ -31,6 +31,10 @@ class VacancyViewHolder(
                 .centerCrop()
                 .transform(RoundedCorners(R.dimen.corners_radius_art_work_vacancy))
                 .into(binding.artWork)
+        }
+
+        itemView.setOnClickListener {
+            onClickListener.onItemClick(vacancy)
         }
 
     }

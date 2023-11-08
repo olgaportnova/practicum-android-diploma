@@ -23,7 +23,7 @@ class VacancyAdapter(
     }
 
     override fun onBindViewHolder(holder: VacancyViewHolder, position: Int) {
-        holder.bind(vacancyList[position])
+        holder.bind(vacancyList[position], onClickListener)
     }
 
     interface OnClickListener {
