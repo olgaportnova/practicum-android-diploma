@@ -81,7 +81,6 @@ open class DefaultViewModel : ViewModel() {
 
     suspend fun asyncSearchInputText(inputText: CharSequence?): Deferred<List<AbstractData>> =
         viewModelScope.async {
-            //delay(5000)
             searchInputText = inputText.toString()
             return@async if (inputText.isNullOrBlank()) {
                 fullDataList

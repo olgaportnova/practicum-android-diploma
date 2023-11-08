@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filter.presentation.util
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -110,7 +111,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
         when (newScreenState) {
             is ScreenState.Loading -> {
                 binding.areaRecycler.isVisible=true
-                binding.btnChooseAll.setText("Loading")
+                Log.e("LOG","screen loading ${newScreenState.code}")
             }
 
             is ScreenState.Content -> {
@@ -121,6 +122,8 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             is ScreenState.EmptyContent ->{
                 binding.areaRecycler.isVisible=false
                 binding.btnChooseAll.setText("EmptyContent")
+                Log.e("LOG","screen empty content")
+
             }
             is ScreenState.Error -> showMsgDialog(newScreenState.exception)
             else -> {}

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,14 +11,12 @@ import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.util.DataStatus
 
 open class DistrictVm(private val areaController: AreaController) : DefaultViewModel() {
-
-
     fun loadDistrictList(parentAreaId: Int) {
+        Log.e("LOG","loadDistrictList $parentAreaId")
         viewModelScope.launch {
             areaController.loadDistricts(parentId = parentAreaId).collect {
-                if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(null)
+                if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(parentAreaId)
                 if (it is DataStatus.Content) loadAllCityList(it.data!!)
-
             }
         }
     }
