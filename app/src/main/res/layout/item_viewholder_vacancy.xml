@@ -8,6 +8,7 @@
     <ImageView
         android:id="@+id/art_work"
         tools:src="@tools:sample/avatars"
+        android:background="@drawable/background_for_art_work"
         style="@style/art_work_vacancy" />
 
     <LinearLayout

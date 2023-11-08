@@ -19,7 +19,7 @@ class VacancyDtoMapper {
                 vacancyName = vacancyName,
                 companyName = employer.name,
                 alternateUrl = alternateUrl,
-                logoUrl = logo?.small,
+                logoUrl = employer.logo?.big,
                 city = area.name,
                 employment = employment?.name,
                 experience = experience?.name,
