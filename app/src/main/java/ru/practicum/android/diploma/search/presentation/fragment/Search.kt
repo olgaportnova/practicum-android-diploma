@@ -266,7 +266,7 @@ class Search : Fragment() {
     }
 
     private fun renderUseFilters(content: FilterData) {
-        binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
+       // binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
         //TODO:Logic get SH data
     }
 
