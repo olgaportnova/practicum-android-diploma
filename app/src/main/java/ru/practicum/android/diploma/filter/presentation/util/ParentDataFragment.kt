@@ -1,9 +1,12 @@
 package ru.practicum.android.diploma.filter.presentation.util
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,7 +32,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     protected var paramCountryId: Int? = null // Считывается из аргументов в onCreate
     open val vm: DefaultViewModel? = null
 
-    private val adapter = AreaAdapter(mutableListOf()) {
+    protected var adapter = AreaAdapter(mutableListOf()) {
         vm?.dataToSendBack = it
         exitExtraWhenSystemBackPushed() // Exit after choosing required area
     }
@@ -46,13 +49,27 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             navigationBar.setNavigationOnClickListener {
                 exitExtraWhenSystemBackPushed()
             }
+
+            txtSearch.doOnTextChanged { text, start, before, count ->
+                vm?.searchInputData(text)
+            }
+
+            btnChooseAll.setOnClickListener {
+                exitExtraWhenSystemBackPushed()
+            }
         }
     }
 
     open fun setObservers() {
-        vm?.let {
+        vm?.let { it ->
             with(it) {
                 errorMsg.observe(viewLifecycleOwner) { msg -> showMsgDialog(msg) }
+
+                itemPosToUpdate.observe(viewLifecycleOwner) { item ->
+                    adapter.notifyItemChanged(item)
+                    // После выбора хотя бы одного элемента отображаем кнопку "Выбрать"
+                    binding.btnChooseAll.isVisible = true
+                }
             }
         }
     }
@@ -95,9 +112,27 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
 
     private fun setFragmentScreenState(newScreenState: ScreenState) {
         when (newScreenState) {
-            is ScreenState.Loading -> binding.txtContent.text = "Initial "
-            is ScreenState.Content -> adapter.changeData(newScreenState.data)
+            is ScreenState.Loading -> {
+                binding.areaRecycler.isVisible=false
+                binding.progressLoading.isVisible = true
+                binding.progressLoading.text = "Loading"
+            }
+
+            is ScreenState.Content -> {
+                // TODO: need to do in background
+                adapter.changeData(newScreenState.data)
+                binding.areaRecycler.isVisible=true
+                binding.progressLoading.isVisible = false
+                binding.progressLoading.text = "Content"
+
+            }
+            is ScreenState.EmptyContent ->{
+                binding.areaRecycler.isVisible=false
+                binding.progressLoading.isVisible = true
+                binding.progressLoading.text = "Empty content"
+            }
             is ScreenState.Error -> showMsgDialog(newScreenState.exception)
+            else -> {}
         }
     }
 

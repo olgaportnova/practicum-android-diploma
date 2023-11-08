@@ -5,5 +5,6 @@
         android:id="@+id/nav_to_filter_fragment"
         android:icon="@drawable/ic_filters"
         android:title="@string/search"
+        android:iconTint="?attr/colorOnPrimary"
         app:showAsAction="ifRoom" />
 </menu>

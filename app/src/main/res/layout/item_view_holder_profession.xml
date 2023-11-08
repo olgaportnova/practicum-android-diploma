@@ -28,17 +28,13 @@
         android:textSize="16sp"
         android:fontFamily="@font/ys_display_regular"/>
 
-    <ImageView
-        android:id="@+id/ing_arrow"
+    <RadioButton
+        android:id="@+id/btn_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginEnd="4dp"
-        android:padding="@dimen/work_place_icon_padding"
-        app:tint="?attr/colorOnPrimary"
-
-        android:src="@drawable/baseline_arrow_forward_24"
-        android:contentDescription="@string/app_name" />
+        app:tint="@color/blue_main"
+        />
 </LinearLayout>
 
 

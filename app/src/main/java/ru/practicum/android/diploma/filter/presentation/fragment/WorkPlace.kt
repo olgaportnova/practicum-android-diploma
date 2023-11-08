@@ -59,19 +59,21 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
                 // Функция вызванная с нулевыми параметрами обнуляет поле _districtChosen in viewModel
                 vm.chooseAnotherDistrict(null, null)
             }
+
+            btnChooseAll.setOnClickListener {
+                exitExtraWhenSystemBackPushed()
+            }
         }
     }
 
     override fun exitExtraWhenSystemBackPushed() {
-        // TODO: Вызвать сохранение модели данных фильтра в sharedPrefs
-
+        vm.saveAreasToFilter()
         // Exit back
         findNavController().popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
 
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->

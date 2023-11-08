@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.root.presentation
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
@@ -36,6 +35,7 @@ class RootActivity : AppCompatActivity() {
                 R.id.district -> navView.isVisible = false
                 R.id.vacancy -> navView.isVisible = false
                 R.id.country -> navView.isVisible = false
+                R.id.industry -> navView.isVisible = false
                 else -> navView.isVisible = true
             }
         }

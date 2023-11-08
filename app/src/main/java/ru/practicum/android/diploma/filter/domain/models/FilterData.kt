@@ -1,11 +1,11 @@
 package ru.practicum.android.diploma.filter.domain.models
 
 data class FilterData(
-    val idCountry: String?,
-    val idArea:String?,
+    var idCountry: String?,
+    var idArea:String?,
     val idIndustry:String?,
-    val nameCountry:String?,
-    val nameArea: String?,
+    var nameCountry:String?,
+    var nameArea: String?,
     val nameIndustry:String?,
     val currency:String?,
     val salary:Int?,
