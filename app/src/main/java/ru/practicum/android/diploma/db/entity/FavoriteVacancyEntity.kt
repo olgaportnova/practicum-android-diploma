@@ -26,7 +26,9 @@ data class FavoriteVacancyEntity(
     val keySkills: List<String?>,
     @Embedded(prefix = "contacts_")
     val contacts: ContactsEntity?,
-    val comment: String?
+    val comment: String?,
+    val schedule:String?,
+    val address:String?
 )
 
 data class SalaryEntity(
