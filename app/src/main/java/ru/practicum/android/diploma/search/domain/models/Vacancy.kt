@@ -13,7 +13,9 @@ data class Vacancy(
     val description: String?,
     val keySkills: List<String?>,
     val contacts: Contacts?,
-    val comment: String?
+    val comment: String?,
+    val schedule:String?,
+    val address:String?
 )
 
 data class Salary(

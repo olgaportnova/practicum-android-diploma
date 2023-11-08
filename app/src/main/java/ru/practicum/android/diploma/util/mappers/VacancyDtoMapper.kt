@@ -27,7 +27,9 @@ class VacancyDtoMapper {
                 description = description,
                 keySkills = extractKeySkills(keySkills),
                 contacts = createContacts(contacts),
-                comment = comment
+                comment = comment,
+                schedule = schedule?.name,
+                address = address?.fullAddress
             )
         }
     }
