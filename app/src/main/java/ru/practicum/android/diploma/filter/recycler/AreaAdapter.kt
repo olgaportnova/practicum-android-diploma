@@ -2,44 +2,141 @@ package ru.practicum.android.diploma.filter.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.viewbinding.ViewBinding
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemViewHolderAreaBinding
-import ru.practicum.android.diploma.filter.domain.models.AbstarctData
+import ru.practicum.android.diploma.databinding.ItemViewHolderProfessionBinding
+import ru.practicum.android.diploma.filter.domain.models.AbstractData
 
 class AreaAdapter(
-    private val areaList: MutableList<AbstarctData>,
-    private val onItemClickListener: Clickable
-) : Adapter<AreaAdapter.AreaViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AreaViewHolder {
-        val bindingImpl =
-            ItemViewHolderAreaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AreaViewHolder(bindingImpl)
+    private val areaList: MutableList<AbstractData>,
+    private var onItemClickListener: Clickable
+) : Adapter<AreaAdapter.InfoVH>() {
+    private var adapterType: Int = AREA
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InfoVH {
+        when (viewType) {
+            AREA -> {
+                val binding = ItemViewHolderAreaBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return AreaViewHolder(binding)
+            }
+
+            CATEGORIES -> {
+                val binding = ItemViewHolderProfessionBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return CategoriesViewHolder(binding)
+            }
+
+            else -> return InfoVH(
+                ItemViewHolderAreaBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        }
     }
 
     override fun getItemCount() = areaList.size
 
-    override fun onBindViewHolder(holder: AreaViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: InfoVH, position: Int) {
         holder.bindInfo(areaList[position], onItemClickListener)
     }
 
-    fun changeData(newDataList: List<AbstarctData>) {
-        // TODO: insert diffUtil if needed
-        areaList.clear()
-        areaList.addAll(newDataList)
-        this.notifyDataSetChanged()
+    override fun getItemViewType(position: Int): Int {
+        return adapterType
     }
 
-    class AreaViewHolder(val binding: ItemViewHolderAreaBinding) : ViewHolder(binding.root) {
-        fun bindInfo(area: AbstarctData, onItemClickListener: Clickable) {
+    fun changeData(newDataList: List<AbstractData>) {
+        // TODO: insert diffUtil async if needed
+        val diffResult = DiffUtil.calculateDiff(AreaDiffCallback(areaList, newDataList))
+        areaList.clear()
+        areaList.addAll(newDataList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun setAdapterType(typeAdapter: Int) {
+        adapterType = when (typeAdapter) {
+            0 -> AREA
+            1 -> CATEGORIES
+            else -> AREA
+        }
+    }
+
+    fun setNewItemClickListener(newClickListener: Clickable) {
+        this.onItemClickListener = newClickListener
+    }
+
+    open class InfoVH(open val binding: ViewBinding) : ViewHolder(binding.root) {
+        open fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {}
+    }
+
+    class AreaViewHolder(override val binding: ItemViewHolderAreaBinding) : InfoVH(binding) {
+        override fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {
             binding.txtAreaName.text = area.name
-            binding.txtAreaName.setOnClickListener {
+
+
+            if (area.isSelected) {
+                //.root.setBackgroundColor( binding.root.resources.getColor(  R.color.grey_dark,    theme)  )
+                binding.ingArrow.setImageResource(R.drawable.ic_main_favorite)
+            }
+            else{
+                binding.ingArrow.setImageResource(R.drawable.baseline_arrow_forward_24)
+            }
+
+            binding.root.setOnClickListener {
+                onItemClickListener.onClick(area)
+            }
+        }
+    }
+
+    class CategoriesViewHolder(override val binding: ItemViewHolderProfessionBinding) :
+        InfoVH(binding) {
+        override fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {
+            binding.txtAreaName.text = area.name
+            binding.btnRadio.isChecked = area.isSelected
+
+            binding.root.setOnClickListener {
+                onItemClickListener.onClick(area)
+            }
+            binding.btnRadio.setOnClickListener {
                 onItemClickListener.onClick(area)
             }
         }
     }
 
     fun interface Clickable {
-        fun onClick(clickedAreaModel: AbstarctData)
+        fun onClick(clickedAreaModel: AbstractData)
+    }
+
+    class AreaDiffCallback(
+        private val oldList: List<AbstractData>,
+        private val newList: List<AbstractData>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize() = oldList.size
+        override fun getNewListSize() = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+    }
+
+    companion object {
+        const val AREA = 0
+        const val CATEGORIES = 1
+
     }
 }

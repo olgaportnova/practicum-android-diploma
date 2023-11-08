@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        style="@style/ToolbarTitleText"
         app:titleTextAppearance="@style/ToolbarTitleText"
-        app:titleTextColor="@color/black_text"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIconTint="?attr/colorOnPrimary"
 
         app:titleMarginStart="0dp"
         app:titleCentered="false"
@@ -128,19 +128,16 @@
 
 
 
-    <com.google.android.material.button.MaterialButton
+    <TextView
         android:id="@+id/btn_choose_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/work_place_info_margin_start"
 
-        android:backgroundTint="@null"
-        android:background="@drawable/background_search_result_count"
-
+        style="@style/big_blue_button"
 
         android:layout_marginBottom="@dimen/margin_24"
         android:text="@string/btn_choose_title"
-        android:textAllCaps="false"
 
 
         app:layout_constraintBottom_toBottomOf="parent"

@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,6 +23,7 @@ class Country : ParentDataFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.navigationBar.title = getString(R.string.country_fragment_title)
+        binding.txtSearch.isVisible = false
     }
 
 }

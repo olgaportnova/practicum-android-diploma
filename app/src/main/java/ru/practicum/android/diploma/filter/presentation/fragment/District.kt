@@ -9,6 +9,7 @@ import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
 import ru.practicum.android.diploma.filter.presentation.util.KEY_DISTRICT_RESULT
 import ru.practicum.android.diploma.filter.presentation.util.ParentDataFragment
 import ru.practicum.android.diploma.filter.presentation.view_model.DistrictVm
+import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 
 open class District : ParentDataFragment() {
     override val vm: DistrictVm by viewModel()
@@ -32,6 +33,11 @@ open class District : ParentDataFragment() {
         if (paramCountryId != null) {
             // Загрузка списка регионов производится только при наличии ненулевого id страны
             paramCountryId?.let { id -> vm.loadDistrictList(id) }
+        }
+
+        adapter.setNewItemClickListener() {
+            vm.dataToSendBack = it
+            vm.selectItemInDataList(it)
         }
     }
 

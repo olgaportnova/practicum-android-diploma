@@ -17,4 +17,17 @@ class FilterConverter(): DtoConverter<FilterDto, FilterData> {
             onlyWithSalary = modelApi.onlyWithSalary
         )
     }
+    fun convertToDto(modelData: FilterData): FilterDto {
+        return FilterDto(
+            idCountry = modelData.idCountry,
+            idArea =  modelData.idArea,
+            idIndustry = modelData.idIndustry,
+            nameCountry = modelData.nameCountry,
+            nameArea = modelData.nameArea,
+            nameIndustry = modelData.nameIndustry,
+            currency = modelData.currency,
+            salary = modelData.salary,
+            onlyWithSalary = modelData.onlyWithSalary
+        )
+    }
 }
