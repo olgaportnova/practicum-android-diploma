@@ -15,13 +15,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.flow.collect
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
+import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.search.presentation.SavedFilters
 import ru.practicum.android.diploma.search.presentation.states.StateFilters
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
@@ -33,7 +35,9 @@ class Search : Fragment() {
         const val APP_ERROR_SEARCH = 0
         const val PER_PAGE = 20
         const val START_PAGE = 0
+        const val INIT_TEXT = ""
     }
+    //TODO:Добавить пангинацию
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -42,16 +46,17 @@ class Search : Fragment() {
 
     private val _paramsFilter: SavedFilters? = null
     private val paramsFilter get() = _paramsFilter!!
-    private val _adapter: VacancyAdapter? = null
+    private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
 
-    private val currentPage = START_PAGE
+    private val savedFilter: SavedFilters = SavedFilters()
+    private val modelForQuery: QuerySearchMdl = QuerySearchMdl(
+        page = START_PAGE, perPage = PER_PAGE, text = INIT_TEXT
+    )
+
+    private var currentPage = START_PAGE
 
     private fun setUiListeners() {
-//        //TODO: отработать нажание на item вакансии и переход
-//        binding.txtTemporal.setOnClickListener {
-//            openFragmentVacancy("vacancy from search")
-//        }
 
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -63,6 +68,8 @@ class Search : Fragment() {
                 else -> false
             }
         }
+
+        binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
     }
 
     override fun onCreateView(
@@ -97,6 +104,7 @@ class Search : Fragment() {
             }
         }
 
+        initRecycler()
         viewModel.getParamsFilters()
     }
 
@@ -112,10 +120,10 @@ class Search : Fragment() {
      * @author Oleg
      */
     // TODO: change param type
-    private fun openFragmentVacancy(vacancyToShow: String) {
+    private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
             R.id.action_search_to_vacancy,
-            Bundle().apply { putString("vacancy_model", vacancyToShow) })
+            Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
     private fun renderFiltersUi(state: StateFilters) {
@@ -187,31 +195,30 @@ class Search : Fragment() {
         }
     }
 
-    private fun renderSearchLoadingUi(){
-     if(currentPage == START_PAGE){
-        with(binding){
-            infoSearchResultCount.isVisible = false
-            recycleViewSearchResult.isVisible = false
-            progressBar.isVisible= true
-            progressBarBottom.isVisible = false
-            imagePlaceholder.isVisible = false
-            textPlaceholder.isVisible= false
-        }
-     }
-        else{
-         with(binding){
-             infoSearchResultCount.isVisible = true
-             recycleViewSearchResult.isVisible = true
-             progressBar.isVisible = false
-             progressBarBottom.isVisible = true
-             imagePlaceholder.isVisible = false
-             textPlaceholder.isVisible = false
-         }
+    private fun renderSearchLoadingUi() {
+        if (currentPage == START_PAGE) {
+            with(binding) {
+                infoSearchResultCount.isVisible = false
+                recycleViewSearchResult.isVisible = false
+                progressBar.isVisible = true
+                progressBarBottom.isVisible = false
+                imagePlaceholder.isVisible = false
+                textPlaceholder.isVisible = false
+            }
+        } else {
+            with(binding) {
+                infoSearchResultCount.isVisible = true
+                recycleViewSearchResult.isVisible = true
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = true
+                imagePlaceholder.isVisible = false
+                textPlaceholder.isVisible = false
+            }
         }
     }
 
-    private fun renderSearchNoConnectingUi(){
-        with(binding){
+    private fun renderSearchNoConnectingUi() {
+        with(binding) {
             infoSearchResultCount.isVisible = false
             recycleViewSearchResult.isVisible = false
             progressBar.isVisible = false
@@ -223,8 +230,9 @@ class Search : Fragment() {
         }
     }
 
-    private fun renderSearchEmptyUi(){
-        with(binding){
+    private fun renderSearchEmptyUi() {
+        with(binding) {
+            infoSearchResultCount.setText(R.string.no_found_vacancies_count)
             infoSearchResultCount.isVisible = true
             recycleViewSearchResult.isVisible = false
             progressBar.isVisible = false
@@ -237,7 +245,18 @@ class Search : Fragment() {
     }
 
     private fun renderSearchContentUi(data: AnswerVacancyList?) {
-        binding.recycleViewSearchResult.isVisible = true
+        with(binding) {
+            infoSearchResultCount.text =
+                requireContext().getString(R.string.found_vacancies_count,data!!.found)
+            infoSearchResultCount.isVisible = true
+            adapter!!.updateList(data.listVacancy)
+            progressBar.isVisible = false
+            progressBarBottom.isVisible = false
+            imagePlaceholder.isVisible = false
+            textPlaceholder.isVisible = false
+            recycleViewSearchResult.isVisible = true
+        }
+
 
     }
 
@@ -247,30 +266,54 @@ class Search : Fragment() {
 
     private fun renderUseFilters(content: FilterData) {
         binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
-    //TODO:Logic get SH data
+        //TODO:Logic get SH data
     }
 
-    private fun getTextWatcherForSearch():TextWatcher{
-        return object :TextWatcher{
+    private fun getTextWatcherForSearch(): TextWatcher {
+        return object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
+                //not use
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                binding.editTextSearch.set
+                hideIcDellText(p0)
+
+                modelForQuery.text = p0.toString()
+                //TODO Добавить Debouncy
+                viewModel.searchDebounce(modelForQuery)
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                TODO("Not yet implemented")
+                //not use
             }
         }
     }
 
-    private fun hideIcDellText(text: CharSequence?): Int{
+    private fun hideIcDellText(text: CharSequence?) {
         return if (text.isNullOrEmpty()) {
-            View.GONE
+            binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_search,
+                0
+            );
         } else {
-            View.VISIBLE
+            binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_clear,
+                0
+            );
         }
+    }
+
+    private fun initRecycler() {
+        _adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
+            override fun onItemClick(vacancy: Vacancy) {
+                openFragmentVacancy(vacancyToShow = vacancy.id)
+            }
+        })
+        binding.recycleViewSearchResult.adapter = adapter
+        binding.recycleViewSearchResult.layoutManager = LinearLayoutManager(context)
     }
 }
