@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -43,6 +44,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/ibShare"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_28"
@@ -50,6 +52,7 @@
                     android:src="@drawable/ic_share" />
 
                 <ImageButton
+                    android:id="@+id/ibFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_20"
@@ -106,18 +109,18 @@
                 style="@style/item_viewholder_header_text"
                 android:layout_width="0dp"
                 android:layout_marginStart="@dimen/edit_text_margin_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ivEmployerLogo"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Едаааааааааааааааааааааааааааааааааааааааааааааааа" />
 
             <TextView
                 android:id="@+id/tvCity"
                 style="@style/item_viewholder_regular_text"
                 android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tvEmployerName"
                 app:layout_constraintTop_toBottomOf="@id/tvEmployerName"
-                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Москваааааааааааааааааааааааааааааааааааааааааааа" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -215,6 +218,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_24"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/KeySkillsContainer">
 
                 <TextView
@@ -296,42 +300,48 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+            <TextView
+                android:id="@+id/tvSimilarVacanciesButton"
+                style="@style/big_blue_button"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_24"
+                android:text="@string/similar_vacancies"
+                app:layout_constraintTop_toBottomOf="@id/ContactsContainer" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
             android:id="@+id/ProgressBar"
             style="@style/progress_bar"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@id/navigationBar"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/ivPlaceholderServerError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:src="@drawable/placeholder_server_error_cat"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@id/navigationBar"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tvPlaceholderServerError"
             style="@style/placeholder_text"
             android:gravity="center_horizontal"
             android:text="@string/server_error"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-            app:layout_constraintStart_toStartOf="@id/leftGuideline"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivPlaceholderServerError"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
