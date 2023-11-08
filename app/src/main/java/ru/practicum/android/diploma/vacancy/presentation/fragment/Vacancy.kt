@@ -63,7 +63,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            paramVacancyId = it.getString(ARG_VACANCY)
+            paramVacancyId = it.getInt(ARG_VACANCY).toString()
         }
 
     }

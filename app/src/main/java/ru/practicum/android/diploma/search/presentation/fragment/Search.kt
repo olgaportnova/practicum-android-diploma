@@ -260,7 +260,8 @@ class Search : Fragment() {
     }
 
     private fun renderNoFilters() {
-        binding.navigationBar.setNavigationIcon(R.drawable.ic_filters)
+     //binding.navigationBar.setNavigationIcon(R.drawable.ic_filters)
+     //TODO Fix bug for icon
     }
 
     private fun renderUseFilters(content: FilterData) {
