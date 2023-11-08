@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
+import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
 import ru.practicum.android.diploma.search.domain.models.Contacts
 import ru.practicum.android.diploma.search.domain.models.Phone
 import ru.practicum.android.diploma.search.domain.models.Salary
@@ -126,7 +127,11 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             }*/
 
             tvSimilarVacanciesButton.setOnClickListener {
-                findNavController().navigate(R.id.action_to_similar)
+                findNavController().navigate(R.id.action_to_similar, Bundle().apply {
+                    putString(
+                        ARG_VACANCY, vacancyId
+                    )
+                })
             }
         }
     }
