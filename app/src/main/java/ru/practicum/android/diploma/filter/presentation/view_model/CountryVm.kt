@@ -22,10 +22,8 @@ class CountryVm(private val areaController: AreaController) : DefaultViewModel()
                     is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
                     is DataStatus.Content -> {
                         val countryList = it.data!!.map { area -> areaToAbstract(area) }
-                        //_screenState.value = ScreenState.Content(countryList)
                         changeRecyclerContent(countryList)
                     }
-
                     else -> {}
                 }
             }

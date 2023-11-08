@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.coroutineScope
 import ru.practicum.android.diploma.databinding.ItemViewHolderAreaBinding
 import ru.practicum.android.diploma.databinding.ItemViewHolderProfessionBinding
 import ru.practicum.android.diploma.filter.domain.models.AbstractData

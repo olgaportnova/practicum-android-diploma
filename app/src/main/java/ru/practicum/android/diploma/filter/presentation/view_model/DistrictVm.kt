@@ -24,9 +24,10 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
     private fun loadAllCityList(parentArea: AreaData) {
         fullDataList.clear()
         viewModelScope.launch(Dispatchers.IO) {
-            findCityRecursive(parentArea) // Рекурсивно заполняем лист городами
+            // Рекурсивно заполняем лист городами
+            findCityRecursive(parentArea)
 
-            //_screenState.value = ScreenState.Content(fullDataList)
+            // Отправляем итоговый лист в recycler
             changeRecyclerContent(fullDataList)
         }
     }
