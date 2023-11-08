@@ -32,10 +32,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
                        _stateSearch.value = DataStatus.Loading()
                    }
                    is DataStatus.Error -> {
-                       if (it.code == 0)
-                       _stateSearch.value  = DataStatus.Error(errorMessage = R.string.error_app_search_log.toString())
-                       else
-                       _stateSearch.value = DataStatus.Error(errorMessage = "${R.string.error_sever_log} ${it.code}")
+                       _stateSearch.value = DataStatus.Error()
                    }
                    is DataStatus.EmptyContent -> {
                        _stateSearch.value = DataStatus.EmptyContent()

@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.search.data.impl
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.data.mappers.FilterConverter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
@@ -54,6 +56,7 @@ class SearchRepositoryImpl(
             }
 
         }.catch { emit(DataStatus.Error()) }
+         .flowOn(Dispatchers.IO)
     }
 
 
