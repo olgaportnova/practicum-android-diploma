@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -58,8 +59,11 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
         vm?.let { it ->
             with(it) {
                 errorMsg.observe(viewLifecycleOwner) { msg -> showMsgDialog(msg) }
-                itemPosToUpdate.observe(viewLifecycleOwner){item->
+
+                itemPosToUpdate.observe(viewLifecycleOwner) { item ->
                     adapter.notifyItemChanged(item)
+                    // После выбора хотя бы одного элемента отображаем кнопку "Выбрать"
+                    binding.btnChooseAll.isVisible = true
                 }
             }
         }
@@ -106,9 +110,10 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             is ScreenState.Loading -> {
 
             }
+
             is ScreenState.Content -> adapter.changeData(newScreenState.data)
             is ScreenState.Error -> showMsgDialog(newScreenState.exception)
-            else->{}
+            else -> {}
         }
     }
 

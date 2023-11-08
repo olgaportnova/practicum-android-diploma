@@ -21,7 +21,7 @@
 
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/root_nav_bar"
-
         app:layout_constraintTop_toTopOf="parent"
+
         app:navGraph="@navigation/job_pulse_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

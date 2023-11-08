@@ -82,7 +82,7 @@ class AreaAdapter(
     class AreaViewHolder(override val binding: ItemViewHolderAreaBinding) : InfoVH(binding) {
         override fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {
             binding.txtAreaName.text = area.name
-            binding.txtAreaName.setOnClickListener {
+            binding.root.setOnClickListener {
                 onItemClickListener.onClick(area)
             }
         }
@@ -92,7 +92,11 @@ class AreaAdapter(
         override fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {
             binding.txtAreaName.text = area.name
             binding.btnRadio.isChecked = area.isSelected
-            binding.txtAreaName.setOnClickListener {
+
+            binding.root.setOnClickListener {
+                onItemClickListener.onClick(area)
+            }
+            binding.btnRadio.setOnClickListener{
                 onItemClickListener.onClick(area)
             }
         }
