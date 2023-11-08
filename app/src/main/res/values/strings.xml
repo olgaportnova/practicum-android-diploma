@@ -65,5 +65,7 @@
 
     <!--    ERRORS MESSAGES   -->
     <string name="error_get_data_empty">Error get data. Your data is empty.</string>
+    <string name="error_sever_log">Error on server: </string>
+    <string name="error_app_search_log">Error app in search operation processing!</string>
 
 </resources>

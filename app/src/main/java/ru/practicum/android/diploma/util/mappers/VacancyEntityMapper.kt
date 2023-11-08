@@ -26,7 +26,10 @@ class VacancyEntityMapper {
                 description = description,
                 keySkills = keySkills,
                 contacts = createContacts(contacts),
-                comment = comment
+                comment = comment,
+                schedule = schedule,
+                address = address
+
             )
         }
     }
@@ -80,7 +83,9 @@ class VacancyEntityMapper {
                 description = description,
                 keySkills = keySkills,
                 contacts = createContactsEntity(contacts),
-                comment = comment
+                comment = comment,
+                schedule = schedule,
+                address = address
             )
         }
     }

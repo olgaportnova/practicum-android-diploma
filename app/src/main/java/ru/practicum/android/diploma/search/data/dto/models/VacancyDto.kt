@@ -18,7 +18,9 @@ data class VacancyDto(
     @SerializedName("key_skills")
     val keySkills: List<KeySkillDto>?,
     val contacts: ContactsDto?,
-    val comment: String?
+    val comment: String?,
+    val schedule:ScheduleDto?,
+    val address:AddressDto?
 )
 
 data class SalaryDto(
@@ -68,5 +70,14 @@ data class LogoDto(
     val big: String?,
     @SerializedName("original")
     val original: String?
+)
+
+data class ScheduleDto(
+    val name:String?
+)
+
+data class AddressDto(
+    @SerializedName("raw")
+    val fullAddress:String?
 )
 
