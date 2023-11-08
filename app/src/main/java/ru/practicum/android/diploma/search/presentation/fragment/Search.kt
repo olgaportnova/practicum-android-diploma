@@ -64,7 +64,6 @@ class Search : Fragment() {
                     findNavController().navigate(R.id.action_to_filters)
                     true
                 }
-
                 else -> false
             }
         }
@@ -279,7 +278,7 @@ class Search : Fragment() {
                 hideIcDellText(p0)
 
                 modelForQuery.text = p0.toString()
-                //TODO Добавить Debouncy
+                //TODO Добавить Debouncy для ввода
                 viewModel.searchDebounce(modelForQuery)
             }
 
