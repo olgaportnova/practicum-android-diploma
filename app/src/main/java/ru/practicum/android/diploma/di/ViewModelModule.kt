@@ -21,7 +21,7 @@ class ViewModelModule {
 
         viewModel { IndustryVm(industriesController = get()) }
 
-        viewModel { WorkPlaceVm() }
+        viewModel { WorkPlaceVm(filtersController = get()) }
 
         viewModel{
             SearchViewModel(searchInteractor = get())

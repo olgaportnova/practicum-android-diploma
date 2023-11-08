@@ -47,8 +47,10 @@ open class DefaultViewModel : ViewModel() {
                     // Снимаем выделение с предыдущего выделенного элемента
                     previouslySelectedItemPos?.let {
                         val prevSelItemPos = activeList.indexOf(it)
-                        activeList[prevSelItemPos].isSelected = false
-                        _itemPosToUpdate.value = prevSelItemPos
+                        if(prevSelItemPos!=-1){
+                            activeList[prevSelItemPos].isSelected = false
+                            _itemPosToUpdate.value = prevSelItemPos
+                        }
                     }
 
                     // Устанавливаем выделение на выбранный элемент

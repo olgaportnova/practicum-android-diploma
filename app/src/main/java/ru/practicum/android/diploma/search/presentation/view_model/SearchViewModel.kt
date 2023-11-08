@@ -15,7 +15,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
          searchInteractor.getTestRequest(request).collect{
              Log.d("VacancyName", it.listVacancy[0].vacancyName)
          }
-
      }
  }
 }

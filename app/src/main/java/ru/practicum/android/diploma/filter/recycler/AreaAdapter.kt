@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
-import kotlinx.coroutines.coroutineScope
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemViewHolderAreaBinding
 import ru.practicum.android.diploma.databinding.ItemViewHolderProfessionBinding
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
@@ -15,9 +15,9 @@ class AreaAdapter(
     private val areaList: MutableList<AbstractData>,
     private var onItemClickListener: Clickable
 ) : Adapter<AreaAdapter.InfoVH>() {
-    private var adapterType:Int= AREA
+    private var adapterType: Int = AREA
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InfoVH {
-        when(viewType){
+        when (viewType) {
             AREA -> {
                 val binding = ItemViewHolderAreaBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -26,6 +26,7 @@ class AreaAdapter(
                 )
                 return AreaViewHolder(binding)
             }
+
             CATEGORIES -> {
                 val binding = ItemViewHolderProfessionBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -34,11 +35,14 @@ class AreaAdapter(
                 )
                 return CategoriesViewHolder(binding)
             }
-            else -> return InfoVH(ItemViewHolderAreaBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ))
+
+            else -> return InfoVH(
+                ItemViewHolderAreaBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
         }
     }
 
@@ -53,43 +57,50 @@ class AreaAdapter(
     }
 
     fun changeData(newDataList: List<AbstractData>) {
-        // TODO: insert diffUtil if needed
+        // TODO: insert diffUtil async if needed
         val diffResult = DiffUtil.calculateDiff(AreaDiffCallback(areaList, newDataList))
         areaList.clear()
         areaList.addAll(newDataList)
         diffResult.dispatchUpdatesTo(this)
-
-        //areaList.clear()
-        //areaList.addAll(newDataList)
-        //this.notifyDataSetChanged()
     }
 
-    fun setAdapterType(typeAdapter:Int){
-        adapterType = when(typeAdapter){
-            0-> AREA
-            1-> CATEGORIES
+    fun setAdapterType(typeAdapter: Int) {
+        adapterType = when (typeAdapter) {
+            0 -> AREA
+            1 -> CATEGORIES
             else -> AREA
         }
     }
 
-    fun setNewItemClickListener(newClickListener: Clickable){
+    fun setNewItemClickListener(newClickListener: Clickable) {
         this.onItemClickListener = newClickListener
     }
 
-    open class InfoVH(open val binding:ViewBinding):ViewHolder(binding.root){
+    open class InfoVH(open val binding: ViewBinding) : ViewHolder(binding.root) {
         open fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {}
     }
 
     class AreaViewHolder(override val binding: ItemViewHolderAreaBinding) : InfoVH(binding) {
         override fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {
             binding.txtAreaName.text = area.name
+
+
+            if (area.isSelected) {
+                //.root.setBackgroundColor( binding.root.resources.getColor(  R.color.grey_dark,    theme)  )
+                binding.ingArrow.setImageResource(R.drawable.ic_main_favorite)
+            }
+            else{
+                binding.ingArrow.setImageResource(R.drawable.baseline_arrow_forward_24)
+            }
+
             binding.root.setOnClickListener {
                 onItemClickListener.onClick(area)
             }
         }
     }
 
-    class CategoriesViewHolder(override val binding: ItemViewHolderProfessionBinding) : InfoVH(binding) {
+    class CategoriesViewHolder(override val binding: ItemViewHolderProfessionBinding) :
+        InfoVH(binding) {
         override fun bindInfo(area: AbstractData, onItemClickListener: Clickable) {
             binding.txtAreaName.text = area.name
             binding.btnRadio.isChecked = area.isSelected
@@ -97,7 +108,7 @@ class AreaAdapter(
             binding.root.setOnClickListener {
                 onItemClickListener.onClick(area)
             }
-            binding.btnRadio.setOnClickListener{
+            binding.btnRadio.setOnClickListener {
                 onItemClickListener.onClick(area)
             }
         }
@@ -123,7 +134,7 @@ class AreaAdapter(
         }
     }
 
-    companion object{
+    companion object {
         const val AREA = 0
         const val CATEGORIES = 1
 
