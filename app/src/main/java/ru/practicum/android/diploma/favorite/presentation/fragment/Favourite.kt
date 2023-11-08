@@ -20,6 +20,7 @@ import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteVie
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 
+private const val ARG_VACANCY = "vacancy_model"
 class Favourite : Fragment() {
     private var _binding: FragmentFavouriteBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +53,7 @@ class Favourite : Fragment() {
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
-                openFragmentVacancy(vacancyToShow = "vacancy")
+                openFragmentVacancy(vacancyToShow = vacancy.id.toString())
             }
         })
         binding.favouritesRecyclerView.adapter = adapter
@@ -62,7 +63,7 @@ class Favourite : Fragment() {
     private fun openFragmentVacancy(vacancyToShow: String) {
         findNavController().navigate(
             R.id.action_favourite_to_vacancy,
-            Bundle().apply { putString("vacancy_model", vacancyToShow) })
+            Bundle().apply { putString(ARG_VACANCY, vacancyToShow) })
     }
 
     override fun onDestroy() {
@@ -93,13 +94,14 @@ class Favourite : Fragment() {
             favouritesRecyclerView.visibility = View.GONE
             imagePlaceholder.setImageResource(R.drawable.placeholder_empty_result)
             imagePlaceholder.visibility = View.VISIBLE
-            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "87470720") }
+            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "89154491") }
             textPlaceholder.setText(R.string.no_search_result)
             textPlaceholder.visibility = View.VISIBLE
         }
     }
     private fun showEmpty() {
         with(binding) {
+            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "89154491") }
             favouritesRecyclerView.visibility = View.GONE
             imagePlaceholder.setImageResource(R.drawable.placeholder_favorite_empty)
             imagePlaceholder.visibility = View.VISIBLE

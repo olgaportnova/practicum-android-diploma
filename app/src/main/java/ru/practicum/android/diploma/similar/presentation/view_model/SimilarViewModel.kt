@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.favorite.domain.FavoriteState
 import ru.practicum.android.diploma.similar.domain.SimilarInteractor
 import ru.practicum.android.diploma.util.DataStatus
-
 class SimilarViewModel(
     private val similarInteractor: SimilarInteractor
 ) : ViewModel() {
@@ -16,14 +15,8 @@ class SimilarViewModel(
     private val _screenState = MutableStateFlow<FavoriteState>(FavoriteState.Loading)
     val screenState = _screenState as StateFlow<FavoriteState>
 
-    // TODO: тут получить id вакансии при переходе на этот экран с экрана деталей
-    val vacancyId = "vacancy_id"
 
-    init {
-        getSimilarVacancies()
-    }
-
-    private fun getSimilarVacancies() {
+    fun getSimilarVacancies(vacancyId:String) {
         viewModelScope.launch {
             similarInteractor.getSimilarVacancies(vacancyId).collect {
                 when (it) {
@@ -38,5 +31,3 @@ class SimilarViewModel(
         }
     }
 }
-
-
