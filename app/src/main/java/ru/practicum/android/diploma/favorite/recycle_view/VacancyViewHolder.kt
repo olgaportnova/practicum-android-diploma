@@ -16,7 +16,9 @@ class VacancyViewHolder(
     private val binding: ItemViewholderVacancyBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
+    private val radius = binding.root.resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy)
     fun bind(vacancy: Vacancy, onClickListener: VacancyAdapter.OnClickListener) {
+
 
         with(binding) {
             headerVacancy.text = "${vacancy.vacancyName}${
@@ -29,7 +31,7 @@ class VacancyViewHolder(
                 .load(vacancy.logoUrl)
                 .placeholder(R.drawable.placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(R.dimen.corners_radius_art_work_vacancy))
+                .transform(RoundedCorners(radius))
                 .into(binding.artWork)
         }
 

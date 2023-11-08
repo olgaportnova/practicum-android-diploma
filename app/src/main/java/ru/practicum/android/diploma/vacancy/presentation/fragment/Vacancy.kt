@@ -192,7 +192,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 .load(vacancy?.logoUrl)
                 .placeholder(R.drawable.placeholder_employer_logo)
                 .centerCrop()
-                .transform(RoundedCorners(R.dimen.corners_radius_art_work_vacancy))
+                .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy)))
                 .into(ivEmployerLogo)
 
             tvEmployerName.text = vacancy?.companyName

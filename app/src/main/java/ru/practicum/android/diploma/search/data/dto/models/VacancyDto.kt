@@ -8,8 +8,6 @@ data class VacancyDto(
     @SerializedName("alternate_url")
     val alternateUrl:String?,
     val employer: EmployerDto,
-    @SerializedName("logo_urls")
-    val logo: LogoDto?,
     val area: AreaDto,
     val employment: EmploymentDto?, // это тип занятости
     val experience: ExperienceDto?,
@@ -56,7 +54,9 @@ data class AreaDto(
 )
 
 data class EmployerDto(
-    val name: String
+    val name: String,
+    @SerializedName("logo_urls")
+    val logo: LogoDto?
 )
 
 data class KeySkillDto(

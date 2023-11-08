@@ -94,13 +94,14 @@ class Favourite : Fragment() {
             favouritesRecyclerView.visibility = View.GONE
             imagePlaceholder.setImageResource(R.drawable.placeholder_empty_result)
             imagePlaceholder.visibility = View.VISIBLE
-            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "87470720") }
+            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "89154491") }
             textPlaceholder.setText(R.string.no_search_result)
             textPlaceholder.visibility = View.VISIBLE
         }
     }
     private fun showEmpty() {
         with(binding) {
+            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "89154491") }
             favouritesRecyclerView.visibility = View.GONE
             imagePlaceholder.setImageResource(R.drawable.placeholder_favorite_empty)
             imagePlaceholder.visibility = View.VISIBLE
