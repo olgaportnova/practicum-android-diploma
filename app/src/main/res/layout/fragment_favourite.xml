@@ -11,7 +11,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/black_text"
         app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
 
