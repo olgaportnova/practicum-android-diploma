@@ -13,7 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="?attr/colorOnPrimary"
         app:titleMarginStart="16dp"
         app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
