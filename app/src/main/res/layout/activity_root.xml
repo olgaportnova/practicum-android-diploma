@@ -21,10 +21,16 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/root_nav_bar"
         app:layout_constraintTop_toTopOf="parent"
-
         app:navGraph="@navigation/job_pulse_nav" />
+
+
+    <com.google.android.material.divider.MaterialDivider
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/root_nav_bar"
+        style="@style/divider" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

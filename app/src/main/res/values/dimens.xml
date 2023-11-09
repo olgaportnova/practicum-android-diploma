@@ -29,6 +29,8 @@
     <dimen name="super_big_text_size">32sp</dimen>
     <dimen name="corners_radius_art_work_vacancy">12dp</dimen>
 
+    <dimen name="height_divider">1dp</dimen>
+
 
 
     <!--    VACANCY FRAGMENT     -->
