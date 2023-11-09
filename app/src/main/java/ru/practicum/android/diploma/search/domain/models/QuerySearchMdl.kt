@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.search.domain.models
 
 data class QuerySearchMdl(
-    val page:Int,
+    var page:Int,
     val perPage:Int,
     var text:String,
     val area:String? = null,

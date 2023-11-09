@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.search.presentation.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -37,8 +38,8 @@ class Search : Fragment() {
         const val PER_PAGE = 20
         const val START_PAGE = 0
         const val INIT_TEXT = ""
+        const val ONE_PAGE = 1
     }
-    //TODO:Добавить пангинацию
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -55,7 +56,10 @@ class Search : Fragment() {
         page = START_PAGE, perPage = PER_PAGE, text = INIT_TEXT
     )
 
-    private var currentPage = START_PAGE
+    private var _maxPage: Int? = null
+    private val maxPage get() = _maxPage
+    private var isSearchRequest = false
+
 
     private fun setUiListeners() {
 
@@ -65,10 +69,14 @@ class Search : Fragment() {
                     findNavController().navigate(R.id.action_to_filters)
                     true
                 }
+
                 else -> false
             }
         }
         binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
+
+        binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
+
     }
 
     override fun onCreateView(
@@ -105,6 +113,7 @@ class Search : Fragment() {
 
         initRecycler()
         viewModel.getParamsFilters()
+
     }
 
 
@@ -195,7 +204,7 @@ class Search : Fragment() {
     }
 
     private fun renderSearchLoadingUi() {
-        if (currentPage == START_PAGE) {
+        if (modelForQuery.page == START_PAGE) {
             with(binding) {
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
@@ -243,12 +252,16 @@ class Search : Fragment() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun renderSearchContentUi(data: AnswerVacancyList?) {
         with(binding) {
             infoSearchResultCount.text =
-                requireContext().getString(R.string.found_vacancies_count,data!!.found)
+                requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
-            adapter!!.updateList(data.listVacancy)
+
+            _maxPage = data.maxPages
+            adapter!!.updateList(data.listVacancy, true)
+            isSearchRequest = true
             progressBar.isVisible = false
             progressBarBottom.isVisible = false
             imagePlaceholder.isVisible = false
@@ -261,12 +274,12 @@ class Search : Fragment() {
 
     private fun renderNoFilters() {
 
-   //  val itemMenu = binding.navigationBar.menu.getItem(R.drawable.ic_filters)
-   //TODO Fix bug for icon
+        //  val itemMenu = binding.navigationBar.menu.getItem(R.drawable.ic_filters)
+        //TODO Fix bug for icon
     }
 
     private fun renderUseFilters(content: FilterData) {
-       // binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
+        // binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
         //TODO:Logic get SH data
     }
 
@@ -280,8 +293,8 @@ class Search : Fragment() {
                 hideIcDellText(p0)
 
                 modelForQuery.text = p0.toString()
-                //TODO Добавить Debouncy для ввода
-                viewModel.searchDebounce(modelForQuery)
+                if (p0.toString() != "")
+                    viewModel.searchDebounce(modelForQuery)
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -305,6 +318,27 @@ class Search : Fragment() {
                 R.drawable.ic_clear,
                 0
             );
+        }
+    }
+
+    private fun onScrollListener(): OnScrollListener {
+        return object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val position =
+                        (binding.recycleViewSearchResult.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val itemsCount = adapter!!.itemCount
+
+                    if (position >= itemsCount - 1) {
+                        modelForQuery.page = modelForQuery.page + ONE_PAGE
+                        if (isSearchRequest && (maxPage!! >= modelForQuery.page + ONE_PAGE)) {
+                            viewModel.doRequestSearch(modelForQuery)
+                            isSearchRequest = false
+                        }
+                    }
+                }
+            }
         }
     }
 

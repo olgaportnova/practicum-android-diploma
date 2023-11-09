@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.favorite.recycle_view
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,6 +12,10 @@ class VacancyAdapter(
     private val vacancyList: ArrayList<Vacancy>,
     private var onClickListener: OnClickListener
 ) : RecyclerView.Adapter<VacancyViewHolder>() {
+
+    companion object{
+        const val ITEM_COUNT_ADD = 20
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -30,11 +35,20 @@ class VacancyAdapter(
         fun onItemClick(vacancy: Vacancy)
     }
 
-    fun updateList(newVacancyList: List<Vacancy>) {
-        val diffResult = DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))
-        vacancyList.clear()
-        vacancyList.addAll(newVacancyList)
-        diffResult.dispatchUpdatesTo(this)
+    @SuppressLint("SuspiciousIndentation")
+    fun updateList(newVacancyList: List<Vacancy>, isPagination: Boolean = false) {
+
+        if (isPagination) {
+            vacancyList.addAll(newVacancyList)
+            this.notifyItemRangeChanged(itemCount, ITEM_COUNT_ADD)
+        } else {
+            val diffResult =
+                DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))
+
+            vacancyList.clear()
+            vacancyList.addAll(newVacancyList)
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
 }
