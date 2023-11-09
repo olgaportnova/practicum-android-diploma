@@ -46,15 +46,13 @@ class Search : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    private val _paramsFilter: SavedFilters? = null
-    private val paramsFilter get() = _paramsFilter!!
+    //private val _paramsFilter: SavedFilters? = null
+    //private val paramsFilter get() = _paramsFilter!!
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
 
-    private val savedFilter: SavedFilters = SavedFilters()
-    private val modelForQuery: QuerySearchMdl = QuerySearchMdl(
-        page = START_PAGE, perPage = PER_PAGE, text = INIT_TEXT
-    )
+    //private val savedFilter: SavedFilters = SavedFilters()
+    lateinit var modelForQuery: QuerySearchMdl
 
     private var _maxPage: Int? = null
     private val maxPage get() = _maxPage
@@ -77,7 +75,9 @@ class Search : Fragment() {
 
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
 
+      //added function clear list seach
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -110,10 +110,8 @@ class Search : Fragment() {
                 }
             }
         }
-
         initRecycler()
         viewModel.getParamsFilters()
-
     }
 
 
@@ -258,7 +256,6 @@ class Search : Fragment() {
             infoSearchResultCount.text =
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
-
             _maxPage = data.maxPages
             adapter!!.updateList(data.listVacancy, true)
             isSearchRequest = true
@@ -268,21 +265,31 @@ class Search : Fragment() {
             textPlaceholder.isVisible = false
             recycleViewSearchResult.isVisible = true
         }
-
-
     }
 
     private fun renderNoFilters() {
-
-        //  val itemMenu = binding.navigationBar.menu.getItem(R.drawable.ic_filters)
-        //TODO Fix bug for icon
+        binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
     }
 
     private fun renderUseFilters(content: FilterData) {
-        // binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
-        //TODO:Logic get SH data
+        binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+        addFilterInModel(content)
+
     }
 
+    private fun addFilterInModel(content: FilterData){
+        with(modelForQuery){
+            page = START_PAGE
+            perPage = PER_PAGE
+            text = INIT_TEXT
+            area = content.idArea
+            parentArea = content.idCountry
+            industry = content.idIndustry
+            currency = content.currency
+            salary  =content.salary
+            onlyWithSalary= content.onlyWithSalary
+        }
+    }
     private fun getTextWatcherForSearch(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -293,8 +300,10 @@ class Search : Fragment() {
                 hideIcDellText(p0)
 
                 modelForQuery.text = p0.toString()
-                if (p0.toString() != "")
+                if (p0.toString() != ""){
                     viewModel.searchDebounce(modelForQuery)
+                    modelForQuery.page = START_PAGE
+                }
             }
 
             override fun afterTextChanged(p0: Editable?) {
