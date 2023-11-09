@@ -20,7 +20,6 @@
     <style name="art_work_vacancy">
         <item name="android:layout_width">@dimen/recycle_art_work_size</item>
         <item name="android:layout_height">@dimen/recycle_art_work_size</item>
-        <item name="background">@drawable/background_for_art_work</item>
     </style>
 
     <style name="item_viewholder_text_layout">

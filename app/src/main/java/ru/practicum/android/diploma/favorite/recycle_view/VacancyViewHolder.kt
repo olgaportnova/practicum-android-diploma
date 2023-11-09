@@ -19,7 +19,6 @@ class VacancyViewHolder(
     private val radius = binding.root.resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy)
     fun bind(vacancy: Vacancy, onClickListener: VacancyAdapter.OnClickListener) {
 
-
         with(binding) {
             headerVacancy.text = "${vacancy.vacancyName}${
                 vacancy.city?.takeIf { it.isNotEmpty() }?.let { ", $it" } ?: ""
