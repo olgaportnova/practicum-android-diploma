@@ -2,6 +2,7 @@
 <resources>
 
     <color name="navigation_icon_color">#FDFDFD</color>
+    <color name="navigation_background">#1A1B22</color>
 
 
 </resources>

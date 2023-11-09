@@ -29,7 +29,7 @@ class VacancyViewHolder(
             Glide
                 .with(itemView)
                 .load(vacancy.logoUrl)
-                .placeholder(R.drawable.placeholder)
+                .placeholder(R.drawable.placeholder_employer_logo)
                 .centerCrop()
                 .transform(RoundedCorners(radius))
                 .into(binding.artWork)
