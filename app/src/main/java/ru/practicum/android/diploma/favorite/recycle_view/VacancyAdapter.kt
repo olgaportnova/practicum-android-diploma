@@ -13,7 +13,7 @@ class VacancyAdapter(
     private var onClickListener: OnClickListener
 ) : RecyclerView.Adapter<VacancyViewHolder>() {
 
-    companion object{
+    companion object {
         const val ITEM_COUNT_ADD = 20
     }
 
@@ -36,11 +36,26 @@ class VacancyAdapter(
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun updateList(newVacancyList: List<Vacancy>, isPagination: Boolean = false) {
-
+    fun updateList(
+        newVacancyList: List<Vacancy>,
+        isPagination: Boolean = false,
+        newSearch: Boolean = false
+    ) {
         if (isPagination) {
+            if (newSearch) {
+                vacancyList.clear()
+            }
+            val newListForCompare = vacancyList.map { it } as ArrayList<Vacancy>
+            newListForCompare.addAll(newVacancyList)
             vacancyList.addAll(newVacancyList)
-            this.notifyItemRangeChanged(itemCount, ITEM_COUNT_ADD)
+            val diffResult =
+                DiffUtil.calculateDiff(
+                    VacancyDiffCallback(
+                        vacancyList,
+                        newListForCompare as List<Vacancy>
+                    )
+                )
+            diffResult.dispatchUpdatesTo(this)
         } else {
             val diffResult =
                 DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))

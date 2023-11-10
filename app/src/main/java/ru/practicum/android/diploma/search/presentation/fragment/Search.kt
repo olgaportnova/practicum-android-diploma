@@ -1,13 +1,19 @@
 package ru.practicum.android.diploma.search.presentation.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -52,7 +58,9 @@ class Search : Fragment() {
     private val adapter get() = _adapter
 
     //private val savedFilter: SavedFilters = SavedFilters()
-    lateinit var modelForQuery: QuerySearchMdl
+    private var modelForQuery: QuerySearchMdl = QuerySearchMdl(
+        page = START_PAGE, perPage = PER_PAGE, text = INIT_TEXT
+    )
 
     private var _maxPage: Int? = null
     private val maxPage get() = _maxPage
@@ -75,7 +83,7 @@ class Search : Fragment() {
 
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
 
-      //added function clear list seach
+        //added function clear list seach
     }
 
 
@@ -181,6 +189,8 @@ class Search : Fragment() {
             imagePlaceholder.setImageResource(R.drawable.placeholder_start_of_search)
             imagePlaceholder.isVisible = true
             textPlaceholder.isVisible = false
+            editTextSearch.setText(INIT_TEXT)
+            hideSoftKeyboard()
         }
     }
 
@@ -193,6 +203,7 @@ class Search : Fragment() {
             imagePlaceholder.setImageResource(R.drawable.placeholder_error_server)
             imagePlaceholder.isVisible = true
             textPlaceholder.setText(R.string.server_error)
+            textPlaceholder.isVisible = true
         }
         if (codeError == APP_ERROR_SEARCH) {
             Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
@@ -257,7 +268,11 @@ class Search : Fragment() {
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
             _maxPage = data.maxPages
-            adapter!!.updateList(data.listVacancy, true)
+            if (data.currentPages == START_PAGE) {
+                adapter!!.updateList(data.listVacancy, true, true)
+            } else {
+                adapter!!.updateList(data.listVacancy, true)
+            }
             isSearchRequest = true
             progressBar.isVisible = false
             progressBarBottom.isVisible = false
@@ -277,8 +292,8 @@ class Search : Fragment() {
 
     }
 
-    private fun addFilterInModel(content: FilterData){
-        with(modelForQuery){
+    private fun addFilterInModel(content: FilterData) {
+        with(modelForQuery) {
             page = START_PAGE
             perPage = PER_PAGE
             text = INIT_TEXT
@@ -286,10 +301,11 @@ class Search : Fragment() {
             parentArea = content.idCountry
             industry = content.idIndustry
             currency = content.currency
-            salary  =content.salary
-            onlyWithSalary= content.onlyWithSalary
+            salary = content.salary
+            onlyWithSalary = content.onlyWithSalary
         }
     }
+
     private fun getTextWatcherForSearch(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -300,10 +316,8 @@ class Search : Fragment() {
                 hideIcDellText(p0)
 
                 modelForQuery.text = p0.toString()
-                if (p0.toString() != ""){
-                    viewModel.searchDebounce(modelForQuery)
-                    modelForQuery.page = START_PAGE
-                }
+                modelForQuery.page = START_PAGE
+                viewModel.searchDebounce(modelForQuery)
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -312,21 +326,39 @@ class Search : Fragment() {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables", "ClickableViewAccessibility")
     private fun hideIcDellText(text: CharSequence?) {
-        return if (text.isNullOrEmpty()) {
+
+        val editText = binding.editTextSearch
+
+         if (text.isNullOrEmpty()) {
             binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
                 0,
                 0,
                 R.drawable.ic_search,
                 0
-            );
+            )
+                 editText.setOnTouchListener { _, motionEvent ->
+                 false
+             }
         } else {
             binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
                 0,
                 0,
                 R.drawable.ic_clear,
                 0
-            );
+            )
+            val iconClear = editText.compoundDrawables[2]
+            editText.setOnTouchListener { _, motionEvent ->
+                if ((motionEvent.action == MotionEvent.ACTION_UP) &&
+                    (motionEvent.rawX >= (editText.right - iconClear.bounds.width()*2))) {
+
+                    viewModel.setDefaultState()
+
+                    Toast.makeText(context, "This clear", Toast.LENGTH_LONG).show()
+                }
+                false
+            }
         }
     }
 
@@ -359,5 +391,11 @@ class Search : Fragment() {
         })
         binding.recycleViewSearchResult.adapter = adapter
         binding.recycleViewSearchResult.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun hideSoftKeyboard() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(binding.textPlaceholder.windowToken, 0)
     }
 }
