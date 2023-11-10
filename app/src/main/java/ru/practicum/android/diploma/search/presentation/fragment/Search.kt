@@ -64,7 +64,7 @@ class Search : Fragment() {
     private var _maxPage: Int? = null
     private val maxPage get() = _maxPage
     private var isSearchRequest = false
-
+    private var currentPage: Int = START_PAGE
 
     private fun setUiListeners() {
 
@@ -224,14 +224,17 @@ class Search : Fragment() {
                 textPlaceholder.setText(R.string.server_error)
                 textPlaceholder.isVisible = true
             }
-            if (codeError == APP_ERROR_SEARCH) {
-                Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
-            } else {
-                Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
-            }
-        }else{
-            with(binding){
-                infoSearchResultCount.isVisible
+                setLogForError(codeError)
+        } else {
+            with(binding) {
+                infoSearchResultCount.isVisible = true
+                recycleViewSearchResult.isVisible = true
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.isVisible = false
+                textPlaceholder.isVisible = false
+                setLogForError(codeError)
+                viewModel.showToastDebounce(getString(R.string.error_for_toast))
             }
         }
     }
@@ -276,7 +279,10 @@ class Search : Fragment() {
                 recycleViewSearchResult.isVisible = true
                 progressBar.isVisible = false
                 progressBarBottom.isVisible = false
-                viewModel.showToast(R.string.no_internet.toString())
+                imagePlaceholder.isVisible = false
+                textPlaceholder.isVisible = false
+                viewModel.showToastDebounce(getString(R.string.no_internet_for_toast))
+                isSearchRequest = true
             }
         }
     }
@@ -302,12 +308,14 @@ class Search : Fragment() {
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
             _maxPage = data.maxPages
+            currentPage = data.currentPages
             if (data.currentPages == START_PAGE) {
                 adapter!!.updateList(data.listVacancy, true, true)
             } else {
                 adapter!!.updateList(data.listVacancy, true)
             }
             isSearchRequest = true
+
             progressBar.isVisible = false
             progressBarBottom.isVisible = false
             imagePlaceholder.isVisible = false
@@ -405,10 +413,13 @@ class Search : Fragment() {
                     val itemsCount = adapter!!.itemCount
 
                     if (position >= itemsCount - 1) {
-                        modelForQuery.page = modelForQuery.page + ONE_PAGE
-                        if (isSearchRequest && (maxPage!! >= modelForQuery.page + ONE_PAGE)) {
-                            viewModel.doRequestSearch(modelForQuery)
+
+                        if (isSearchRequest) {
                             isSearchRequest = false
+                            if (maxPage!! >= currentPage + ONE_PAGE){
+                                modelForQuery.page = currentPage + ONE_PAGE
+                                viewModel.doRequestSearch(modelForQuery)
+                            }
                         }
                     }
                 }
@@ -436,5 +447,13 @@ class Search : Fragment() {
         val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
+    }
+
+    private fun setLogForError(codeError: Int) {
+        if (codeError == APP_ERROR_SEARCH) {
+            Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
+        } else {
+            Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
+        }
     }
 }

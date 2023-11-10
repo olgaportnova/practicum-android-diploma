@@ -18,6 +18,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_ML = 2000L
+        private const val TOAST_DEBOUNCE_DELAY_ML = 10000L
     }
 
 
@@ -31,6 +32,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     val stateToast = _stateToast as StateFlow<ToastState>
 
     private var searchJob: Job? = null
+    private var isShowToast:Boolean = true
     fun doRequestSearch(modelForQuery: QuerySearchMdl) {
 
         if (modelForQuery.text.length != 1) {
@@ -105,6 +107,17 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     fun showToast(message: String){
         _stateToast.value = ToastState.ShowMessage(message)
+    }
+
+    fun showToastDebounce(message:String){
+        if(isShowToast){
+            isShowToast = false
+            showToast(message)
+            viewModelScope.launch {
+                delay(TOAST_DEBOUNCE_DELAY_ML)
+                isShowToast = true
+            }
+        }
     }
 
 }
