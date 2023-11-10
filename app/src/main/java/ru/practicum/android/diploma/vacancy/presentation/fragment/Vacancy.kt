@@ -23,14 +23,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.search.domain.models.Phone
-import ru.practicum.android.diploma.search.domain.models.Salary
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.vacancy.presentation.view_model.VacancyDetailsViewModel
-import java.text.NumberFormat
-import java.util.Currency
-import java.util.Locale
+import ru.practicum.android.diploma.util.SalaryUtil
 
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -191,7 +188,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
             tvVacancyName.text = vacancy?.vacancyName
 
-            tvSalary.text = formSalary(vacancy?.salary)
+            tvSalary.text = SalaryUtil.formSalary(vacancy?.salary, requireContext())
 
             val roundCorners =
                 RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy))
@@ -269,52 +266,6 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         }
     }
 
-    private fun formSalary(salary: Salary?): String {
-        salary ?: return requireContext().getString(R.string.salary_not_indicated)
-
-        return when {
-            salary.from != null && salary.to != null && salary.currency != null ->
-                requireContext().getString(
-                    R.string.salary_from_to,
-                    formatNumberWithSpaces(salary.from),
-                    formatNumberWithSpaces(salary.to),
-                    getCurrencySymbol(salary.currency)
-                )
-
-            salary.from != null && salary.currency != null ->
-                requireContext().getString(
-                    R.string.salary_from,
-                    formatNumberWithSpaces(salary.from),
-                    getCurrencySymbol(salary.currency)
-                )
-
-            salary.to != null && salary.currency != null ->
-                requireContext().getString(
-                    R.string.salary_to,
-                    formatNumberWithSpaces(salary.to),
-                    getCurrencySymbol(salary.currency)
-                )
-
-            else -> requireContext().getString(R.string.salary_not_indicated)
-        }
-    }
-
-    private fun formatNumberWithSpaces(number: Int): String {
-        val formatter = NumberFormat.getNumberInstance(Locale.FRENCH)
-        return formatter.format(number)
-    }
-
-    private fun getCurrencySymbol(currencyCode: String): String {
-        return if (currencyCode == "RUR" || currencyCode == "RUB") {
-            "₽"
-        } else {
-            try {
-                Currency.getInstance(currencyCode).symbol
-            } catch (e: IllegalArgumentException) {
-                currencyCode
-            }
-        }
-    }
 
     private fun String.addSpacesBetweenParagraphs(): String {
         return this.replace(Regex("<li>\\s<p>|<li>"), "<li>\u00A0")

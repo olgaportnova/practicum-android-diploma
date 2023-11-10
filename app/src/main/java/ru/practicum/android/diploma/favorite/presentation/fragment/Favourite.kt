@@ -15,30 +15,30 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavouriteBinding
+import ru.practicum.android.diploma.databinding.FragmentSimilarBinding
 import ru.practicum.android.diploma.favorite.domain.FavoriteState
 import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteViewModel
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.util.DefaultFragment
 
 private const val ARG_VACANCY = "vacancy_model"
-class Favourite : Fragment() {
-    private var _binding: FragmentFavouriteBinding? = null
-    private val binding get() = _binding!!
+class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
+
     private val viewModel: FavoriteViewModel by viewModel()
     private lateinit var adapter: VacancyAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFavouriteBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun bindingInflater(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFavouriteBinding {
+        return FragmentFavouriteBinding.inflate(inflater, container, false)
     }
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        setUiListeners()
 
       lifecycleScope.launch {
           repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -49,7 +49,6 @@ class Favourite : Fragment() {
       }
         viewModel.getAllFavoriteVacancies()
     }
-
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
@@ -59,18 +58,21 @@ class Favourite : Fragment() {
         binding.favouritesRecyclerView.adapter = adapter
         binding.favouritesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
-
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
             R.id.action_favourite_to_vacancy,
             Bundle().apply { putInt(ARG_VACANCY, vacancyToShow) })
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    override fun setUiListeners() {
+        with(binding) {
+            navigationBar.setNavigationOnClickListener {
+                exitExtraWhenSystemBackPushed()
+            }
+        }
     }
-
+    override fun exitExtraWhenSystemBackPushed() {
+        findNavController().popBackStack()
+    }
     private fun updateUI(state: FavoriteState) {
         when (state) {
             is FavoriteState.Success -> showFavorite(state.vacancies)
@@ -79,8 +81,6 @@ class Favourite : Fragment() {
             else -> {}
         }
     }
-
-
     private fun showFavorite(listOfFavorite: List<Vacancy>) {
         with(binding) {
             adapter.updateList(listOfFavorite)
