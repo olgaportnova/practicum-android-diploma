@@ -52,16 +52,16 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
-                openFragmentVacancy(vacancyToShow = vacancy.id.toString())
+                openFragmentVacancy(vacancyToShow = vacancy.id)
             }
         })
         binding.favouritesRecyclerView.adapter = adapter
         binding.favouritesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
-    private fun openFragmentVacancy(vacancyToShow: String) {
+    private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
             R.id.action_favourite_to_vacancy,
-            Bundle().apply { putString(ARG_VACANCY, vacancyToShow) })
+            Bundle().apply { putInt(ARG_VACANCY, vacancyToShow) })
     }
     override fun setUiListeners() {
         with(binding) {
@@ -94,14 +94,12 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
             favouritesRecyclerView.visibility = View.GONE
             imagePlaceholder.setImageResource(R.drawable.placeholder_empty_result)
             imagePlaceholder.visibility = View.VISIBLE
-            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "89154491") }
             textPlaceholder.setText(R.string.no_search_result)
             textPlaceholder.visibility = View.VISIBLE
         }
     }
     private fun showEmpty() {
         with(binding) {
-            imagePlaceholder.setOnClickListener { openFragmentVacancy(vacancyToShow = "89154491") }
             favouritesRecyclerView.visibility = View.GONE
             imagePlaceholder.setImageResource(R.drawable.placeholder_favorite_empty)
             imagePlaceholder.visibility = View.VISIBLE
