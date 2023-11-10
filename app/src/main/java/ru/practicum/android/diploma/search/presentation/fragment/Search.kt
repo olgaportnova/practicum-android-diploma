@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.favorite.recycle_view.TopSpaceItemDecoration
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
@@ -384,11 +385,16 @@ class Search : Fragment() {
     }
 
     private fun initRecycler() {
+        val spaceHeightInPixels = resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
+        val itemDecoration = TopSpaceItemDecoration(spaceHeightInPixels)
+
         _adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
                 openFragmentVacancy(vacancyToShow = vacancy.id)
             }
         })
+        binding.recycleViewSearchResult.addItemDecoration(itemDecoration)
+
         binding.recycleViewSearchResult.adapter = adapter
         binding.recycleViewSearchResult.layoutManager = LinearLayoutManager(context)
     }

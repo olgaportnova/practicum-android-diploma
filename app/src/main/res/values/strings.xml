@@ -68,4 +68,18 @@
     <string name="error_sever_log">Error on server: </string>
     <string name="error_app_search_log">Error app in search operation processing!</string>
 
+
+    <!--    CURRENCY CONVECTOR   -->
+    <string name="currency_symbol_rub">₽</string>
+    <string name="currency_symbol_byr">Br</string>
+    <string name="currency_symbol_usd">$</string>
+    <string name="currency_symbol_eur">€</string>
+    <string name="currency_symbol_kzt">₸</string>
+    <string name="currency_symbol_uah">₴</string>
+    <string name="currency_symbol_azn">₼</string>
+    <string name="currency_symbol_uzs">сўм</string>
+    <string name="currency_symbol_gel">₾</string>
+    <string name="currency_symbol_kgt">сом</string>
+
+
 </resources>
