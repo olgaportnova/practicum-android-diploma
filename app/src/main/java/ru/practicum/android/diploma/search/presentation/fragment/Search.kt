@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.search.presentation.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,7 +11,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -33,8 +31,8 @@ import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.presentation.SavedFilters
 import ru.practicum.android.diploma.search.presentation.states.StateFilters
+import ru.practicum.android.diploma.search.presentation.states.ToastState
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 import ru.practicum.android.diploma.util.DataStatus
 
@@ -84,7 +82,6 @@ class Search : Fragment() {
 
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
 
-        //added function clear list seach
     }
 
 
@@ -119,6 +116,15 @@ class Search : Fragment() {
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateToast.collect {
+                    renderToast(it)
+                    viewModel.setToastNoMessage()
+                }
+            }
+        }
+
         initRecycler()
         viewModel.getParamsFilters()
     }
@@ -181,6 +187,17 @@ class Search : Fragment() {
         }
     }
 
+    private fun renderToast(state: ToastState) {
+        when (state) {
+            is ToastState.ShowMessage -> showToast(state.message)
+            is ToastState.NoneMessage -> {}
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
     private fun renderSearchDefaultUi() {
         with(binding) {
             infoSearchResultCount.isVisible = false
@@ -196,20 +213,26 @@ class Search : Fragment() {
     }
 
     private fun renderSearchErrorUi(codeError: Int) {
-        with(binding) {
-            infoSearchResultCount.isVisible = false
-            recycleViewSearchResult.isVisible = false
-            progressBar.isVisible = false
-            progressBarBottom.isVisible = false
-            imagePlaceholder.setImageResource(R.drawable.placeholder_error_server)
-            imagePlaceholder.isVisible = true
-            textPlaceholder.setText(R.string.server_error)
-            textPlaceholder.isVisible = true
-        }
-        if (codeError == APP_ERROR_SEARCH) {
-            Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
-        } else {
-            Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
+        if (modelForQuery.page == START_PAGE) {
+            with(binding) {
+                infoSearchResultCount.isVisible = false
+                recycleViewSearchResult.isVisible = false
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.setImageResource(R.drawable.placeholder_error_server)
+                imagePlaceholder.isVisible = true
+                textPlaceholder.setText(R.string.server_error)
+                textPlaceholder.isVisible = true
+            }
+            if (codeError == APP_ERROR_SEARCH) {
+                Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
+            } else {
+                Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
+            }
+        }else{
+            with(binding){
+                infoSearchResultCount.isVisible
+            }
         }
     }
 
@@ -236,15 +259,25 @@ class Search : Fragment() {
     }
 
     private fun renderSearchNoConnectingUi() {
-        with(binding) {
-            infoSearchResultCount.isVisible = false
-            recycleViewSearchResult.isVisible = false
-            progressBar.isVisible = false
-            progressBarBottom.isVisible = false
-            imagePlaceholder.setImageResource(R.drawable.placeholder_no_internet)
-            imagePlaceholder.isVisible = true
-            textPlaceholder.setText(R.string.no_internet)
-            textPlaceholder.isVisible = true
+        if (modelForQuery.page == START_PAGE) {
+            with(binding) {
+                infoSearchResultCount.isVisible = false
+                recycleViewSearchResult.isVisible = false
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.setImageResource(R.drawable.placeholder_no_internet)
+                imagePlaceholder.isVisible = true
+                textPlaceholder.setText(R.string.no_internet)
+                textPlaceholder.isVisible = true
+            }
+        } else {
+            with(binding) {
+                infoSearchResultCount.isVisible = true
+                recycleViewSearchResult.isVisible = true
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                viewModel.showToast(R.string.no_internet.toString())
+            }
         }
     }
 
@@ -293,6 +326,7 @@ class Search : Fragment() {
 
     }
 
+
     private fun addFilterInModel(content: FilterData) {
         with(modelForQuery) {
             page = START_PAGE
@@ -332,16 +366,16 @@ class Search : Fragment() {
 
         val editText = binding.editTextSearch
 
-         if (text.isNullOrEmpty()) {
+        if (text.isNullOrEmpty()) {
             binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
                 0,
                 0,
                 R.drawable.ic_search,
                 0
             )
-                 editText.setOnTouchListener { _, motionEvent ->
-                 false
-             }
+            editText.setOnTouchListener { _, motionEvent ->
+                false
+            }
         } else {
             binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
                 0,
@@ -352,13 +386,11 @@ class Search : Fragment() {
             val iconClear = editText.compoundDrawables[2]
             editText.setOnTouchListener { _, motionEvent ->
                 if ((motionEvent.action == MotionEvent.ACTION_UP) &&
-                    (motionEvent.rawX >= (editText.right - iconClear.bounds.width()*2))) {
-
+                    (motionEvent.rawX >= (editText.right - iconClear.bounds.width() * 2))
+                ) {
                     viewModel.setDefaultState()
-
-                    Toast.makeText(context, "This clear", Toast.LENGTH_LONG).show()
                 }
-                false
+                true
             }
         }
     }
@@ -385,7 +417,8 @@ class Search : Fragment() {
     }
 
     private fun initRecycler() {
-        val spaceHeightInPixels = resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
+        val spaceHeightInPixels =
+            resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
         val itemDecoration = TopSpaceItemDecoration(spaceHeightInPixels)
 
         _adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
@@ -402,6 +435,6 @@ class Search : Fragment() {
     private fun hideSoftKeyboard() {
         val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow(binding.textPlaceholder.windowToken, 0)
+        inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
     }
 }

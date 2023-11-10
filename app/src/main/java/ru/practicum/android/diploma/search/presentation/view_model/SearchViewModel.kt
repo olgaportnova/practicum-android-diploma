@@ -1,19 +1,17 @@
 package ru.practicum.android.diploma.search.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.search.domain.SearchInteractor
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.presentation.states.StateFilters
+import ru.practicum.android.diploma.search.presentation.states.ToastState
 import ru.practicum.android.diploma.util.DataStatus
 
 class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
@@ -23,11 +21,14 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     }
 
 
-    val _stateFilters = MutableStateFlow<StateFilters>(StateFilters.NoUseFilters)
+    private val _stateFilters = MutableStateFlow<StateFilters>(StateFilters.NoUseFilters)
     val stateFilters = _stateFilters as StateFlow<StateFilters>
 
-    val _stateSearch = MutableStateFlow<DataStatus<AnswerVacancyList>>(DataStatus.Default())
+    private val _stateSearch = MutableStateFlow<DataStatus<AnswerVacancyList>>(DataStatus.Default())
     val stateSearch = _stateSearch as StateFlow<DataStatus<AnswerVacancyList>>
+
+    private val _stateToast = MutableStateFlow<ToastState>(ToastState.NoneMessage)
+    val stateToast = _stateToast as StateFlow<ToastState>
 
     private var searchJob: Job? = null
     fun doRequestSearch(modelForQuery: QuerySearchMdl) {
@@ -96,6 +97,14 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     fun setDefaultState(){
         _stateSearch.value = DataStatus.Default()
+    }
+
+    fun setToastNoMessage(){
+        _stateToast.value = ToastState.NoneMessage
+    }
+
+    fun showToast(message: String){
+        _stateToast.value = ToastState.ShowMessage(message)
     }
 
 }
