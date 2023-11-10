@@ -219,7 +219,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_24"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/KeySkillsContainer">
+                app:layout_constraintTop_toBottomOf="@id/KeySkillsContainer"
+                tools:visibility="visible">
 
                 <TextView
                     android:id="@+id/tvContacts"
@@ -318,7 +319,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/navigationBar"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <ImageView
             android:id="@+id/ivPlaceholderServerError"
@@ -330,7 +331,7 @@
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@id/navigationBar"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/tvPlaceholderServerError"
@@ -341,7 +342,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivPlaceholderServerError"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
