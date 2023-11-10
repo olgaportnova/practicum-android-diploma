@@ -41,7 +41,7 @@ class VacancyDetailsViewModel(
                     }
 
                     is DataStatus.NoConnecting -> {
-                        if (favoriteInteractor.doesVacancyInFavoriteList(vacancyId.toInt())) {
+                        if (isVacancyFavorite(vacancyId)) {
                             getVacancyFromDb(vacancyId.toInt())
                             _screenState.value =
                                 VacancyDetailsScreenState.SimilarVacanciesButtonState(false)
@@ -61,6 +61,7 @@ class VacancyDetailsViewModel(
     private fun getVacancyFromDb(vacancyId: Int) {
         viewModelScope.launch {
             val vacancyFromDb = favoriteInteractor.getFavouriteVacancyById(vacancyId)
+            _currentVacancy.value = vacancyFromDb
             _screenState.value =
                 VacancyDetailsScreenState.Content(
                     foundVacancy = vacancyFromDb,
