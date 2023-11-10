@@ -8,7 +8,10 @@ sealed interface VacancyDetailsScreenState {
     object Error : VacancyDetailsScreenState
 
     data class Content(
-        val foundVacancy: Vacancy?
+        val foundVacancy: Vacancy?, val favoriteStatus: Boolean
     ) : VacancyDetailsScreenState
 
+    data class SimilarVacanciesButtonState(
+        val visibility: Boolean
+    ) : VacancyDetailsScreenState
 }
