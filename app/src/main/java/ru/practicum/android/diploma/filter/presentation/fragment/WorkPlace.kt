@@ -51,13 +51,11 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             btnClrCountry.setOnClickListener {
-                // Функция вызванная с нулевыми параметрами обнуляет поле _countryChosen in viewModel
-                vm.chooseAnotherCountry(null, null)
+                vm.chooseAnotherCountry(null)
             }
 
             btnClrDistrict.setOnClickListener {
-                // Функция вызванная с нулевыми параметрами обнуляет поле _districtChosen in viewModel
-                vm.chooseAnotherDistrict(null, null)
+                vm.chooseAnotherDistrict(null)
             }
 
             btnChooseAll.setOnClickListener {
@@ -67,7 +65,6 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     }
 
     override fun exitExtraWhenSystemBackPushed() {
-        vm.saveAreasToFilter()
         // Exit back
         findNavController().popBackStack()
     }
@@ -77,19 +74,30 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
 
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
-            val areaName = bundle.getString(AREA_NAME)
+            val areaName = bundle.getString(AREA_NAME).toString()
             val areaId = bundle.getInt(AREA_ID)
 
-            vm.chooseAnotherDistrict(areaId, areaName)
+            translateNewArea(areaName, areaId, WorkPlaceVm.AREA_TYPE_AREA)
         }
 
 
         setFragmentResultListener(KEY_COUNTRY_RESULT) { requestKey, bundle ->
-            val areaName = bundle.getString(AREA_NAME)
+            val areaName = bundle.getString(AREA_NAME).toString()
             val areaId = bundle.getInt(AREA_ID)
 
-            vm.chooseAnotherCountry(areaId, areaName)
+            translateNewArea(areaName, areaId, WorkPlaceVm.AREA_TYPE_COUNTRY)
         }
+    }
+
+    private fun translateNewArea(name: String, id: Int, areaType: Int) {
+        val area = AreaData(
+            id = id,
+            name = name,
+            parentId = null,
+            areas = emptyList()
+        )
+        if (areaType == WorkPlaceVm.AREA_TYPE_COUNTRY) vm.chooseAnotherCountry(newCountry = area)
+        else vm.chooseAnotherDistrict(area)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

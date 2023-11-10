@@ -79,11 +79,6 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
     }
 
     private fun bindFragmentState(screenState: ScreenState) {
-        if (screenState is ScreenState.FilterSettings) {
-            if (screenState.filters.nameCountry != null) binding.btnChooseCountry.text =
-                screenState.filters.nameCountry
-            if (screenState.filters.nameArea != null) binding.btnChooseCountry.text =binding.btnChooseCountry.text.toString().plus("(${screenState.filters.nameArea})")
 
-        }
     }
 }

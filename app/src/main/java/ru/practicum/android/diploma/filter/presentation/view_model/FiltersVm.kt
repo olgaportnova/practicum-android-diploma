@@ -13,28 +13,43 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading(null))
     val screenState = _screenState as StateFlow<ScreenState>
 
+    var filtersSettings:FilterData = filtersController.getDefaultSettings()
 
-    fun loadFilterSet(){
-        val fSet = filtersController.getFilterSettings()
-        Log.e("Log",fSet.toString())
-
-        if (fSet == null) safeDefaultFilter()
-        else _screenState.value = ScreenState.FilterSettings(fSet)
+    private fun FilterData.updateParams(
+        idCountry: String? = null,
+        idArea: String? = null,
+        idIndustry: String? = null,
+        nameCountry: String? = null,
+        nameArea: String? = null,
+        nameIndustry: String? = null,
+        currency: String? = null,
+        salary: Int? = null,
+        onlyWithSalary: Boolean? = null
+    ): FilterData {
+        return this.copy(
+            idCountry = idCountry ?: this.idCountry,
+            idArea = idArea ?: this.idArea,
+            idIndustry = idIndustry ?: this.idIndustry,
+            nameCountry = nameCountry ?: this.nameCountry,
+            nameArea = nameArea ?: this.nameArea,
+            nameIndustry = nameIndustry ?: this.nameIndustry,
+            currency = currency ?: this.currency,
+            salary = salary ?: this.salary,
+            onlyWithSalary = onlyWithSalary ?: this.onlyWithSalary,
+        )
     }
 
-    private fun safeDefaultFilter() {
-        val defaultSettings = FilterData(
-            idCountry = "-1",
-            idArea = "-1",
-            idIndustry = "-1",
-            nameCountry = null,
-            nameArea = null,
-            nameIndustry = null,
-            currency = null,
-            salary = -1,
-            onlyWithSalary = false,
-        )
-        filtersController.saveFilterSettings(defaultSettings)
-        _screenState.value = ScreenState.FilterSettings(defaultSettings)
+    fun loadFilterSet() {
+        filtersSettings= filtersController.getFilterSettings()
+            _screenState.value = ScreenState.FilterSettings(filtersSettings)
+        Log.e("LOG",filtersSettings.toString())
+    }
+
+    fun setNewSalaryToFilter(newSalary:Int){
+        filtersController.saveFilterSettings(filtersSettings.updateParams(salary = newSalary))
+    }
+
+    fun setWithSalaryParam(withSalaryParam:Boolean){
+        filtersController.saveFilterSettings(filtersSettings.updateParams(onlyWithSalary = withSalaryParam))
     }
 }
