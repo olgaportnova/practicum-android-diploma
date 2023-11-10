@@ -6,22 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
+import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.util.AREA_ID
 import ru.practicum.android.diploma.filter.presentation.util.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
 import ru.practicum.android.diploma.filter.presentation.util.KEY_COUNTRY_RESULT
 import ru.practicum.android.diploma.filter.presentation.util.KEY_DISTRICT_RESULT
+import ru.practicum.android.diploma.filter.presentation.view_model.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     private val vm: WorkPlaceVm by viewModel()
+    private val viewModel: FilterSharedVm by activityViewModels()
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -59,27 +63,31 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             btnChooseAll.setOnClickListener {
-                exitExtraWhenSystemBackPushed()
+                vm.countryChosen.value?.let {
+                    viewModel.countryArea = AbstractData(id = it.id, name = it.name)
+                }
+                vm.districtChosen.value?.let {
+                    viewModel.districtArea = AbstractData(id = it.id, name = it.name)
+                }
+                findNavController().popBackStack()
             }
         }
     }
 
     override fun exitExtraWhenSystemBackPushed() {
-        vm.saveAllDislocations()
         // Exit back
         findNavController().popBackStack()
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
             val areaName = bundle.getString(AREA_NAME)
             val areaId = bundle.getInt(AREA_ID)
 
             val result = saveNewArea(areaName, areaId, WorkPlaceVm.AREA_TYPE_AREA)
-            if (!result) vm.chooseAnotherDistrict(null)
+            if (!result) vm.chooseAnotherDistrict(null)// Стираем отображение страны
         }
 
 
@@ -88,12 +96,12 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             val areaId = bundle.getInt(AREA_ID)
 
             val result = saveNewArea(areaName, areaId, WorkPlaceVm.AREA_TYPE_COUNTRY)
-            if(!result) vm.chooseAnotherCountry(null)
+            if (!result) vm.chooseAnotherCountry(null) // Стираем отображение региона
         }
     }
 
-    private fun saveNewArea(name: String?, id: Int, areaType: Int) :Boolean{
-        if (name.isNullOrEmpty())return false
+    private fun saveNewArea(name: String?, id: Int, areaType: Int): Boolean {
+        if (name.isNullOrEmpty()) return false
         else {
             val area = AreaData(
                 id = id,
@@ -103,7 +111,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             )
 
             if (areaType == WorkPlaceVm.AREA_TYPE_COUNTRY) vm.chooseAnotherCountry(newCountry = area)
-            else vm.chooseAnotherDistrict(area)
+            else vm.chooseAnotherDistrict(newDistrict = area)
         }
         return true
     }

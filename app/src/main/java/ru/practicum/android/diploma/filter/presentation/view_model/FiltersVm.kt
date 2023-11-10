@@ -13,7 +13,8 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading(null))
     val screenState = _screenState as StateFlow<ScreenState>
 
-    var filtersSettings:FilterData = filtersController.getDefaultSettings()
+    private var filtersSettings: FilterData = filtersController.getDefaultSettings()
+    private var newFilterSet = filtersController.getDefaultSettings()
 
     private fun FilterData.updateParams(
         idCountry: String? = null,
@@ -39,17 +40,57 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         )
     }
 
-    fun loadFilterSet() {
-        filtersSettings= filtersController.getFilterSettings()
-            _screenState.value = ScreenState.FilterSettings(filtersSettings)
-        Log.e("LOG",filtersSettings.toString())
+    init {
+        loadFilterSet()
     }
 
-    fun setNewSalaryToFilter(newSalary:Int){
-        filtersController.saveFilterSettings(filtersSettings.updateParams(salary = newSalary))
+    private fun loadFilterSet() {
+        filtersSettings = filtersController.getFilterSettings()
+        Log.e("LOG", filtersSettings.toString())
+
+        _screenState.value = ScreenState.FilterSettings(filtersSettings)
+
     }
 
-    fun setWithSalaryParam(withSalaryParam:Boolean){
-        filtersController.saveFilterSettings(filtersSettings.updateParams(onlyWithSalary = withSalaryParam))
+    fun setNewSalaryToFilter(newSalary: CharSequence?) {
+        val salary =50// newSalary.toString().toInt()
+        newFilterSet = newFilterSet.updateParams(salary = salary)
+        _screenState.value = ScreenState.FilterSettings(newFilterSet)
     }
+
+    fun setWithSalaryParam(withSalaryParam: Boolean) {
+        newFilterSet = newFilterSet.updateParams(onlyWithSalary = withSalaryParam)
+        _screenState.value = ScreenState.FilterSettings(newFilterSet)
+    }
+
+    fun setNewCountryToFilter(name: String?, id: Int): Boolean {
+        if (name.isNullOrEmpty()) return false
+        else {
+            newFilterSet = newFilterSet.updateParams(idCountry = id.toString())
+            newFilterSet = newFilterSet.updateParams(nameCountry = name)
+            _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        }
+        return true
+    }
+
+    fun setNewAreToFilter(name: String?, id: Int): Boolean {
+        if (name.isNullOrEmpty()) return false
+        else {
+            newFilterSet = newFilterSet.updateParams(idArea = id.toString())
+            newFilterSet = newFilterSet.updateParams(nameArea = name)
+            _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        }
+        return true
+    }
+
+    fun setNewIndustryToFilter(name: String?, id: Int): Boolean {
+        if (name.isNullOrEmpty()) return false
+        else {
+            newFilterSet = newFilterSet.updateParams(idIndustry = id.toString())
+            newFilterSet = newFilterSet.updateParams(nameIndustry = name)
+            _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        }
+        return true
+    }
+
 }

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,54 +28,9 @@ class WorkPlaceVm(private val filtersController: FiltersController) : ViewModel(
         loadFilterSet()
     }
 
-    private fun FilterData.updateParams(
-        idCountry: String? = null,
-        idArea: String? = null,
-        idIndustry: String? = null,
-        nameCountry: String? = null,
-        nameArea: String? = null,
-        nameIndustry: String? = null,
-        currency: String? = null,
-        salary: Int? = null,
-        onlyWithSalary: Boolean? = null
-    ): FilterData {
-        return this.copy(
-            idCountry = idCountry ?: this.idCountry,
-            idArea = idArea ?: this.idArea,
-            idIndustry = idIndustry ?: this.idIndustry,
-            nameCountry = nameCountry ?: this.nameCountry,
-            nameArea = nameArea ?: this.nameArea,
-            nameIndustry = nameIndustry ?: this.nameIndustry,
-            currency = currency ?: this.currency,
-            salary = salary ?: this.salary,
-            onlyWithSalary = onlyWithSalary ?: this.onlyWithSalary,
-        )
-    }
-
     private fun loadFilterSet() {
         filtersSettings = filtersController.getFilterSettings()
         screenStateFilterSettings.value = filtersSettings
-    }
-
-    private fun updateFilterSharedPref(areaToSave: AreaData?, areaType: Int) {
-        val newSet = when (areaType) {
-            AREA_TYPE_AREA -> {
-                filtersSettings.updateParams(
-                    idArea = areaToSave?.id.toString(),
-                    nameArea = areaToSave?.name
-                )
-            }
-
-            AREA_TYPE_COUNTRY -> {
-                filtersSettings.updateParams(
-                    idCountry = areaToSave?.id.toString(),
-                    nameCountry = areaToSave?.name
-                )
-            }
-            else -> filtersSettings
-        }
-
-        filtersController.saveFilterSettings(newSet)
     }
 
     fun chooseAnotherCountry(newCountry: AreaData?) {
@@ -85,16 +41,6 @@ class WorkPlaceVm(private val filtersController: FiltersController) : ViewModel(
     fun chooseAnotherDistrict(newDistrict: AreaData?) {
         _districtChosen.value = newDistrict
         checkAcceptCondition()
-    }
-
-    fun saveAllDislocations(){
-        updateFilterSharedPref(
-            areaToSave = _districtChosen.value,
-            areaType = AREA_TYPE_AREA)
-
-        updateFilterSharedPref(
-            areaToSave = _countryChosen.value,
-            areaType = AREA_TYPE_COUNTRY)
     }
 
     private fun checkAcceptCondition() {
