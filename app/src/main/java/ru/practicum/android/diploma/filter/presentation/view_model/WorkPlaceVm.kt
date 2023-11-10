@@ -20,7 +20,7 @@ class WorkPlaceVm(private val filtersController: FiltersController) : ViewModel(
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
 
-    val screenStateFilterSettings = MutableLiveData<FilterData>()
+    private val screenStateFilterSettings = MutableLiveData<FilterData>()
     var filtersSettings: FilterData = filtersController.getDefaultSettings()
 
     init {
@@ -56,19 +56,19 @@ class WorkPlaceVm(private val filtersController: FiltersController) : ViewModel(
         screenStateFilterSettings.value = filtersSettings
     }
 
-    private fun saveAreaToFilter(areaToSave: AreaData, areaType: Int) {
+    private fun updateFilterSharedPref(areaToSave: AreaData?, areaType: Int) {
         val newSet = when (areaType) {
             AREA_TYPE_AREA -> {
                 filtersSettings.updateParams(
-                    idArea = areaToSave.id.toString(),
-                    nameArea = areaToSave.name
+                    idArea = areaToSave?.id.toString(),
+                    nameArea = areaToSave?.name
                 )
             }
 
             AREA_TYPE_COUNTRY -> {
                 filtersSettings.updateParams(
-                    idCountry = areaToSave.id.toString(),
-                    nameCountry = areaToSave.name
+                    idCountry = areaToSave?.id.toString(),
+                    nameCountry = areaToSave?.name
                 )
             }
             else -> filtersSettings
@@ -79,23 +79,22 @@ class WorkPlaceVm(private val filtersController: FiltersController) : ViewModel(
 
     fun chooseAnotherCountry(newCountry: AreaData?) {
         _countryChosen.value = newCountry
-        if (newCountry != null) saveAreaToFilter(
-            areaToSave = newCountry,
-            areaType = AREA_TYPE_COUNTRY
-        )
-
         checkAcceptCondition()
     }
 
     fun chooseAnotherDistrict(newDistrict: AreaData?) {
         _districtChosen.value = newDistrict
-
-        if (newDistrict != null) saveAreaToFilter(
-            areaToSave = newDistrict,
-            areaType = AREA_TYPE_AREA
-        )
-
         checkAcceptCondition()
+    }
+
+    fun saveAllDislocations(){
+        updateFilterSharedPref(
+            areaToSave = _districtChosen.value,
+            areaType = AREA_TYPE_AREA)
+
+        updateFilterSharedPref(
+            areaToSave = _countryChosen.value,
+            areaType = AREA_TYPE_COUNTRY)
     }
 
     private fun checkAcceptCondition() {
