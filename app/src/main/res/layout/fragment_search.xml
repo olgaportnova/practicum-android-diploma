@@ -13,7 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="?attr/colorOnPrimary"
         app:titleMarginStart="16dp"
         app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
@@ -36,14 +35,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/progress_bar" />
 
-    <TextView
-        android:id="@+id/info_search_result_count"
-        tools:text="@string/no_found_vacancies_count"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
-        style="@style/information_vacancies_count" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view_search_result"
@@ -51,10 +42,20 @@
         tools:listitem="@layout/item_viewholder_vacancy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info_search_result_count"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
         app:layout_constraintBottom_toTopOf="@id/progress_bar_bottom"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        style="@style/recycle_view" />
+        style="@style/recycle_view"
+        android:layout_marginTop="0dp"/>
+
+    <TextView
+        android:id="@+id/info_search_result_count"
+        tools:text="@string/no_found_vacancies_count"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
+        style="@style/information_vacancies_count" />
 
     <ImageView
         android:id="@+id/image_placeholder"
