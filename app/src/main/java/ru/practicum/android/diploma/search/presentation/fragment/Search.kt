@@ -41,9 +41,9 @@ class Search : Fragment() {
     companion object {
         const val APP_ERROR_SEARCH = 0
         const val PER_PAGE = 20
-        const val START_PAGE = 0
+        const val START_PAGE_INDEX = 0
         const val INIT_TEXT = ""
-        const val ONE_PAGE = 1
+        const val ONE_PAGE_INDEX = 1
     }
 
     private var _binding: FragmentSearchBinding? = null
@@ -51,20 +51,17 @@ class Search : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    //private val _paramsFilter: SavedFilters? = null
-    //private val paramsFilter get() = _paramsFilter!!
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
 
-    //private val savedFilter: SavedFilters = SavedFilters()
     private var modelForQuery: QuerySearchMdl = QuerySearchMdl(
-        page = START_PAGE, perPage = PER_PAGE, text = INIT_TEXT
+        page = START_PAGE_INDEX, perPage = PER_PAGE, text = INIT_TEXT
     )
-
     private var _maxPage: Int? = null
     private val maxPage get() = _maxPage
     private var isSearchRequest = false
-    private var currentPage: Int = START_PAGE
+    private var isGetParamsFragment = false
+    private var currentPage: Int = START_PAGE_INDEX
 
     private fun setUiListeners() {
 
@@ -74,16 +71,12 @@ class Search : Fragment() {
                     findNavController().navigate(R.id.action_to_filters)
                     true
                 }
-
                 else -> false
             }
         }
         binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
-
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
-
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,10 +84,8 @@ class Search : Fragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        // Inflate the layout for this fragment
         return binding.root
     }
-
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,11 +115,9 @@ class Search : Fragment() {
                 }
             }
         }
-
         initRecycler()
         viewModel.getParamsFilters()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -213,7 +202,7 @@ class Search : Fragment() {
     }
 
     private fun renderSearchErrorUi(codeError: Int) {
-        if (modelForQuery.page == START_PAGE) {
+        if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
@@ -240,7 +229,7 @@ class Search : Fragment() {
     }
 
     private fun renderSearchLoadingUi() {
-        if (modelForQuery.page == START_PAGE) {
+        if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
@@ -262,7 +251,7 @@ class Search : Fragment() {
     }
 
     private fun renderSearchNoConnectingUi() {
-        if (modelForQuery.page == START_PAGE) {
+        if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
@@ -309,7 +298,7 @@ class Search : Fragment() {
             infoSearchResultCount.isVisible = true
             _maxPage = data.maxPages
             currentPage = data.currentPages
-            if (data.currentPages == START_PAGE) {
+            if (data.currentPages == START_PAGE_INDEX) {
                 adapter!!.updateList(data.listVacancy, true, true)
             } else {
                 adapter!!.updateList(data.listVacancy, true)
@@ -331,13 +320,11 @@ class Search : Fragment() {
     private fun renderUseFilters(content: FilterData) {
         binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
         addFilterInModel(content)
-
     }
-
 
     private fun addFilterInModel(content: FilterData) {
         with(modelForQuery) {
-            page = START_PAGE
+            page = START_PAGE_INDEX
             perPage = PER_PAGE
             text = INIT_TEXT
             area = content.idArea
@@ -354,15 +341,14 @@ class Search : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //not use
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 hideIcDellText(p0)
-
-                modelForQuery.text = p0.toString()
-                modelForQuery.page = START_PAGE
-                viewModel.searchDebounce(modelForQuery)
+                if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
+                    modelForQuery.text = p0.toString()
+                    modelForQuery.page = START_PAGE_INDEX
+                    viewModel.searchDebounce(modelForQuery)
+                }
             }
-
             override fun afterTextChanged(p0: Editable?) {
                 //not use
             }
@@ -371,7 +357,6 @@ class Search : Fragment() {
 
     @SuppressLint("UseCompatLoadingForDrawables", "ClickableViewAccessibility")
     private fun hideIcDellText(text: CharSequence?) {
-
         val editText = binding.editTextSearch
 
         if (text.isNullOrEmpty()) {
@@ -413,11 +398,10 @@ class Search : Fragment() {
                     val itemsCount = adapter!!.itemCount
 
                     if (position >= itemsCount - 1) {
-
                         if (isSearchRequest) {
                             isSearchRequest = false
-                            if (maxPage!! >= currentPage + ONE_PAGE){
-                                modelForQuery.page = currentPage + ONE_PAGE
+                            if (maxPage!! - ONE_PAGE_INDEX >= currentPage + ONE_PAGE_INDEX) {
+                                modelForQuery.page = currentPage + ONE_PAGE_INDEX
                                 viewModel.doRequestSearch(modelForQuery)
                             }
                         }
