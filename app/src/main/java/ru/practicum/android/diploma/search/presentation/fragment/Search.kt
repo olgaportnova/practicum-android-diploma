@@ -1,14 +1,17 @@
 package ru.practicum.android.diploma.search.presentation.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -17,6 +20,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -26,8 +31,8 @@ import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.presentation.SavedFilters
 import ru.practicum.android.diploma.search.presentation.states.StateFilters
+import ru.practicum.android.diploma.search.presentation.states.ToastState
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 import ru.practicum.android.diploma.util.DataStatus
 
@@ -36,27 +41,27 @@ class Search : Fragment() {
     companion object {
         const val APP_ERROR_SEARCH = 0
         const val PER_PAGE = 20
-        const val START_PAGE = 0
+        const val START_PAGE_INDEX = 0
         const val INIT_TEXT = ""
+        const val ONE_PAGE_INDEX = 1
     }
-    //TODO:Добавить пангинацию
+
+    private val viewModel: SearchViewModel by viewModel()
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SearchViewModel by viewModel()
-
-    private val _paramsFilter: SavedFilters? = null
-    private val paramsFilter get() = _paramsFilter!!
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
 
-    private val savedFilter: SavedFilters = SavedFilters()
-    private val modelForQuery: QuerySearchMdl = QuerySearchMdl(
-        page = START_PAGE, perPage = PER_PAGE, text = INIT_TEXT
+    private var modelForQuery: QuerySearchMdl = QuerySearchMdl(
+        page = START_PAGE_INDEX, perPage = PER_PAGE, text = INIT_TEXT
     )
-
-    private var currentPage = START_PAGE
+    private var _maxPage: Int? = null
+    private val maxPage get() = _maxPage
+    private var isSearchRequest = false
+    private var isGetParamsFragment = false
+    private var currentPage: Int = START_PAGE_INDEX
 
     private fun setUiListeners() {
 
@@ -70,6 +75,7 @@ class Search : Fragment() {
             }
         }
         binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
+        binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
     }
 
     override fun onCreateView(
@@ -78,10 +84,8 @@ class Search : Fragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        // Inflate the layout for this fragment
         return binding.root
     }
-
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,10 +108,17 @@ class Search : Fragment() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateToast.collect {
+                    renderToast(it)
+                    viewModel.setToastNoMessage()
+                }
+            }
+        }
         initRecycler()
         viewModel.getParamsFilters()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -166,6 +177,17 @@ class Search : Fragment() {
         }
     }
 
+    private fun renderToast(state: ToastState) {
+        when (state) {
+            is ToastState.ShowMessage -> showToast(state.message)
+            is ToastState.NoneMessage -> {}
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
     private fun renderSearchDefaultUi() {
         with(binding) {
             infoSearchResultCount.isVisible = false
@@ -175,28 +197,40 @@ class Search : Fragment() {
             imagePlaceholder.setImageResource(R.drawable.placeholder_start_of_search)
             imagePlaceholder.isVisible = true
             textPlaceholder.isVisible = false
+            editTextSearch.setText(INIT_TEXT)
+            hideSoftKeyboard()
         }
     }
 
     private fun renderSearchErrorUi(codeError: Int) {
-        with(binding) {
-            infoSearchResultCount.isVisible = false
-            recycleViewSearchResult.isVisible = false
-            progressBar.isVisible = false
-            progressBarBottom.isVisible = false
-            imagePlaceholder.setImageResource(R.drawable.placeholder_error_server)
-            imagePlaceholder.isVisible = true
-            textPlaceholder.setText(R.string.server_error)
-        }
-        if (codeError == APP_ERROR_SEARCH) {
-            Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
+        if (modelForQuery.page == START_PAGE_INDEX) {
+            with(binding) {
+                infoSearchResultCount.isVisible = false
+                recycleViewSearchResult.isVisible = false
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.setImageResource(R.drawable.placeholder_error_server)
+                imagePlaceholder.isVisible = true
+                textPlaceholder.setText(R.string.server_error)
+                textPlaceholder.isVisible = true
+            }
+                setLogForError(codeError)
         } else {
-            Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
+            with(binding) {
+                infoSearchResultCount.isVisible = true
+                recycleViewSearchResult.isVisible = true
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.isVisible = false
+                textPlaceholder.isVisible = false
+                setLogForError(codeError)
+                viewModel.showToastDebounce(getString(R.string.error_for_toast))
+            }
         }
     }
 
     private fun renderSearchLoadingUi() {
-        if (currentPage == START_PAGE) {
+        if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
@@ -218,15 +252,28 @@ class Search : Fragment() {
     }
 
     private fun renderSearchNoConnectingUi() {
-        with(binding) {
-            infoSearchResultCount.isVisible = false
-            recycleViewSearchResult.isVisible = false
-            progressBar.isVisible = false
-            progressBarBottom.isVisible = false
-            imagePlaceholder.setImageResource(R.drawable.placeholder_no_internet)
-            imagePlaceholder.isVisible = true
-            textPlaceholder.setText(R.string.no_internet)
-            textPlaceholder.isVisible = true
+        if (modelForQuery.page == START_PAGE_INDEX) {
+            with(binding) {
+                infoSearchResultCount.isVisible = false
+                recycleViewSearchResult.isVisible = false
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.setImageResource(R.drawable.placeholder_no_internet)
+                imagePlaceholder.isVisible = true
+                textPlaceholder.setText(R.string.no_internet)
+                textPlaceholder.isVisible = true
+            }
+        } else {
+            with(binding) {
+                infoSearchResultCount.isVisible = true
+                recycleViewSearchResult.isVisible = true
+                progressBar.isVisible = false
+                progressBarBottom.isVisible = false
+                imagePlaceholder.isVisible = false
+                textPlaceholder.isVisible = false
+                viewModel.showToastDebounce(getString(R.string.no_internet_for_toast))
+                isSearchRequest = true
+            }
         }
     }
 
@@ -244,31 +291,50 @@ class Search : Fragment() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun renderSearchContentUi(data: AnswerVacancyList?) {
         with(binding) {
             infoSearchResultCount.text =
-                requireContext().getString(R.string.found_vacancies_count,data!!.found)
+                requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
-            adapter!!.updateList(data.listVacancy)
+            _maxPage = data.maxPages
+            currentPage = data.currentPages
+            if (data.currentPages == START_PAGE_INDEX) {
+                adapter!!.updateList(data.listVacancy, true, true)
+            } else {
+                adapter!!.updateList(data.listVacancy, true)
+            }
+            isSearchRequest = true
+
             progressBar.isVisible = false
             progressBarBottom.isVisible = false
             imagePlaceholder.isVisible = false
             textPlaceholder.isVisible = false
             recycleViewSearchResult.isVisible = true
         }
-
-
     }
 
     private fun renderNoFilters() {
-
-   //  val itemMenu = binding.navigationBar.menu.getItem(R.drawable.ic_filters)
-   //TODO Fix bug for icon
+        binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
     }
 
     private fun renderUseFilters(content: FilterData) {
-       // binding.navigationBar.setNavigationIcon(R.drawable.ic_filters_selected)
-        //TODO:Logic get SH data
+        binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+        addFilterInModel(content)
+    }
+
+    private fun addFilterInModel(content: FilterData) {
+        with(modelForQuery) {
+            page = START_PAGE_INDEX
+            perPage = PER_PAGE
+            text = INIT_TEXT
+            area = content.idArea
+            parentArea = content.idCountry
+            industry = content.idIndustry
+            currency = content.currency
+            salary = content.salary
+            onlyWithSalary = content.onlyWithSalary
+        }
     }
 
     private fun getTextWatcherForSearch(): TextWatcher {
@@ -276,41 +342,79 @@ class Search : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //not use
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 hideIcDellText(p0)
-
-                modelForQuery.text = p0.toString()
-                //TODO Добавить Debouncy для ввода
-                viewModel.searchDebounce(modelForQuery)
+                if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
+                    modelForQuery.text = p0.toString()
+                    modelForQuery.page = START_PAGE_INDEX
+                    viewModel.searchDebounce(modelForQuery)
+                }
             }
-
             override fun afterTextChanged(p0: Editable?) {
                 //not use
             }
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables", "ClickableViewAccessibility")
     private fun hideIcDellText(text: CharSequence?) {
-        return if (text.isNullOrEmpty()) {
+        val editText = binding.editTextSearch
+
+        if (text.isNullOrEmpty()) {
             binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
                 0,
                 0,
                 R.drawable.ic_search,
                 0
-            );
+            )
+            editText.setOnTouchListener { _, motionEvent ->
+                false
+            }
         } else {
             binding.editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
                 0,
                 0,
                 R.drawable.ic_clear,
                 0
-            );
+            )
+            val iconClear = editText.compoundDrawables[2]
+            editText.setOnTouchListener { _, motionEvent ->
+                if ((motionEvent.action == MotionEvent.ACTION_UP) &&
+                    (motionEvent.rawX >= (editText.right - iconClear.bounds.width() * 2))
+                ) {
+                    viewModel.setDefaultState()
+                }
+                true
+            }
+        }
+    }
+
+    private fun onScrollListener(): OnScrollListener {
+        return object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val position =
+                        (binding.recycleViewSearchResult.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val itemsCount = adapter!!.itemCount
+
+                    if (position >= itemsCount - 1) {
+                        if (isSearchRequest) {
+                            isSearchRequest = false
+                            if (maxPage!! - ONE_PAGE_INDEX >= currentPage + ONE_PAGE_INDEX) {
+                                modelForQuery.page = currentPage + ONE_PAGE_INDEX
+                                viewModel.doRequestSearch(modelForQuery)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
     private fun initRecycler() {
-        val spaceHeightInPixels = resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
+        val spaceHeightInPixels =
+            resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
         val itemDecoration = TopSpaceItemDecoration(spaceHeightInPixels)
 
         _adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
@@ -322,5 +426,19 @@ class Search : Fragment() {
 
         binding.recycleViewSearchResult.adapter = adapter
         binding.recycleViewSearchResult.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun hideSoftKeyboard() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
+    }
+
+    private fun setLogForError(codeError: Int) {
+        if (codeError == APP_ERROR_SEARCH) {
+            Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
+        } else {
+            Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
+        }
     }
 }
