@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.util
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +50,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             }
 
             txtSearch.doOnTextChanged { text, start, before, count ->
-                vm?.searchInputData(text)
+                vm?.txtSearchChanged(text)
             }
 
             btnChooseAll.setOnClickListener {
@@ -113,7 +112,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     private fun setFragmentScreenState(newScreenState: ScreenState) {
         when (newScreenState) {
             is ScreenState.Loading -> {
-                binding.areaRecycler.isVisible=false
+                binding.areaRecycler.isVisible = false
                 binding.progressLoading.isVisible = true
                 binding.progressLoading.text = "Loading"
             }
@@ -121,16 +120,18 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             is ScreenState.Content -> {
                 // TODO: need to do in background
                 adapter.changeData(newScreenState.data)
-                binding.areaRecycler.isVisible=true
+                binding.areaRecycler.isVisible = true
                 binding.progressLoading.isVisible = false
                 binding.progressLoading.text = "Content"
 
             }
-            is ScreenState.EmptyContent ->{
-                binding.areaRecycler.isVisible=false
+
+            is ScreenState.EmptyContent -> {
+                binding.areaRecycler.isVisible = false
                 binding.progressLoading.isVisible = true
                 binding.progressLoading.text = "Empty content"
             }
+
             is ScreenState.Error -> showMsgDialog(newScreenState.exception)
             else -> {}
         }
