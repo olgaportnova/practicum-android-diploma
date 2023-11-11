@@ -20,29 +20,176 @@
 
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- TODO: Update blank fragment layout -->
+    <!--Work Place-->
 
-    <!-- TODO: Временные кнопки для отработки переходов на след фрагменты -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_choose_country"
+    <LinearLayout
+        android:id="@+id/layout_work_place"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:paddingStart="@dimen/work_place_info_margin_start"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_clr_work_place"
+        app:layout_constraintTop_toTopOf="@id/btn_clr_work_place"
+        app:layout_constraintBottom_toBottomOf="@id/btn_clr_work_place">
+
+        <TextView
+            android:id="@+id/lbl_choose_work_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/work_place_lbl_top_margin"
+
+            android:textColor="?attr/colorOnPrimary"
+            android:text="Место работы"
+            android:textSize="12sp"
+            android:fontFamily="@font/ys_display_regular"/>
+
+
+        <TextView
+            android:id="@+id/txt_choose_work_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Место работы"
+            android:textSize="16sp"
+            android:fontFamily="@font/ys_display_regular"/>
+
+    </LinearLayout>
+
+    <!--Work place clear bottom-->
+
+    <ImageView
+        android:id="@+id/btn_clr_work_place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Work place"
+        android:layout_marginTop="@dimen/work_place_distance_after_toolbar"
+        android:padding="@dimen/work_place_icon_padding"
+        android:src="@drawable/ic_clear"
+        android:contentDescription="@string/app_name"
 
-        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navigation_bar" />
 
-        app:layout_constraintTop_toBottomOf="@id/navigation_bar"
-        app:layout_constraintStart_toStartOf="parent"/>
+    <!--Industry-->
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_choose_industry"
+    <LinearLayout
+        android:id="@+id/layout_industry"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:paddingStart="@dimen/work_place_info_margin_start"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_clr_industry"
+        app:layout_constraintTop_toTopOf="@id/btn_clr_industry"
+        app:layout_constraintBottom_toBottomOf="@id/btn_clr_industry">
+
+        <TextView
+            android:id="@+id/lbl_choose_industry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/work_place_lbl_top_margin"
+
+            android:textColor="?attr/colorOnPrimary"
+            android:text="Отрасль"
+            android:textSize="12sp"
+            android:fontFamily="@font/ys_display_regular"/>
+
+
+        <TextView
+            android:id="@+id/txt_choose_industry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Отрасль"
+            android:textSize="16sp"
+            android:fontFamily="@font/ys_display_regular"/>
+
+    </LinearLayout>
+
+    <!--Industry place clear bottom-->
+
+    <ImageView
+        android:id="@+id/btn_clr_industry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Industry"
+        android:layout_marginTop="@dimen/work_place_distance_after_toolbar"
+        android:padding="@dimen/work_place_icon_padding"
+        android:src="@drawable/ic_clear"
+        android:contentDescription="@string/app_name"
 
-        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_clr_work_place" />
 
-        app:layout_constraintTop_toBottomOf="@id/btn_choose_country"
+    <!--Salary input-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lbl_input_salary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+
+        app:layout_constraintTop_toBottomOf="@id/btn_clr_industry">
+
+        <EditText
+            android:id="@+id/txt_salary_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/app_name"
+            />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--only with salary checkbox-->
+
+    <CheckBox
+        android:id="@+id/checkbox_with_salary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/lbl_input_salary"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <!--Accept button-->
+
+    <TextView
+        android:id="@+id/btn_accept_filter_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/big_blue_button"
+        android:text="Accept"
+        android:visibility="gone"
+
+        android:layout_margin="16dp"
+
+        app:layout_constraintTop_toBottomOf="@id/checkbox_with_salary"/>
+
+    <TextView
+        android:id="@+id/btn_decline_filter_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/big_blue_button"
+        android:text="Decline"
+        android:visibility="gone"
+
+        android:layout_margin="16dp"
+
+        app:layout_constraintTop_toBottomOf="@id/btn_accept_filter_set"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

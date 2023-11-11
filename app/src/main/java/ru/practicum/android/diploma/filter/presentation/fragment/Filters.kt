@@ -1,10 +1,13 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.setFragmentResultListener
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -13,15 +16,15 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
-import ru.practicum.android.diploma.filter.presentation.util.INDUSTRY_ID
-import ru.practicum.android.diploma.filter.presentation.util.INDUSTRY_NAME
-import ru.practicum.android.diploma.filter.presentation.util.KEY_INDUSTRY_RESULT
+import ru.practicum.android.diploma.filter.domain.models.FilterData
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.filter.presentation.view_model.FiltersVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class Filters : DefaultFragment<FragmentFiltersBinding>() {
     private val vm: FiltersVm by viewModel()
+    private val viewModel: FilterSharedVm by activityViewModels()
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -29,38 +32,36 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         return FragmentFiltersBinding.inflate(inflater, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
-        vm.loadFilterSet()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setFragmentResultListener(KEY_INDUSTRY_RESULT) { requestKey, bundle ->
-            val industryName = bundle.getString(INDUSTRY_NAME)
-            val industryId = bundle.getInt(INDUSTRY_ID)
-
-            showMsgDialog(industryName.toString())
-        }
-    }
 
     override fun setUiListeners() {
         with(binding) {
             navigationBar.setNavigationOnClickListener {
-                //parentFragmentManager.setFragmentResult("key", Bundle().apply { putString("bundleKey","Возврат с фрагмента Фильтры. Можно выполнить любую функцию") })
                 exitExtraWhenSystemBackPushed()
             }
 
-            btnChooseCountry.setOnClickListener {
+            layoutWorkPlace.setOnClickListener {
                 findNavController().navigate(R.id.action_to_workPlace)
             }
 
-            btnChooseIndustry.setOnClickListener {
+            layoutIndustry.setOnClickListener {
                 findNavController().navigate(R.id.action_filters_to_industry,
                     Bundle().apply {
 
                     })
             }
+
+            checkboxWithSalary.setOnClickListener {
+                Log.e("LOG","Click")
+                vm.setWithSalaryParam()
+            }
+
+            txtSalaryInput.doOnTextChanged { text, start, before, count ->
+                vm.setNewSalaryToFilter(text)
+            }
+
+            btnAcceptFilterSet.setOnClickListener { vm.saveNewFilterSet() }
+
+            btnDeclineFilterSet.setOnClickListener { vm.abortFilters() }
         }
     }
 
@@ -68,22 +69,65 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         findNavController().popBackStack()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Загружаем набор настроек фильтрации в объединенную модель при первой загрузке фрагмента
+        // Внутри объединенной модели так же есть проверка, что не было многократной перезаписи
+        viewModel.setFilter(vm.getFilters())
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.screenState.collect { bindFragmentState(it) }
+                vm.screenState.collect {
+                    if (it is ScreenState.FilterSettings) bindFragmentState(it.filters)
+                }
             }
+        }
+
+        vm.hasFilterSetChanged.observe(viewLifecycleOwner) {
+            binding.btnAcceptFilterSet.isVisible = it
+            binding.btnDeclineFilterSet.isVisible = it
         }
     }
 
-    private fun bindFragmentState(screenState: ScreenState) {
-        if (screenState is ScreenState.FilterSettings) {
-            if (screenState.filters.nameCountry != null) binding.btnChooseCountry.text =
-                screenState.filters.nameCountry
-            if (screenState.filters.nameArea != null) binding.btnChooseCountry.text =binding.btnChooseCountry.text.toString().plus("(${screenState.filters.nameArea})")
+    override fun onResume() {
+        super.onResume()
 
+        // При возвращении на фрагмент собираем потенциально полученную информацию
+        // от фрагментов выбора страны, региона, профессии
+        viewModel.getFilters()?.let {
+            vm.updateFiltersWithRemote(it)
         }
+    }
+
+    private fun bindFragmentState(filterSet: FilterData) {
+        if (filterSet.idCountry != null) {
+            binding.lblChooseWorkPlace.isVisible = true
+            binding.txtChooseWorkPlace.isVisible = true
+            binding.txtChooseWorkPlace.text = filterSet.nameCountry
+        } else {
+            binding.txtChooseWorkPlace.isVisible = false
+        }
+
+        if (filterSet.idArea != null) {
+            binding.txtChooseWorkPlace.text = "${filterSet.nameCountry}, ${filterSet.nameArea}"
+        }
+
+        if (filterSet.idIndustry != null) {
+
+            binding.lblChooseIndustry.isVisible = true
+            binding.txtChooseIndustry.isVisible = true
+            binding.txtChooseIndustry.text = filterSet.nameIndustry
+        } else {
+            binding.txtChooseIndustry.isVisible = false
+        }
+
+        binding.checkboxWithSalary.isChecked = filterSet.onlyWithSalary
+        Log.e("LOG","is checked ${filterSet.onlyWithSalary}")
+
+        binding.txtSalaryInput.setText(filterSet.salary.toString())
     }
 }
