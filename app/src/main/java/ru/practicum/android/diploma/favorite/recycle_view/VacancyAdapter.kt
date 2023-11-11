@@ -13,10 +13,6 @@ class VacancyAdapter(
     private var onClickListener: OnClickListener
 ) : RecyclerView.Adapter<VacancyViewHolder>() {
 
-    companion object {
-        const val ITEM_COUNT_ADD = 20
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemViewholderVacancyBinding.inflate(inflater, parent, false)

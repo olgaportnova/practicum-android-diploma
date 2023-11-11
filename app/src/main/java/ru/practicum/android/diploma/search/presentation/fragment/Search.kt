@@ -46,10 +46,10 @@ class Search : Fragment() {
         const val ONE_PAGE_INDEX = 1
     }
 
+    private val viewModel: SearchViewModel by viewModel()
+
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel: SearchViewModel by viewModel()
 
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
@@ -107,6 +107,7 @@ class Search : Fragment() {
                 }
             }
         }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateToast.collect {
