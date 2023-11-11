@@ -20,6 +20,8 @@
 
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <!--Work Place-->
+
     <LinearLayout
         android:id="@+id/layout_work_place"
         android:layout_width="0dp"
@@ -59,6 +61,8 @@
 
     </LinearLayout>
 
+    <!--Work place clear bottom-->
+
     <ImageView
         android:id="@+id/btn_clr_work_place"
         android:layout_width="wrap_content"
@@ -70,6 +74,8 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/navigation_bar" />
+
+    <!--Industry-->
 
     <LinearLayout
         android:id="@+id/layout_industry"
@@ -110,6 +116,8 @@
 
     </LinearLayout>
 
+    <!--Industry place clear bottom-->
+
     <ImageView
         android:id="@+id/btn_clr_industry"
         android:layout_width="wrap_content"
@@ -121,6 +129,8 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_clr_work_place" />
+
+    <!--Salary input-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lbl_input_salary"
@@ -145,13 +155,41 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!--only with salary checkbox-->
+
     <CheckBox
-        android:id="@+id/checkbox_with_salry"
+        android:id="@+id/checkbox_with_salary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toBottomOf="@id/lbl_input_salary"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <!--Accept button-->
+
+    <TextView
+        android:id="@+id/btn_accept_filter_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/big_blue_button"
+        android:text="Accept"
+        android:visibility="gone"
+
+        android:layout_margin="16dp"
+
+        app:layout_constraintTop_toBottomOf="@id/checkbox_with_salary"/>
+
+    <TextView
+        android:id="@+id/btn_decline_filter_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/big_blue_button"
+        android:text="Decline"
+        android:visibility="gone"
+
+        android:layout_margin="16dp"
+
+        app:layout_constraintTop_toBottomOf="@id/btn_accept_filter_set"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

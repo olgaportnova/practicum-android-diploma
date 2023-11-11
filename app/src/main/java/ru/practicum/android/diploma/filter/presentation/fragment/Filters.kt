@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.filter.domain.models.FilterData
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.util.ScreenState
-import ru.practicum.android.diploma.filter.presentation.view_model.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.view_model.FiltersVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
@@ -49,18 +50,30 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                     })
             }
 
-            checkboxWithSalry.setOnClickListener {
-                vm.setWithSalaryParam(it.isPressed)
+            checkboxWithSalary.setOnClickListener {
+                Log.e("LOG","Click")
+                vm.setWithSalaryParam()
             }
 
             txtSalaryInput.doOnTextChanged { text, start, before, count ->
                 vm.setNewSalaryToFilter(text)
             }
+
+            btnAcceptFilterSet.setOnClickListener { vm.saveNewFilterSet() }
+
+            btnDeclineFilterSet.setOnClickListener { vm.abortFilters() }
         }
     }
 
     override fun exitExtraWhenSystemBackPushed() {
         findNavController().popBackStack()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Загружаем набор настроек фильтрации в объединенную модель при первой загрузке фрагмента
+        // Внутри объединенной модели так же есть проверка, что не было многократной перезаписи
+        viewModel.setFilter(vm.getFilters())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,21 +86,20 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 }
             }
         }
+
+        vm.hasFilterSetChanged.observe(viewLifecycleOwner) {
+            binding.btnAcceptFilterSet.isVisible = it
+            binding.btnDeclineFilterSet.isVisible = it
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
-        viewModel.countryArea?.let {
-            vm.setNewCountryToFilter(it.name, it.id)
-        }
-
-        viewModel.districtArea?.let {
-            vm.setNewAreToFilter(it.name, it.id)
-        }
-
-        viewModel.industry?.let {
-            vm.setNewIndustryToFilter(it.name, it.id)
+        // При возвращении на фрагмент собираем потенциально полученную информацию
+        // от фрагментов выбора страны, региона, профессии
+        viewModel.getFilters()?.let {
+            vm.updateFiltersWithRemote(it)
         }
     }
 
@@ -113,6 +125,9 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             binding.txtChooseIndustry.isVisible = false
         }
 
+        binding.checkboxWithSalary.isChecked = filterSet.onlyWithSalary
+        Log.e("LOG","is checked ${filterSet.onlyWithSalary}")
 
+        binding.txtSalaryInput.setText(filterSet.salary.toString())
     }
 }

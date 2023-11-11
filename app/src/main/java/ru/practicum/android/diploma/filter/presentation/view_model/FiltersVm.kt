@@ -1,6 +1,8 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,84 +15,77 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading(null))
     val screenState = _screenState as StateFlow<ScreenState>
 
-    private var filtersSettings: FilterData = filtersController.getDefaultSettings()
+    private var oldFiltersSet = filtersController.getDefaultSettings()
     private var newFilterSet = filtersController.getDefaultSettings()
 
-    private fun FilterData.updateParams(
-        idCountry: String? = null,
-        idArea: String? = null,
-        idIndustry: String? = null,
-        nameCountry: String? = null,
-        nameArea: String? = null,
-        nameIndustry: String? = null,
-        currency: String? = null,
-        salary: Int? = null,
-        onlyWithSalary: Boolean? = null
-    ): FilterData {
-        return this.copy(
-            idCountry = idCountry ?: this.idCountry,
-            idArea = idArea ?: this.idArea,
-            idIndustry = idIndustry ?: this.idIndustry,
-            nameCountry = nameCountry ?: this.nameCountry,
-            nameArea = nameArea ?: this.nameArea,
-            nameIndustry = nameIndustry ?: this.nameIndustry,
-            currency = currency ?: this.currency,
-            salary = salary ?: this.salary,
-            onlyWithSalary = onlyWithSalary ?: this.onlyWithSalary,
-        )
-    }
+    private val _hasFilterSetChanged = MutableLiveData<Boolean>(false)
+    var hasFilterSetChanged = _hasFilterSetChanged as LiveData<Boolean>
+
 
     init {
         loadFilterSet()
     }
 
     private fun loadFilterSet() {
-        filtersSettings = filtersController.getFilterSettings()
-        Log.e("LOG", filtersSettings.toString())
+        // Загружаем данные из SharedPrefs
+        oldFiltersSet = filtersController.getFilterSettings()
+        newFilterSet = oldFiltersSet.copy()
 
-        _screenState.value = ScreenState.FilterSettings(filtersSettings)
+        Log.e("Log", oldFiltersSet.toString())
 
+        // Invalidate screen
+        _screenState.value = ScreenState.FilterSettings(oldFiltersSet)
+        compareFilters()
     }
+
+    fun getFilters() = newFilterSet
 
     fun setNewSalaryToFilter(newSalary: CharSequence?) {
-        val salary =50// newSalary.toString().toInt()
-        newFilterSet = newFilterSet.updateParams(salary = salary)
+        val salary = 50// newSalary.toString().toInt()
+        newFilterSet = newFilterSet.copy(salary = salary)
+
+        // Invalidate screen
         _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        compareFilters()
     }
 
-    fun setWithSalaryParam(withSalaryParam: Boolean) {
-        newFilterSet = newFilterSet.updateParams(onlyWithSalary = withSalaryParam)
+    fun setWithSalaryParam() {
+        val isChecked = newFilterSet.onlyWithSalary
+        newFilterSet = newFilterSet.copy(onlyWithSalary = !isChecked)
+
+        // Invalidate screen
         _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        compareFilters()
     }
 
-    fun setNewCountryToFilter(name: String?, id: Int): Boolean {
-        if (name.isNullOrEmpty()) return false
-        else {
-            newFilterSet = newFilterSet.updateParams(idCountry = id.toString())
-            newFilterSet = newFilterSet.updateParams(nameCountry = name)
-            _screenState.value = ScreenState.FilterSettings(newFilterSet)
-        }
-        return true
+    fun updateFiltersWithRemote(receivedFilterSettings: FilterData) {
+        this.newFilterSet = receivedFilterSettings
+
+        // Invalidate screen
+        _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        compareFilters()
     }
 
-    fun setNewAreToFilter(name: String?, id: Int): Boolean {
-        if (name.isNullOrEmpty()) return false
-        else {
-            newFilterSet = newFilterSet.updateParams(idArea = id.toString())
-            newFilterSet = newFilterSet.updateParams(nameArea = name)
-            _screenState.value = ScreenState.FilterSettings(newFilterSet)
-        }
-        return true
+    private fun compareFilters() {
+        this._hasFilterSetChanged.value = oldFiltersSet != newFilterSet
     }
 
-    fun setNewIndustryToFilter(name: String?, id: Int): Boolean {
-        if (name.isNullOrEmpty()) return false
-        else {
-            newFilterSet = newFilterSet.updateParams(idIndustry = id.toString())
-            newFilterSet = newFilterSet.updateParams(nameIndustry = name)
-            _screenState.value = ScreenState.FilterSettings(newFilterSet)
-        }
-        return true
+    fun saveNewFilterSet() {
+        filtersController.saveFilterSettings(newFilterSet)
+
+        oldFiltersSet = newFilterSet.copy()
+
+        // Invalidate screen
+        _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        compareFilters()
     }
 
+    fun abortFilters() {
+        newFilterSet = oldFiltersSet.copy()
+
+        // Invalidate screen
+        _screenState.value = ScreenState.FilterSettings(newFilterSet)
+        compareFilters()
+    }
 }
+

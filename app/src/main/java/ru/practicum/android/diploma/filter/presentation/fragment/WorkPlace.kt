@@ -19,7 +19,7 @@ import ru.practicum.android.diploma.filter.presentation.util.AREA_NAME
 import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
 import ru.practicum.android.diploma.filter.presentation.util.KEY_COUNTRY_RESULT
 import ru.practicum.android.diploma.filter.presentation.util.KEY_DISTRICT_RESULT
-import ru.practicum.android.diploma.filter.presentation.view_model.FilterSharedVm
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
@@ -64,10 +64,10 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
             btnChooseAll.setOnClickListener {
                 vm.countryChosen.value?.let {
-                    viewModel.countryArea = AbstractData(id = it.id, name = it.name)
+                    viewModel.setCountry(AbstractData(id = it.id, name = it.name))
                 }
                 vm.districtChosen.value?.let {
-                    viewModel.districtArea = AbstractData(id = it.id, name = it.name)
+                    viewModel.setDistrict(AbstractData(id = it.id, name = it.name))
                 }
                 findNavController().popBackStack()
             }
@@ -75,7 +75,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     }
 
     override fun exitExtraWhenSystemBackPushed() {
-        // Exit back
+        // Exit back no saving
         findNavController().popBackStack()
     }
 
