@@ -89,15 +89,19 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.screenState.collect {
-                    if (it is ScreenState.FilterSettings) bindFragmentState(it.filters)
+                    if (it is ScreenState.FilterSettings) {
+                        renderFilterSettings(it.filters)
+                        renderAcceptChangeBtn(it.btnAcceptVisibility)
+                    }
                 }
             }
         }
 
-        vm.hasFilterSetChanged.observe(viewLifecycleOwner) {
-            binding.btnAcceptFilterSet.isVisible = it
-            binding.btnDeclineFilterSet.isVisible = it
-        }
+    }
+
+    private fun renderAcceptChangeBtn(isVisible:Boolean){
+        binding.btnAcceptFilterSet.isVisible = isVisible
+        binding.btnDeclineFilterSet.isVisible = isVisible
     }
 
     override fun onResume() {
@@ -110,7 +114,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         }
     }
 
-    private fun bindFragmentState(filterSet: FilterData) {
+    private fun renderFilterSettings(filterSet: FilterData) {
         if (filterSet.idCountry != null) {
             binding.lblChooseWorkPlace.isVisible = true
             binding.txtChooseWorkPlace.isVisible = true

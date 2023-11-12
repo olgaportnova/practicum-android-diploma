@@ -8,5 +8,5 @@ sealed class ScreenState {
     data class Loading(val code: Any?) : ScreenState()
     data class Error(val exception: String) : ScreenState()
     data class EmptyContent(val code: Any?):ScreenState()
-    data class FilterSettings(val filters:FilterData):ScreenState()
+    data class FilterSettings(val filters:FilterData,val btnAcceptVisibility:Boolean):ScreenState()
 }
