@@ -61,6 +61,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private var isSearchRequest = false
     private var isGetParamsFragment = false
     private var currentPage: Int = START_PAGE_INDEX
+    private var tempValueEditText: String = INIT_TEXT
+
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -90,13 +92,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
         setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
             showMsgDialog("Фильтры поменялись")
-            viewModel.getParamsFilters()
-
-            // Star new search
-            modelForQuery.text = binding.editTextSearch.text.toString()
-            modelForQuery.page = START_PAGE_INDEX
-            viewModel.searchDebounce(modelForQuery)
-
+            isGetParamsFragment = true
+            binding.editTextSearch.setText(tempValueEditText)
         }
 
         lifecycleScope.launch {
@@ -119,7 +116,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateToast.collect {
                     renderToast(it)
-                    viewModel.setToastNoMessage()
+                    //viewModel.setToastNoMessage()
                 }
             }
         }
@@ -303,7 +300,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             _maxPage = data.maxPages
             currentPage = data.currentPages
             if (data.currentPages == START_PAGE_INDEX) {
-                adapter!!.updateList(data.listVacancy, true, true)
+                adapter!!.updateList(data.listVacancy, false)
             } else {
                 adapter!!.updateList(data.listVacancy, true)
             }
@@ -330,7 +327,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         with(modelForQuery) {
             page = START_PAGE_INDEX
             perPage = PER_PAGE
-            text = INIT_TEXT
             area = content.idArea
             parentArea = content.idCountry
             industry = content.idIndustry
@@ -348,9 +344,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 hideIcDellText(p0)
+                    tempValueEditText = p0.toString()
                 if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
                     modelForQuery.text = p0.toString()
                     modelForQuery.page = START_PAGE_INDEX
+                    isGetParamsFragment = false
                     viewModel.searchDebounce(modelForQuery)
                 }
             }
