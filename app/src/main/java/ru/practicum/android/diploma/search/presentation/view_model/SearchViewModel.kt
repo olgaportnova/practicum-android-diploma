@@ -83,8 +83,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         if (params == null) {
             _stateFilters.value = StateFilters.NoUseFilters
         } else {
-            Log.e("LOG", "Update filters")
-            Log.e("LOG", params.toString())
             _stateFilters.value = StateFilters.UseFilters(params)
         }
     }

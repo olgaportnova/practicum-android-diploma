@@ -93,9 +93,9 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             viewModel.getParamsFilters()
 
             // Star new search
-            /*modelForQuery.text = binding.editTextSearch.text.toString()
+            modelForQuery.text = binding.editTextSearch.text.toString()
             modelForQuery.page = START_PAGE_INDEX
-            viewModel.searchDebounce(modelForQuery)*/
+            viewModel.searchDebounce(modelForQuery)
 
         }
 
