@@ -13,14 +13,14 @@ class FiltersRepositoryImpl(private val sharedPrefsClient: FiltersStorage) : Fil
     }
 
     override fun getDefaultSettings(): FilterData = FilterData(
-        idCountry = "-1",
-        idArea = "-1",
-        idIndustry = "-1",
+        idCountry =null,
+        idArea = null,
+        idIndustry = null,
         nameCountry = null,
         nameArea = null,
         nameIndustry = null,
         currency = null,
-        salary = -1,
+        salary = null,
         onlyWithSalary = false,
     )
 

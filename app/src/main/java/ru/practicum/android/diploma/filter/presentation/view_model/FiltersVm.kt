@@ -31,8 +31,6 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         oldFiltersSet = filtersController.getFilterSettings()
         newFilterSet = oldFiltersSet.copy()
 
-        Log.e("Log", oldFiltersSet.toString())
-
         // Invalidate screen
         _screenState.value = ScreenState.FilterSettings(oldFiltersSet)
         compareFilters()

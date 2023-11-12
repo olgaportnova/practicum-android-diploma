@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.search.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -32,7 +33,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     val stateToast = _stateToast as StateFlow<ToastState>
 
     private var searchJob: Job? = null
-    private var isShowToast:Boolean = true
+    private var isShowToast: Boolean = true
     fun doRequestSearch(modelForQuery: QuerySearchMdl) {
 
         if (modelForQuery.text.length != 1) {
@@ -79,8 +80,11 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     fun getParamsFilters() {
         val params = searchInteractor.getParamsFilters()
 
-        if (params == null) _stateFilters.value = StateFilters.NoUseFilters
-        else _stateFilters.value = StateFilters.UseFilters(params)
+        if (params == null) {
+            _stateFilters.value = StateFilters.NoUseFilters
+        } else {
+            _stateFilters.value = StateFilters.UseFilters(params)
+        }
     }
 
     fun searchDebounce(modelForQuery: QuerySearchMdl) {
@@ -97,20 +101,20 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         }
     }
 
-    fun setDefaultState(){
+    fun setDefaultState() {
         _stateSearch.value = DataStatus.Default()
     }
 
-    fun setToastNoMessage(){
+    fun setToastNoMessage() {
         _stateToast.value = ToastState.NoneMessage
     }
 
-    fun showToast(message: String){
+    fun showToast(message: String) {
         _stateToast.value = ToastState.ShowMessage(message)
     }
 
-    fun showToastDebounce(message:String){
-        if(isShowToast){
+    fun showToastDebounce(message: String) {
+        if (isShowToast) {
             isShowToast = false
             showToast(message)
             viewModelScope.launch {
