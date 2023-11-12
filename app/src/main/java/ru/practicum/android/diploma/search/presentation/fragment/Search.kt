@@ -89,8 +89,14 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
-            showToast("msg received")
+            showMsgDialog("Фильтры поменялись")
             viewModel.getParamsFilters()
+
+            // Star new search
+            /*modelForQuery.text = binding.editTextSearch.text.toString()
+            modelForQuery.page = START_PAGE_INDEX
+            viewModel.searchDebounce(modelForQuery)*/
+
         }
 
         lifecycleScope.launch {
