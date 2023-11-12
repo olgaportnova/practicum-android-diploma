@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,9 +52,8 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                     })
             }
 
-            checkboxWithSalary.setOnClickListener {
-                Log.e("LOG", "Click")
-                vm.setWithSalaryParam()
+            checkboxWithSalary.setOnCheckedChangeListener { buttonView, isChecked ->
+                  vm.setWithSalaryParam(isChecked)
             }
 
             txtSalaryInput.doOnTextChanged { text, start, before, count ->
@@ -136,9 +134,11 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             binding.txtChooseIndustry.isVisible = false
         }
 
-        binding.checkboxWithSalary.isChecked = filterSet.onlyWithSalary
-        Log.e("LOG", "is checked ${filterSet.onlyWithSalary}")
-
         binding.txtSalaryInput.setText(filterSet.salary.toString())
+
+        if (vm.checkBoxListenerDisable){
+            binding.checkboxWithSalary.isChecked = filterSet.onlyWithSalary
+            vm.checkBoxListenerDisable = false
+        }
     }
 }

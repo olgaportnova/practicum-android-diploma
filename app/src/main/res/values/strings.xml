@@ -20,7 +20,13 @@
 
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>
-
+    <string name="salary_expected">Ожидаемая зарплата</string>
+    <string name="input_expected_salary">Введите сумму</string>
+    <string name="do_not_show_without_salary">Не показывать без зарплаты</string>
+    <string name="filters_work_place">Место работы</string>
+    <string name="filters_industry">Отрасль</string>
+    <string name="filters_accept">Accept</string>
+    <string name="filters_decline">Decline</string>
 
 
     <!--    WORKPLACE FRAGMENT NAMES    -->

@@ -15,6 +15,8 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     private var oldFiltersSet = filtersController.getDefaultSettings()
     private var newFilterSet = filtersController.getDefaultSettings()
 
+    var checkBoxListenerDisable = false
+
 
     init {
         loadFilterSet()
@@ -25,9 +27,10 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         oldFiltersSet = filtersController.getFilterSettings()
         newFilterSet = oldFiltersSet.copy()
 
+
         // Invalidate screen
+        checkBoxListenerDisable = true
         _screenState.value = ScreenState.FilterSettings(oldFiltersSet, compareFilters())
-        compareFilters()
     }
 
     fun getFilters() = newFilterSet
@@ -40,9 +43,8 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
-    fun setWithSalaryParam() {
-        val isChecked = newFilterSet.onlyWithSalary
-        newFilterSet = newFilterSet.copy(onlyWithSalary = !isChecked)
+    fun setWithSalaryParam(isChecked: Boolean) {
+        newFilterSet = newFilterSet.copy(onlyWithSalary = isChecked)
 
         // Invalidate screen
         _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
