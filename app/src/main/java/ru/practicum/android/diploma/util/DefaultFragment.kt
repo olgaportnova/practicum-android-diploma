@@ -10,13 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
-    private var _binding:T? = null
-    protected val binding:T get() = _binding!!
+abstract class DefaultFragment<T : ViewBinding> : Fragment() {
+    private var _binding: T? = null
+    protected val binding: T get() = _binding!!
 
     abstract fun bindingInflater(inflater: LayoutInflater, container: ViewGroup?): T
 
-    private val backPressedCallback = object: OnBackPressedCallback(true) {
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             exitExtraWhenSystemBackPushed()
         }
@@ -31,7 +31,9 @@ abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
      * Override this fun if you need special behaviour onExit
      * call your own exit fun via fragmentManager or navController
      */
-    abstract fun exitExtraWhenSystemBackPushed()
+    open fun exitExtraWhenSystemBackPushed() {
+        //findNavController().popBackStack()
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,7 +49,7 @@ abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = bindingInflater(inflater,container)
+        _binding = bindingInflater(inflater, container)
 
         //requireActivity().onBackPressedDispatcher.addCallback(this.viewLifecycleOwner,this.backPressedCallback)
         return binding.root
@@ -63,11 +65,11 @@ abstract class  DefaultFragment<T:ViewBinding> :Fragment() {
         _binding = null
     }
 
-    fun showMsgDialog(message: String){
+    fun showMsgDialog(message: String) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Message Dialog")
             .setMessage(message)
-            .setNeutralButton("OK",null)
+            .setNeutralButton("OK", null)
             .show()
     }
 }

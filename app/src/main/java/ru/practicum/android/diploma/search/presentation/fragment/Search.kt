@@ -13,21 +13,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.favorite.recycle_view.TopSpaceItemDecoration
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
+import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
@@ -35,8 +36,9 @@ import ru.practicum.android.diploma.search.presentation.states.StateFilters
 import ru.practicum.android.diploma.search.presentation.states.ToastState
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 import ru.practicum.android.diploma.util.DataStatus
+import ru.practicum.android.diploma.util.DefaultFragment
 
-class Search : Fragment() {
+class Search : DefaultFragment<FragmentSearchBinding>() {
 
     companion object {
         const val APP_ERROR_SEARCH = 0
@@ -47,9 +49,6 @@ class Search : Fragment() {
     }
 
     private val viewModel: SearchViewModel by viewModel()
-
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
 
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
@@ -62,8 +61,14 @@ class Search : Fragment() {
     private var isSearchRequest = false
     private var isGetParamsFragment = false
     private var currentPage: Int = START_PAGE_INDEX
+    override fun bindingInflater(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
+    }
 
-    private fun setUiListeners() {
+    override fun setUiListeners() {
 
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -71,6 +76,7 @@ class Search : Fragment() {
                     findNavController().navigate(R.id.action_to_filters)
                     true
                 }
+
                 else -> false
             }
         }
@@ -78,19 +84,14 @@ class Search : Fragment() {
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-
-        return binding.root
-    }
-
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUiListeners()
+
+        setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
+            showToast("msg received")
+            viewModel.getParamsFilters()
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -120,10 +121,6 @@ class Search : Fragment() {
         viewModel.getParamsFilters()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 
     /**
      * Function to open required vacancy details
@@ -214,7 +211,7 @@ class Search : Fragment() {
                 textPlaceholder.setText(R.string.server_error)
                 textPlaceholder.isVisible = true
             }
-                setLogForError(codeError)
+            setLogForError(codeError)
         } else {
             with(binding) {
                 infoSearchResultCount.isVisible = true
@@ -342,6 +339,7 @@ class Search : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //not use
             }
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 hideIcDellText(p0)
                 if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
@@ -350,6 +348,7 @@ class Search : Fragment() {
                     viewModel.searchDebounce(modelForQuery)
                 }
             }
+
             override fun afterTextChanged(p0: Editable?) {
                 //not use
             }

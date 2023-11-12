@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -18,6 +20,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
+import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.filter.presentation.view_model.FiltersVm
 import ru.practicum.android.diploma.util.DefaultFragment
@@ -51,7 +54,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             }
 
             checkboxWithSalary.setOnClickListener {
-                Log.e("LOG","Click")
+                Log.e("LOG", "Click")
                 vm.setWithSalaryParam()
             }
 
@@ -59,7 +62,11 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 vm.setNewSalaryToFilter(text)
             }
 
-            btnAcceptFilterSet.setOnClickListener { vm.saveNewFilterSet() }
+            btnAcceptFilterSet.setOnClickListener {
+                vm.saveNewFilterSet()
+                setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
+                exitExtraWhenSystemBackPushed()
+            }
 
             btnDeclineFilterSet.setOnClickListener { vm.abortFilters() }
         }
@@ -126,7 +133,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         }
 
         binding.checkboxWithSalary.isChecked = filterSet.onlyWithSalary
-        Log.e("LOG","is checked ${filterSet.onlyWithSalary}")
+        Log.e("LOG", "is checked ${filterSet.onlyWithSalary}")
 
         binding.txtSalaryInput.setText(filterSet.salary.toString())
     }
