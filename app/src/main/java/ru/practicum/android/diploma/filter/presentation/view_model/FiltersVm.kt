@@ -1,8 +1,5 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,8 +16,6 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     private var newFilterSet = filtersController.getDefaultSettings()
 
 
-
-
     init {
         loadFilterSet()
     }
@@ -31,7 +26,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         newFilterSet = oldFiltersSet.copy()
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(oldFiltersSet,compareFilters())
+        _screenState.value = ScreenState.FilterSettings(oldFiltersSet, compareFilters())
         compareFilters()
     }
 
@@ -42,7 +37,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         newFilterSet = newFilterSet.copy(salary = salary)
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet,compareFilters())
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
     fun setWithSalaryParam() {
@@ -50,18 +45,18 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         newFilterSet = newFilterSet.copy(onlyWithSalary = !isChecked)
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet,compareFilters())
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
     fun updateFiltersWithRemote(receivedFilterSettings: FilterData) {
         this.newFilterSet = receivedFilterSettings
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet,compareFilters())
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
-    private fun compareFilters():Boolean {
-       return oldFiltersSet != newFilterSet
+    private fun compareFilters(): Boolean {
+        return oldFiltersSet != newFilterSet
     }
 
     fun saveNewFilterSet() {
@@ -70,14 +65,14 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         oldFiltersSet = newFilterSet.copy()
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet,compareFilters())
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
     fun abortFilters() {
         newFilterSet = oldFiltersSet.copy()
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet,compareFilters())
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 }
 
