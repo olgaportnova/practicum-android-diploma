@@ -1,13 +1,14 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
@@ -54,12 +55,40 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             }
 
             checkboxWithSalary.setOnCheckedChangeListener { buttonView, isChecked ->
-                if(vm.userInput) vm.setWithSalaryParam(isChecked)
+                if (vm.userInput) vm.setWithSalaryParam(isChecked)
             }
 
-            txtSalaryInput.doOnTextChanged { text, start, before, count ->
-                if(vm.userInput) vm.setNewSalaryToFilter(text)
-            }
+            txtSalaryInput.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (vm.userInput) {
+                        vm.userInput = false // Все изменения далее вызваны программно
+
+                        // Передаем введенные данные на проверку viewModel
+                        // Функция вернет значение предыдущего уровня зп, если был введен неверный символ
+                        val pStr = vm.setNewSalaryToFilter(s)
+
+                        // Ноль отображаем как пустое поле для ввода зп
+                        if (pStr == "0") binding.txtSalaryInput.setText("")
+                        else {
+                            binding.txtSalaryInput.setText(pStr)
+                            binding.txtSalaryInput.setSelection(pStr.length)
+                        }
+
+                        vm.userInput = true
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+
 
             btnAcceptFilterSet.setOnClickListener {
                 vm.saveNewFilterSet()
@@ -122,7 +151,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
 
         filterSet.nameArea?.let {
             binding.txtChooseWorkPlace.text =
-                with(StringBuilder()){
+                with(StringBuilder()) {
                     append(filterSet.nameCountry.toString())
                     append(",")
                     append(it)
@@ -136,7 +165,11 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         }
 
         filterSet.salary?.let {
-            binding.txtSalaryInput.setText(it.toString())
+            if (it > 0) {
+                binding.txtSalaryInput.setText(it.toString())
+            } else {
+                binding.txtSalaryInput.setText("")
+            }
         }
 
         filterSet.onlyWithSalary.let {
@@ -153,14 +186,14 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             binding.lblChooseIndustry.isVisible = false
         }
 
-        if(filterSet.salary==null){
+        if (filterSet.salary == null) {
             binding.txtSalaryInput.text = null
         }
 
         vm.userInput = true
     }
 
-    private fun renderAcceptChangeBtn(visibility:Boolean){
+    private fun renderAcceptChangeBtn(visibility: Boolean) {
         binding.btnAcceptFilterSet.isVisible = visibility
         binding.btnDeclineFilterSet.isVisible = visibility
     }

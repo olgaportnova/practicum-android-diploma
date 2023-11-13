@@ -21,6 +21,9 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
     init {
         Log.e("LOG","Init")
+        val num = "-45".toIntOrNull()
+        Log.e("LOG","num = $num")
+
         loadFilterSet()
     }
 
@@ -35,12 +38,30 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
     fun getFilters() = newFilterSet
 
-    fun setNewSalaryToFilter(newSalary: CharSequence?) {
-        val salary = 50// newSalary.toString().toInt()
-        newFilterSet = newFilterSet.copy(salary = salary)
+    fun setNewSalaryToFilter(incomeStr: CharSequence?):String {
+        if(incomeStr.isNullOrEmpty()){
+            // If text from salaryInput has been cleared via delete button
+            // Set salary to zero
+            newFilterSet = newFilterSet.copy(salary = 0)
 
-        // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+            // Invalidate screen (to update accept_button visibility
+            _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+            return "0"
+        }
+
+        val newSalary = incomeStr.toString().toIntOrNull()
+
+        return if(newSalary!==null && newSalary>=0){
+            // if inputSalary is correct, save salary in new filter set
+            newFilterSet = newFilterSet.copy(salary = newSalary)
+
+            // Invalidate screen (to update accept_button visibility
+            _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+
+            newFilterSet.salary.toString()
+        } else{
+            newFilterSet.salary.toString()
+        }
     }
 
     fun setWithSalaryParam(isChecked: Boolean) {
@@ -58,10 +79,6 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     }
 
     private fun compareFilters(): Boolean {
-        Log.e("LOG","old $oldFiltersSet \n")
-        Log.e("LOG","new $newFilterSet \n")
-        Log.e("LOG","${oldFiltersSet!=newFilterSet}")
-
         return oldFiltersSet != newFilterSet
     }
 
