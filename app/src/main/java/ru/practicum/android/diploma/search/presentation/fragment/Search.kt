@@ -90,7 +90,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
-            showMsgDialog("Фильтры поменялись")
             isGetParamsFragment = true
             binding.editTextSearch.setText(tempValueEditText)
         }

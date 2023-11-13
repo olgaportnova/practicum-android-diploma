@@ -35,16 +35,8 @@ class VacancyAdapter(
     fun updateList(
         newVacancyList: List<Vacancy>,
         isPagination: Boolean = false,
-        newSearch: Boolean = false
     ) {
         if (isPagination) {
-           /* if (newSearch){
-                val diffResult =
-                    DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))
-                vacancyList.clear()
-                vacancyList.addAll(newVacancyList)
-                diffResult.dispatchUpdatesTo(this)
-            }*/
             val newListForCompare = vacancyList.map { it } as ArrayList<Vacancy>
             newListForCompare.addAll(newVacancyList)
             vacancyList.addAll(newVacancyList)
