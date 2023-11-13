@@ -9,15 +9,12 @@ import ru.practicum.android.diploma.db.entity.FavoriteVacancyEntity
 
 @Dao
 interface FavoriteVacancyDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVacancyToFavoriteList(vacancy: FavoriteVacancyEntity)
 
     @Delete
     suspend fun deleteVacancyFromFavoriteList(vacancy: FavoriteVacancyEntity)
 
-    // вернуть сортировку когда у нас будут готовы модели Vacancy, пока добавила query без сортировки
-    //@Query("SELECT * FROM favourite_vacancies ORDER BY timestamp DESC ")
     @Query("SELECT * FROM favorite_vacancy")
     suspend fun getAllFavouriteVacancies(): List<FavoriteVacancyEntity>
 
@@ -26,6 +23,4 @@ interface FavoriteVacancyDao {
 
     @Query("SELECT COUNT(*) FROM favorite_vacancy WHERE id = :id")
     suspend fun doesVacancyInFavoriteList(id: Int): Boolean
-
-
 }

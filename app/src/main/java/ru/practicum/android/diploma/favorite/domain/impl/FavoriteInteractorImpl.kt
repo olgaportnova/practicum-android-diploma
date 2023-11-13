@@ -16,7 +16,7 @@ class FavoriteInteractorImpl(
         favoriteRepository.deleteVacancyFromFavoriteList(vacancy)
     }
 
-    override fun getAllFavouriteVacancies(): Flow<List<Vacancy>> {
+    override suspend fun getAllFavouriteVacancies(): Flow<List<Vacancy>> {
        return favoriteRepository.getAllFavouriteVacancies()
     }
 

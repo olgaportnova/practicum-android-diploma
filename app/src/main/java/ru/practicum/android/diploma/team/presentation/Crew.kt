@@ -16,14 +16,10 @@ class Crew : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCrewBinding.inflate(inflater,container,false)
-
-        // Inflate the layout for this fragment
         return binding.root
     }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding=null
     }
-
 }

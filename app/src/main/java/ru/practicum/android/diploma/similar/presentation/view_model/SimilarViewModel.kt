@@ -15,7 +15,6 @@ class SimilarViewModel(
     private val _screenState = MutableStateFlow<FavoriteState>(FavoriteState.Loading)
     val screenState = _screenState as StateFlow<FavoriteState>
 
-
     fun getSimilarVacancies(vacancyId:String) {
         viewModelScope.launch {
             similarInteractor.getSimilarVacancies(vacancyId).collect {
@@ -27,7 +26,6 @@ class SimilarViewModel(
                     else -> {}
                 }
             }
-
         }
     }
 }

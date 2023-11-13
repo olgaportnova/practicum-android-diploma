@@ -5,15 +5,14 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
-@Entity(tableName="favorite_vacancy")
+@Entity(tableName = "favorite_vacancy")
 data class FavoriteVacancyEntity(
     @PrimaryKey
     val id: Int,
     val vacancyName: String,
     val companyName: String,
     @ColumnInfo(name = "alternate_url")
-    val alternateUrl:String?,
+    val alternateUrl: String?,
     @ColumnInfo(name = "logo_url")
     val logoUrl: String?,
     val city: String?,
@@ -27,8 +26,8 @@ data class FavoriteVacancyEntity(
     @Embedded(prefix = "contacts_")
     val contacts: ContactsEntity?,
     val comment: String?,
-    val schedule:String?,
-    val address:String?
+    val schedule: String?,
+    val address: String?
 )
 
 data class SalaryEntity(
