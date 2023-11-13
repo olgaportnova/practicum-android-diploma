@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ import ru.practicum.android.diploma.util.DefaultFragment
 
 class Filters : DefaultFragment<FragmentFiltersBinding>() {
     private val vm: FiltersVm by viewModel()
-    private val viewModel: FilterSharedVm by activityViewModels()
+    private val sharedViewModel: FilterSharedVm by activityViewModels()
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -53,15 +54,16 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             }
 
             checkboxWithSalary.setOnCheckedChangeListener { buttonView, isChecked ->
-                  vm.setWithSalaryParam(isChecked)
+                if(vm.userInput) vm.setWithSalaryParam(isChecked)
             }
 
             txtSalaryInput.doOnTextChanged { text, start, before, count ->
-                vm.setNewSalaryToFilter(text)
+                if(vm.userInput) vm.setNewSalaryToFilter(text)
             }
 
             btnAcceptFilterSet.setOnClickListener {
                 vm.saveNewFilterSet()
+                sharedViewModel.deleteFilters()
                 setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
                 exitExtraWhenSystemBackPushed()
             }
@@ -78,7 +80,8 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         super.onCreate(savedInstanceState)
         // Загружаем набор настроек фильтрации в объединенную модель при первой загрузке фрагмента
         // Внутри объединенной модели так же есть проверка, что не было многократной перезаписи
-        viewModel.setFilter(vm.getFilters())
+        sharedViewModel.setFilter(vm.getFilters())
+        Log.e("LOG", "On create")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,51 +97,71 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 }
             }
         }
-
-    }
-
-    private fun renderAcceptChangeBtn(isVisible:Boolean){
-        binding.btnAcceptFilterSet.isVisible = isVisible
-        binding.btnDeclineFilterSet.isVisible = isVisible
     }
 
     override fun onResume() {
         super.onResume()
+        Log.e("LOG", "OnResume")
+
 
         // При возвращении на фрагмент собираем потенциально полученную информацию
         // от фрагментов выбора страны, региона, профессии
-        viewModel.getFilters()?.let {
+        sharedViewModel.getFilters()?.let {
             vm.updateFiltersWithRemote(it)
         }
     }
 
     private fun renderFilterSettings(filterSet: FilterData) {
-        if (filterSet.idCountry != null) {
+        vm.userInput = false
+
+        filterSet.nameCountry?.let {
             binding.lblChooseWorkPlace.isVisible = true
             binding.txtChooseWorkPlace.isVisible = true
-            binding.txtChooseWorkPlace.text = filterSet.nameCountry
-        } else {
-            binding.txtChooseWorkPlace.isVisible = false
+            binding.txtChooseWorkPlace.text = it
         }
 
-        if (filterSet.idArea != null) {
-            binding.txtChooseWorkPlace.text = "${filterSet.nameCountry}, ${filterSet.nameArea}"
+        filterSet.nameArea?.let {
+            binding.txtChooseWorkPlace.text =
+                with(StringBuilder()){
+                    append(filterSet.nameCountry.toString())
+                    append(",")
+                    append(it)
+                }.toString()
         }
 
-        if (filterSet.idIndustry != null) {
-
+        filterSet.nameIndustry?.let {
             binding.lblChooseIndustry.isVisible = true
             binding.txtChooseIndustry.isVisible = true
-            binding.txtChooseIndustry.text = filterSet.nameIndustry
-        } else {
-            binding.txtChooseIndustry.isVisible = false
+            binding.txtChooseIndustry.text = it
         }
 
-        binding.txtSalaryInput.setText(filterSet.salary.toString())
+        filterSet.salary?.let {
+            binding.txtSalaryInput.setText(it.toString())
+        }
 
-        if (vm.checkBoxListenerDisable){
+        filterSet.onlyWithSalary.let {
             binding.checkboxWithSalary.isChecked = filterSet.onlyWithSalary
-            vm.checkBoxListenerDisable = false
         }
+
+
+
+        if (filterSet.idCountry == null) {
+            binding.lblChooseWorkPlace.isVisible = false
+        }
+
+        if (filterSet.idIndustry == null) {
+            binding.lblChooseIndustry.isVisible = false
+        }
+
+        if(filterSet.salary==null){
+            binding.txtSalaryInput.text = null
+        }
+
+        vm.userInput = true
+    }
+
+    private fun renderAcceptChangeBtn(visibility:Boolean){
+        binding.btnAcceptFilterSet.isVisible = visibility
+        binding.btnDeclineFilterSet.isVisible = visibility
     }
 }

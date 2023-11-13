@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,10 +16,11 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     private var oldFiltersSet = filtersController.getDefaultSettings()
     private var newFilterSet = filtersController.getDefaultSettings()
 
-    var checkBoxListenerDisable = false
+    var userInput = false
 
 
     init {
+        Log.e("LOG","Init")
         loadFilterSet()
     }
 
@@ -27,9 +29,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         oldFiltersSet = filtersController.getFilterSettings()
         newFilterSet = oldFiltersSet.copy()
 
-
         // Invalidate screen
-        checkBoxListenerDisable = true
         _screenState.value = ScreenState.FilterSettings(oldFiltersSet, compareFilters())
     }
 
@@ -58,6 +58,10 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     }
 
     private fun compareFilters(): Boolean {
+        Log.e("LOG","old $oldFiltersSet \n")
+        Log.e("LOG","new $newFilterSet \n")
+        Log.e("LOG","${oldFiltersSet!=newFilterSet}")
+
         return oldFiltersSet != newFilterSet
     }
 
@@ -74,6 +78,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         newFilterSet = oldFiltersSet.copy()
 
         // Invalidate screen
+        userInput = true
         _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 }
