@@ -21,8 +21,6 @@ import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteVie
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DefaultFragment
-
-private const val ARG_VACANCY = "vacancy_model"
 class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
 
     private val viewModel: FavoriteViewModel by viewModel()
@@ -40,15 +38,16 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
         initRecyclerView()
         setUiListeners()
 
-      lifecycleScope.launch {
-          repeatOnLifecycle(Lifecycle.State.STARTED) {
-              viewModel.screenState.collect {
-                  updateUI(it)
-              }
-          }
-      }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.screenState.collect {
+                    updateUI(it)
+                }
+            }
+        }
         viewModel.getAllFavoriteVacancies()
     }
+
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
@@ -58,11 +57,13 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
         binding.favouritesRecyclerView.adapter = adapter
         binding.favouritesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
+
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
             R.id.action_favourite_to_vacancy,
             Bundle().apply { putInt(ARG_VACANCY, vacancyToShow) })
     }
+
     override fun setUiListeners() {
         with(binding) {
             navigationBar.setNavigationOnClickListener {
@@ -70,9 +71,11 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
             }
         }
     }
+
     override fun exitExtraWhenSystemBackPushed() {
         findNavController().popBackStack()
     }
+
     private fun updateUI(state: FavoriteState) {
         when (state) {
             is FavoriteState.Success -> showFavorite(state.vacancies)
@@ -81,6 +84,7 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
             else -> {}
         }
     }
+
     private fun showFavorite(listOfFavorite: List<Vacancy>) {
         with(binding) {
             adapter.updateList(listOfFavorite)
@@ -89,6 +93,7 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
             textPlaceholder.visibility = View.GONE
         }
     }
+
     private fun showError() {
         with(binding) {
             favouritesRecyclerView.visibility = View.GONE
@@ -98,6 +103,7 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
             textPlaceholder.visibility = View.VISIBLE
         }
     }
+
     private fun showEmpty() {
         with(binding) {
             favouritesRecyclerView.visibility = View.GONE
@@ -106,5 +112,8 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
             textPlaceholder.setText(R.string.empty_list_placeholder_favorite)
             textPlaceholder.visibility = View.VISIBLE
         }
+    }
+    companion object {
+        private const val ARG_VACANCY = "vacancy_model"
     }
 }
