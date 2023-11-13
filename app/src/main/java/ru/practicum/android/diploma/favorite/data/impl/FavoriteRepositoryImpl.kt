@@ -24,7 +24,7 @@ class FavoriteRepositoryImpl(
             .deleteVacancyFromFavoriteList(vacancyConvertor.vacancyVacancyToEntity(vacancy))
     }
 
-    override fun getAllFavouriteVacancies(): Flow<List<Vacancy>> = flow {
+    override suspend fun getAllFavouriteVacancies(): Flow<List<Vacancy>> = flow {
         val favoriteVacancies = appDatabase.favoriteVacancyDao().getAllFavouriteVacancies()
         emit(convertFromVacancyEntityToVacancy(favoriteVacancies))
     }

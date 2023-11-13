@@ -20,8 +20,6 @@ import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.similar.presentation.view_model.SimilarViewModel
 
-private const val ARG_VACANCY = "vacancy_model"
-
 class Similar : DefaultFragment<FragmentSimilarBinding>() {
 
     private val similarViewModel by viewModel<SimilarViewModel>()
@@ -34,7 +32,6 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     ): FragmentSimilarBinding {
         return FragmentSimilarBinding.inflate(inflater, container, false)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,13 +67,11 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
-                // TODO: тут не должен быть переход на детали вакансии?
             }
         })
         binding.recycleViewSimilarSearchResult.adapter = adapter
         binding.recycleViewSimilarSearchResult.layoutManager = LinearLayoutManager(context)
     }
-
 
     override fun setUiListeners() {
         with(binding) {
@@ -140,5 +135,7 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
             progressBar.visibility = View.GONE
         }
     }
-
+    companion object {
+        private const val ARG_VACANCY = "vacancy_model"
+    }
 }
