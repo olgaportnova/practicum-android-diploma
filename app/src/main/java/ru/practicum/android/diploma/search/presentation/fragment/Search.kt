@@ -3,8 +3,6 @@ package ru.practicum.android.diploma.search.presentation.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -13,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +31,7 @@ import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.presentation.states.StateFilters
+import ru.practicum.android.diploma.search.presentation.states.StateSearch
 import ru.practicum.android.diploma.search.presentation.states.ToastState
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
 import ru.practicum.android.diploma.util.DataStatus
@@ -60,6 +59,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private val maxPage get() = _maxPage
     private var isSearchRequest = false
     private var isGetParamsFragment = false
+    private var filterData: FilterData? = null
     private var currentPage: Int = START_PAGE_INDEX
     private var tempValueEditText: String = INIT_TEXT
 
@@ -82,7 +82,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 else -> false
             }
         }
-        binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
+        binding.editTextSearch.doOnTextChanged(textWatcherForEditText)
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
     }
 
@@ -95,14 +95,15 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             isGetParamsFragment = true
             binding.editTextSearch.setText(tempValueEditText)
         }
+        /*
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.stateFilters.collect {
+                            renderFiltersUi(it)
+                        }
+                    }
+                }*/
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFilters.collect {
-                    renderFiltersUi(it)
-                }
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -112,16 +113,19 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateToast.collect {
-                    renderToast(it)
-                    //viewModel.setToastNoMessage()
-                }
-            }
-        }
+        /*   lifecycleScope.launch {
+               repeatOnLifecycle(Lifecycle.State.STARTED) {
+                   viewModel.stateToast.collect {
+                       renderToast(it)
+                       viewModel.setToastNoMessage()
+                   }
+               }
+           }*/
         initRecycler()
-        viewModel.getParamsFilters()
+
+        //viewModel.checkOnSearchData()
+        getParamsFilter()
+        //viewModel.getParamsFilters()
     }
 
 
@@ -137,52 +141,65 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
-    private fun renderFiltersUi(state: StateFilters) {
-        when (state) {
-            is StateFilters.NoUseFilters -> {
-                renderNoFilters()
-            }
+    /* private fun renderFiltersUi(state: StateSearch) {
+         when (state) {
+             is StateSearch.NoUseFilters -> {
+                 renderNoFilters()
+             }
 
-            is StateFilters.UseFilters -> {
-                renderUseFilters(state.content)
-            }
-        }
-    }
+             is StateSearch.UseFilters -> {
+                 renderUseFilters(state.content)
+             }
+         }
+     }*/
 
-    private fun renderSearchUi(state: DataStatus<AnswerVacancyList>) {
+    private fun renderSearchUi(state: StateSearch) {
         when (state) {
-            is DataStatus.Default -> {
+            is StateSearch.Default -> {
                 renderSearchDefaultUi()
             }
 
-            is DataStatus.Error -> {
+            is StateSearch.Error -> {
                 renderSearchErrorUi(state.code)
             }
 
-            is DataStatus.Loading -> {
+            is StateSearch.Loading -> {
                 renderSearchLoadingUi()
             }
 
-            is DataStatus.NoConnecting -> {
+            is StateSearch.NoConnecting -> {
                 renderSearchNoConnectingUi()
             }
 
-            is DataStatus.Content -> {
+            is StateSearch.Content -> {
                 renderSearchContentUi(state.data)
             }
 
-            is DataStatus.EmptyContent -> {
+            is StateSearch.EmptyContent -> {
                 renderSearchEmptyUi()
+            }
+
+            is StateSearch.ShowMessage -> {
+                showToast(state.message)
+            }
+
+            is StateSearch.NoneMessage -> {}
+            is StateSearch.UseFilters -> {
+                renderUseFilters(state.content)
+            }
+
+            is StateSearch.NoUseFilters -> {
+                renderNoFilters()
             }
         }
     }
-
-    private fun renderToast(state: ToastState) {
-        when (state) {
-            is ToastState.ShowMessage -> showToast(state.message)
-            is ToastState.NoneMessage -> {}
-        }
-    }
+    /*
+        private fun renderToast(state: ToastState) {
+            when (state) {
+                is ToastState.ShowMessage -> showToast(state.message)
+                is ToastState.NoneMessage -> {}
+            }
+        }*/
 
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
@@ -190,6 +207,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun renderSearchDefaultUi() {
         with(binding) {
+            if(filterData == null){
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+            }else{
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+            }
             infoSearchResultCount.isVisible = false
             recycleViewSearchResult.isVisible = false
             progressBar.isVisible = false
@@ -294,6 +316,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     @SuppressLint("SuspiciousIndentation")
     private fun renderSearchContentUi(data: AnswerVacancyList?) {
         with(binding) {
+            if(filterData == null){
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+            }else{
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+            }
             infoSearchResultCount.text =
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
@@ -323,6 +350,14 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         addFilterInModel(content)
     }
 
+    private fun getParamsFilter(){
+        filterData = viewModel.getParamsFilters()
+        if(filterData != null){
+            addFilterInModel(filterData!!)
+        }
+    }
+
+
     private fun addFilterInModel(content: FilterData) {
         with(modelForQuery) {
             page = START_PAGE_INDEX
@@ -336,26 +371,14 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun getTextWatcherForSearch(): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //not use
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                hideIcDellText(p0)
-                    tempValueEditText = p0.toString()
-                if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
-                    modelForQuery.text = p0.toString()
-                    modelForQuery.page = START_PAGE_INDEX
-                    isGetParamsFragment = false
-                    viewModel.searchDebounce(modelForQuery)
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                //not use
-            }
+    val textWatcherForEditText = { text: CharSequence?, start: Int, before: Int, count: Int ->
+        hideIcDellText(text)
+        tempValueEditText = text.toString()
+        if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
+            modelForQuery.text = text.toString()
+            modelForQuery.page = START_PAGE_INDEX
+            isGetParamsFragment = false
+            viewModel.searchDebounce(modelForQuery)
         }
     }
 
