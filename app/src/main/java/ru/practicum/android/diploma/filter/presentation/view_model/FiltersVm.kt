@@ -91,6 +91,20 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
+    fun clearWorkPlace(){
+        newFilterSet = newFilterSet.copy(idCountry = null,idArea = null, nameCountry = null, nameArea = null)
+
+        // Invalidate screen
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+    }
+
+    fun clearIndustry(){
+        newFilterSet = newFilterSet.copy(idIndustry = null, nameIndustry = null)
+
+        // Invalidate screen
+        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+    }
+
     fun abortFilters() {
         newFilterSet = oldFiltersSet.copy()
 

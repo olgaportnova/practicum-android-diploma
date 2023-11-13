@@ -89,7 +89,6 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 override fun afterTextChanged(s: Editable?) {}
             })
 
-
             btnAcceptFilterSet.setOnClickListener {
                 vm.saveNewFilterSet()
                 sharedViewModel.deleteFilters()
@@ -98,6 +97,14 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             }
 
             btnDeclineFilterSet.setOnClickListener { vm.abortFilters() }
+
+            btnClrWorkPlace.setOnClickListener {
+                vm.clearWorkPlace()
+            }
+
+            btnClrIndustry.setOnClickListener {
+                vm.clearIndustry()
+            }
         }
     }
 
@@ -177,13 +184,14 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         }
 
 
-
         if (filterSet.idCountry == null) {
             binding.lblChooseWorkPlace.isVisible = false
+            binding.txtChooseWorkPlace.text = resources.getString(R.string.filters_work_place)
         }
 
         if (filterSet.idIndustry == null) {
             binding.lblChooseIndustry.isVisible = false
+            binding.txtChooseIndustry.text = resources.getString(R.string.filters_industry)
         }
 
         if (filterSet.salary == null) {
