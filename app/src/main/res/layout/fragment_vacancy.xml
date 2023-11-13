@@ -238,6 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/contact_person"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContacts" />
 
                 <TextView
@@ -245,6 +246,7 @@
                     style="@style/item_viewholder_regular_text"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/info_count_paddings_vertical"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactPerson"
                     tools:text="Ирина" />
 
@@ -255,6 +257,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/contact_email"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactPersonValue" />
 
                 <TextView
@@ -263,6 +266,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/info_count_paddings_vertical"
                     android:textColor="@color/blue_main"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactEmail"
                     tools:text="i.lozgkina@yandex.ru" />
 
@@ -273,16 +277,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/contact_phone"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactEmailValue" />
 
-                <TextView
-                    android:id="@+id/tvPhoneNumberValue"
-                    style="@style/item_viewholder_regular_text"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/phonesList"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/info_count_paddings_vertical"
-                    android:textColor="@color/blue_main"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber"
-                    tools:text="+7 (904) 329-27-71" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_viewholder_phone"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tvComment"
@@ -291,13 +300,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/comment"
-                    app:layout_constraintTop_toBottomOf="@id/tvPhoneNumberValue" />
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/phonesList" />
 
                 <TextView
                     android:id="@+id/tvCommentValue"
                     style="@style/item_viewholder_regular_text"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/info_count_paddings_vertical"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvComment"
                     tools:text="Заполнить анкету по форме можно на нашем сайте" />
 

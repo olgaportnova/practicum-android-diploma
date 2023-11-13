@@ -13,7 +13,9 @@ import ru.practicum.android.diploma.search.domain.SearchInteractor
 import ru.practicum.android.diploma.search.domain.impl.SearchInteractorImpl
 import ru.practicum.android.diploma.similar.domain.SimilarInteractor
 import ru.practicum.android.diploma.similar.domain.impl.SimilarInteractorImpl
+import ru.practicum.android.diploma.vacancy.domain.impl.SharingInteractorImpl
 import ru.practicum.android.diploma.vacancy.domain.impl.VacancyDetailsInteractorImpl
+import ru.practicum.android.diploma.vacancy.domain.interactor.SharingInteractor
 import ru.practicum.android.diploma.vacancy.domain.interactor.VacancyDetailsInteractor
 
 class InteractorModule {
@@ -41,6 +43,8 @@ class InteractorModule {
         single<SimilarInteractor> {
             SimilarInteractorImpl(get())
         }
+
+        single<SharingInteractor> { SharingInteractorImpl(externalNavigator = get()) }
 
     }
 
