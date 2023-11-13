@@ -51,4 +51,13 @@
     <dimen name="work_place_info_margin_start">16dp</dimen>
     <dimen name="work_place_lbl_top_margin">6dp</dimen>
     <dimen name="recycle_top_search_screen_margin">38dp</dimen>
+
+
+    <!--    FILTER FRAGMENT     -->
+    <dimen name="filters_icon_padding">12dp</dimen>
+    <dimen name="filters_distance_after_toolbar">22dp</dimen>
+    <dimen name="filters_margin_start">16dp</dimen>
+    <dimen name="filters_lbl_top_margin">24dp</dimen>
+    <dimen name="filters_search_screen_margin">38dp</dimen>
+    <dimen name="filters_txt_size">16sp</dimen>
 </resources>

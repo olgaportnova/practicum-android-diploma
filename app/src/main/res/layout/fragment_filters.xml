@@ -42,7 +42,7 @@
             android:layout_marginTop="@dimen/work_place_lbl_top_margin"
 
             android:textColor="?attr/colorOnPrimary"
-            android:text="Место работы"
+            android:text="@string/filters_work_place"
             android:textSize="12sp"
             android:fontFamily="@font/ys_display_regular"/>
 
@@ -55,7 +55,7 @@
 
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Место работы"
+            android:text="@string/filters_work_place"
             android:textSize="16sp"
             android:fontFamily="@font/ys_display_regular"/>
 
@@ -97,7 +97,7 @@
             android:layout_marginTop="@dimen/work_place_lbl_top_margin"
 
             android:textColor="?attr/colorOnPrimary"
-            android:text="Отрасль"
+            android:text="@string/filters_industry"
             android:textSize="12sp"
             android:fontFamily="@font/ys_display_regular"/>
 
@@ -110,7 +110,7 @@
 
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Отрасль"
+            android:text="@string/filters_industry"
             android:textSize="16sp"
             android:fontFamily="@font/ys_display_regular"/>
 
@@ -136,12 +136,22 @@
         android:id="@+id/lbl_input_salary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
 
-        app:boxCornerRadiusTopStart="16dp"
-        app:boxCornerRadiusTopEnd="16dp"
-        app:boxCornerRadiusBottomStart="16dp"
-        app:boxCornerRadiusBottomEnd="16dp"
+        android:layout_marginVertical="@dimen/filters_lbl_top_margin"
+        android:layout_marginHorizontal="@dimen/filters_margin_start"
+
+        android:hint="@string/salary_expected"
+        app:hintTextColor="@color/blue_main"
+
+        app:endIconMode="clear_text"
+
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+
+        app:boxCornerRadiusTopStart="@dimen/filters_icon_padding"
+        app:boxCornerRadiusTopEnd="@dimen/filters_icon_padding"
+        app:boxCornerRadiusBottomStart="@dimen/filters_icon_padding"
+        app:boxCornerRadiusBottomEnd="@dimen/filters_icon_padding"
 
         app:layout_constraintTop_toBottomOf="@id/btn_clr_industry">
 
@@ -149,21 +159,44 @@
             android:id="@+id/txt_salary_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/app_name"
-            />
+            android:hint="@string/input_expected_salary"
+            android:textColor="?attr/colorOnPrimary"/>
 
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <!--only with salary checkbox-->
 
+    <TextView
+        android:id="@+id/lbl_only_with_salary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/do_not_show_without_salary"
+        android:textSize="@dimen/filters_txt_size"
+        android:fontFamily="@font/ys_display_regular"
+        android:textColor="?attr/colorOnPrimary"
+
+        android:layout_marginStart="@dimen/filters_margin_start"
+
+        app:layout_constraintTop_toTopOf="@id/checkbox_with_salary"
+        app:layout_constraintBottom_toBottomOf="@id/checkbox_with_salary"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <CheckBox
         android:id="@+id/checkbox_with_salary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+
+        android:padding="@dimen/filters_icon_padding"
+        android:layout_marginTop="@dimen/filters_lbl_top_margin"
+
         app:layout_constraintTop_toBottomOf="@id/lbl_input_salary"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!--Accept button-->
 
@@ -172,10 +205,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/big_blue_button"
-        android:text="Accept"
+        android:text="@string/filters_accept"
         android:visibility="gone"
 
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/filters_margin_start"
 
         app:layout_constraintTop_toBottomOf="@id/checkbox_with_salary"/>
 
@@ -184,10 +217,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/big_blue_button"
-        android:text="Decline"
+        android:text="@string/filters_decline"
         android:visibility="gone"
 
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/filters_margin_start"
 
         app:layout_constraintTop_toBottomOf="@id/btn_accept_filter_set"/>
 
