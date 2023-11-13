@@ -16,11 +16,14 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -40,6 +43,7 @@ import ru.practicum.android.diploma.util.DefaultFragment
 class Search : DefaultFragment<FragmentSearchBinding>() {
 
     companion object {
+        const val TOAST_DEBOUNCE_DELAY_ML = 10000L
         const val APP_ERROR_SEARCH = 0
         const val PER_PAGE = 20
         const val START_PAGE_INDEX = 0
@@ -62,6 +66,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private var filterData: FilterData? = null
     private var currentPage: Int = START_PAGE_INDEX
     private var tempValueEditText: String = INIT_TEXT
+    private var isShowToast = true
 
     override fun bindingInflater(
         inflater: LayoutInflater,
@@ -153,7 +158,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
          }
      }*/
 
-    private fun renderSearchUi(state: StateSearch) {
+    private fun renderSearchUi(state:StateSearch) {
         when (state) {
             is StateSearch.Default -> {
                 renderSearchDefaultUi()
@@ -178,19 +183,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             is StateSearch.EmptyContent -> {
                 renderSearchEmptyUi()
             }
-
-            is StateSearch.ShowMessage -> {
-                showToast(state.message)
-            }
-
-            is StateSearch.NoneMessage -> {}
-            is StateSearch.UseFilters -> {
-                renderUseFilters(state.content)
-            }
-
-            is StateSearch.NoUseFilters -> {
-                renderNoFilters()
-            }
         }
     }
     /*
@@ -201,9 +193,9 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             }
         }*/
 
-    private fun showToast(message: String) {
+  /*  private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-    }
+    }*/
 
     private fun renderSearchDefaultUi() {
         with(binding) {
@@ -246,7 +238,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 imagePlaceholder.isVisible = false
                 textPlaceholder.isVisible = false
                 setLogForError(codeError)
-                viewModel.showToastDebounce(getString(R.string.error_for_toast))
+                showToastMessage(getString(R.string.error_for_toast))
+                //viewModel.showToastDebounce(getString(R.string.error_for_toast))
             }
         }
     }
@@ -254,6 +247,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchLoadingUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
+                if(filterData == null){
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+                }else{
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+                }
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = true
@@ -276,6 +274,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchNoConnectingUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
+                if(filterData == null){
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+                }else{
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+                }
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = false
@@ -293,7 +296,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 progressBarBottom.isVisible = false
                 imagePlaceholder.isVisible = false
                 textPlaceholder.isVisible = false
-                viewModel.showToastDebounce(getString(R.string.no_internet_for_toast))
+                //viewModel.showToastDebounce(getString(R.string.no_internet_for_toast))
+                showToastMessage(getString(R.string.no_internet_for_toast))
                 isSearchRequest = true
             }
         }
@@ -301,6 +305,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun renderSearchEmptyUi() {
         with(binding) {
+            if(filterData == null){
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+            }else{
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+            }
             infoSearchResultCount.setText(R.string.no_found_vacancies_count)
             infoSearchResultCount.isVisible = true
             recycleViewSearchResult.isVisible = false
@@ -341,14 +350,14 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun renderNoFilters() {
+   /* private fun renderNoFilters() {
         binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
     }
 
     private fun renderUseFilters(content: FilterData) {
         binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
         addFilterInModel(content)
-    }
+    }*/
 
     private fun getParamsFilter(){
         filterData = viewModel.getParamsFilters()
@@ -458,6 +467,17 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
+    }
+
+    private fun showToastMessage(message:String){
+        if(isShowToast) {
+            isShowToast = false
+            Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+            lifecycleScope.launch {
+                delay(TOAST_DEBOUNCE_DELAY_ML)
+                isShowToast = true
+               }
+            }
     }
 
     private fun setLogForError(codeError: Int) {

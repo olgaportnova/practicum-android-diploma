@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.search.domain.SearchInteractor
-import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.presentation.states.StateSearch
 import ru.practicum.android.diploma.search.presentation.states.ToastState
@@ -71,12 +68,11 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         searchJob?.cancel()
 
         searchJob = viewModelScope.launch {
-            if (modelForQuery.text.length != 1) {
+
                 if (modelForQuery.text != "") {
                     delay(SEARCH_DEBOUNCE_DELAY_ML)
                     doRequestSearch(modelForQuery)
                 }
-            }
         }
     }
 
@@ -84,7 +80,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         _stateSearch.value = StateSearch.Default
     }
 
-    fun setToastNoMessage() {
+/*    fun setToastNoMessage() {
         _stateSearch.value = StateSearch.NoneMessage
     }
 
@@ -101,6 +97,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
                 isShowToast = true
             }
         }
-    }
+    }*/
 
 }
