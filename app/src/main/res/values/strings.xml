@@ -11,6 +11,8 @@
     <string name="hint_for_edit_text">Введите запрос</string>
     <string name="no_search_result">Не удалось получить \n список вакансий</string>
     <string name="no_internet">Нет интернета</string>
+    <string name="no_internet_for_toast">Проверьте подключение к интернету</string>
+    <string name="error_for_toast">Произошла ошибка</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="found_vacancies_count">Найдено %1$d вакансий</string>
 

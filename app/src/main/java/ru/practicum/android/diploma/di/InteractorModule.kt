@@ -32,20 +32,13 @@ class InteractorModule {
 
         single<FiltersController> { FiltersControllerImpl(filtersRepository = get()) }
 
-        single<VacancyDetailsInteractor> {
-            VacancyDetailsInteractorImpl(repository = get())
-        }
+        single<VacancyDetailsInteractor> { VacancyDetailsInteractorImpl(repository = get()) }
 
-        single<SearchInteractor> {
-            SearchInteractorImpl(get())
-        }
+        single<SearchInteractor> { SearchInteractorImpl(get()) }
 
-        single<SimilarInteractor> {
-            SimilarInteractorImpl(get())
-        }
+        single<SimilarInteractor> { SimilarInteractorImpl(get()) }
 
         single<SharingInteractor> { SharingInteractorImpl(externalNavigator = get()) }
 
     }
-
 }

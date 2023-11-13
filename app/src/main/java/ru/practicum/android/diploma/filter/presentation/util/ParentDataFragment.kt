@@ -21,6 +21,7 @@ const val ARG_COUNTRY_ID = "country_id_pram"
 const val KEY_DISTRICT_RESULT = "district_result"
 const val KEY_COUNTRY_RESULT = "area_result"
 const val KEY_INDUSTRY_RESULT = "industry_result"
+const val KEY_FILTERS_RESULT ="filters_result"
 
 const val AREA_ID = "area_id_param"
 const val AREA_NAME = "area_name_param"

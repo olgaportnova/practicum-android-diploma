@@ -18,7 +18,6 @@ import ru.practicum.android.diploma.sharedPref.FiltersStorage
 import ru.practicum.android.diploma.sharedPref.impl.FiltersStorageImpl
 
 const val DATABASE_NAME = "favorite_vacancy"
-
 class DataModule {
 
     val dataModule = module {
@@ -66,8 +65,5 @@ class DataModule {
         }
 
         single { Gson() }
-
-
     }
-
 }

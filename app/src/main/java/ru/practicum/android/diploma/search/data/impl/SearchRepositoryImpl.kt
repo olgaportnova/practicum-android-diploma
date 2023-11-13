@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.data.mappers.FilterConverter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.hhApi.NetworkClient
