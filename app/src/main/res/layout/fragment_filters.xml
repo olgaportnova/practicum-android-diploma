@@ -147,6 +147,8 @@
         app:hintTextColor="@color/blue_main"
 
         app:endIconMode="clear_text"
+        app:endIconDrawable="@drawable/ic_clear"
+        app:endIconTint="@color/black_text"
 
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
@@ -157,18 +159,13 @@
         app:boxCornerRadiusBottomStart="@dimen/filters_icon_padding"
         app:boxCornerRadiusBottomEnd="@dimen/filters_icon_padding"
 
-        app:layout_constraintTop_toBottomOf="@id/btn_clr_industry">
+        app:layout_constraintTop_toBottomOf="@id/btn_clr_industry"
+        style="@style/text_input_layout">
 
         <EditText
             android:id="@+id/txt_salary_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
             android:hint="@string/input_expected_salary"
-            android:inputType="text"
-            android:singleLine="true"
-            android:imeOptions="actionDone"
-            android:textColor="?attr/colorOnPrimary" />
+            style="@style/salary_edit_text" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -199,6 +196,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:buttonTint="@color/blue_main"
 
         android:padding="@dimen/filters_icon_padding"
         android:layout_marginTop="@dimen/filters_lbl_top_margin"

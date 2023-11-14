@@ -168,5 +168,20 @@
         <item name="android:layout_height">@dimen/height_divider</item>
     </style>
 
+    <style name="salary_edit_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">?attr/colorOnSecondary</item>
+        <item name="android:textColorHint">@color/grey_dark</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="text_input_layout">
+        <item name="android:textColorHint">@color/grey_dark</item>
+    </style>
+
 
 </resources>
