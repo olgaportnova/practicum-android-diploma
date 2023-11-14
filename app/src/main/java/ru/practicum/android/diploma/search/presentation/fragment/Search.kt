@@ -43,6 +43,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         const val START_PAGE_INDEX = 0
         const val INIT_TEXT = ""
         const val ONE_PAGE_INDEX = 1
+        const val INIT_INT = 0
     }
 
     private val viewModel: SearchViewModel by viewModel()
@@ -62,6 +63,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private var filterData: FilterData? = null
     private var currentPage: Int = START_PAGE_INDEX
     private var tempValueEditText: String = INIT_TEXT
+    private var tempInfoSearchResult: Int = INIT_INT
     private var isShowToast = true
 
     override fun bindingInflater(
@@ -168,12 +170,15 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             }
         } else {
             with(binding) {
+                infoSearchResultCount.text =
+                    requireContext().getString(R.string.found_vacancies_count, tempInfoSearchResult)
                 infoSearchResultCount.isVisible = true
                 recycleViewSearchResult.isVisible = true
                 progressBar.isVisible = false
                 progressBarBottom.isVisible = false
                 imagePlaceholder.isVisible = false
                 textPlaceholder.isVisible = false
+                isSearchRequest = true
                 showToastMessage(getString(R.string.error_for_toast))
             }
         }
@@ -225,6 +230,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             }
         } else {
             with(binding) {
+                infoSearchResultCount.text =
+                    requireContext().getString(R.string.found_vacancies_count, tempInfoSearchResult)
                 infoSearchResultCount.isVisible = true
                 recycleViewSearchResult.isVisible = true
                 progressBar.isVisible = false
@@ -267,6 +274,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             infoSearchResultCount.text =
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
+            tempInfoSearchResult = data.found
             _maxPage = data.maxPages
             currentPage = data.currentPages
             if (data.currentPages == START_PAGE_INDEX) {
