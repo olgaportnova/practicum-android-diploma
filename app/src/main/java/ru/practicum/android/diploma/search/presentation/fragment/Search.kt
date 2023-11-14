@@ -339,9 +339,10 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 if ((motionEvent.action == MotionEvent.ACTION_UP) &&
                     (motionEvent.rawX >= (editText.right - iconClear.bounds.width() * 2))
                 ) {
+                    editText.isEnabled = false
                     viewModel.setDefaultState()
                 }
-                true
+                false
             }
         }
     }
@@ -389,6 +390,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
+        binding.editTextSearch.isEnabled = true
     }
 
     private fun showToastMessage(message:String){
