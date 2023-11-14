@@ -13,7 +13,7 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/white_text_dark_mode</item>
         <item name="colorSecondaryVariant">@color/black_text</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/grey_dark</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowBackground">@color/black_night</item>

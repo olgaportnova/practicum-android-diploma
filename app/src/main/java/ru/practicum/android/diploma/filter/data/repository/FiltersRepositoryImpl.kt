@@ -20,7 +20,7 @@ class FiltersRepositoryImpl(private val sharedPrefsClient: FiltersStorage) : Fil
         nameArea = null,
         nameIndustry = null,
         currency = null,
-        salary = null,
+        salary = 0,
         onlyWithSalary = false,
     )
 

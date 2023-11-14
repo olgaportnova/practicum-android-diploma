@@ -59,5 +59,8 @@
     <dimen name="filters_margin_start">16dp</dimen>
     <dimen name="filters_lbl_top_margin">24dp</dimen>
     <dimen name="filters_search_screen_margin">38dp</dimen>
+    <dimen name="filters_decline_btn_padding">20dp</dimen>
     <dimen name="filters_txt_size">16sp</dimen>
+    <dimen name="filters_small_txt_size">12sp</dimen>
+
 </resources>
