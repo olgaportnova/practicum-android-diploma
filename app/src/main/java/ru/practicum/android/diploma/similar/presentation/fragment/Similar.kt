@@ -50,7 +50,6 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 similarViewModel.screenState.collect {
                     updateUI(it)
-
                 }
             }
         }
@@ -67,10 +66,17 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
+                openFragmentVacancy(vacancyToShow = vacancy.id)
             }
         })
         binding.recycleViewSimilarSearchResult.adapter = adapter
         binding.recycleViewSimilarSearchResult.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun openFragmentVacancy(vacancyToShow: Int) {
+        findNavController().navigate(
+            R.id.action_similar_to_vacancy,
+            Bundle().apply { putInt(ARG_VACANCY, vacancyToShow) })
     }
 
     override fun setUiListeners() {
@@ -135,6 +141,7 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
             progressBar.visibility = View.GONE
         }
     }
+
     companion object {
         private const val ARG_VACANCY = "vacancy_model"
     }

@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.delay
@@ -173,11 +173,11 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             tvSalary.text = SalaryUtil.formSalary(vacancy?.salary, requireContext())
 
             val roundCorners = RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy))
-            val options = RequestOptions().transform(CenterCrop(), roundCorners)
+            val options = RequestOptions().transform(CenterInside(), roundCorners)
 
             Glide.with(requireContext())
                 .load(vacancy?.logoUrl)
-                .placeholder(R.drawable.placeholder_employer_logo)
+                .placeholder(R.drawable.logo_placeholder)
                 .apply(options)
                 .into(ivEmployerLogo)
 
