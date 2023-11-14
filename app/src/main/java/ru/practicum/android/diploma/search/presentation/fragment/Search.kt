@@ -49,6 +49,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
+    private val listVacancy: ArrayList<Vacancy> = arrayListOf()
+    private var tempListVacancy: List<Vacancy> = arrayListOf()
 
     private var modelForQuery: QuerySearchMdl = QuerySearchMdl(
         page = START_PAGE_INDEX, perPage = PER_PAGE, text = INIT_TEXT
@@ -270,7 +272,10 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             if (data.currentPages == START_PAGE_INDEX) {
                 adapter!!.updateList(data.listVacancy, false)
             } else {
+                if(!data.listVacancy.equals(tempListVacancy)){
                 adapter!!.updateList(data.listVacancy, true)
+                tempListVacancy = data.listVacancy
+                }
             }
             isSearchRequest = true
 
@@ -375,7 +380,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
         val itemDecoration = TopSpaceItemDecoration(spaceHeightInPixels)
 
-        _adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
+        _adapter = VacancyAdapter(listVacancy, object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
                 openFragmentVacancy(vacancyToShow = vacancy.id)
             }
