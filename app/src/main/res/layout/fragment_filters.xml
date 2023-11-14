@@ -150,6 +150,7 @@
 
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
+        app:expandedHintEnabled="false"
 
         app:boxCornerRadiusTopStart="@dimen/filters_icon_padding"
         app:boxCornerRadiusTopEnd="@dimen/filters_icon_padding"
