@@ -1,3 +1,71 @@
 <resources>
-    <string name="app_name">Practicum-Android-Diploma</string>
+    <!--    ROOT MENU NAMES    -->
+    <string name="app_name">JobPulse</string>
+    <string name="search">Главная</string>
+    <string name="favourite">Избранное</string>
+    <string name="crew">Команда</string>
+
+    <!--    SEARCH FRAGMENT NAMES     -->
+    <string name="search_fragment_title">Поиск вакансий</string>
+    <string name="no_found_vacancies_count">Таких вакансий нет</string>
+    <string name="hint_for_edit_text">Введите запрос</string>
+    <string name="no_search_result">Не удалось получить \n список вакансий</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+
+
+
+    <!--    FILTERS FRAGMENT NAMES    -->
+    <string name="filters_fragment_title">Настройки фильтрации</string>
+
+
+
+    <!--    WORKPLACE FRAGMENT NAMES    -->
+    <string name="work_place_fragment_title">Выбор места работы</string>
+    <string name="work_place_country_title">Страна</string>
+    <string name="work_place_district_title">Регион</string>
+    <string name="btn_choose_title">Выбрать</string>
+
+
+    <!--    COUNTRY FRAGMENT NAMES    -->
+    <string name="country_fragment_title">Выбор страны</string>
+
+    <!--    DISTRICT FRAGMENT NAMES    -->
+    <string name="district_fragment_title">Выбор региона</string>
+
+    <!--    VACANCY DETAILS FRAGMENT NAMES    -->
+    <string name="vacancy_fragment_title">Вакансия</string>
+    <string name="required_experience">Требуемый опыт</string>
+    <string name="vacancy_description">Описание вакансии</string>
+    <string name="key_skills">Ключевые навыки</string>
+    <string name="contacts">Контакты</string>
+    <string name="contact_person">Контактное лицо</string>
+    <string name="contact_email">E-mail</string>
+    <string name="contact_phone">Телефон</string>
+    <string name="comment">Комментарий</string>
+    <string name="salary_not_indicated">Зарплата не указана</string>
+    <string name="salary_from">от %1$s %2$s</string>
+    <string name="salary_to">до %1$s %2$s</string>
+    <string name="salary_from_to">от %1$s до %2$s %3$s</string>
+
+
+    <!--    SIMILAR FRAGMENT NAMES    -->
+    <string name="similar_vacancies">Похожие вакансии</string>
+
+    <!--    FAVORITE FRAGMENT NAMES    -->
+    <string name="empty_list_placeholder_favorite">Список пуст</string>
+
+    <!--    TEAM FRAGMENT NAMES    -->
+    <string name="team_header">Над приложением работали</string>
+    <string name="team_oleg">Олег Венедиктов</string>
+    <string name="team_mike">Михаил Храмцов</string>
+    <string name="team_tanya">Татьяна Руль</string>
+    <string name="team_olga">Ольга Бадосова</string>
+
+    <!--    ERRORS MESSAGES   -->
+    <string name="error_get_data_empty">Error get data. Your data is empty.</string>
+    <string name="error_sever_log">Error on server: </string>
+    <string name="error_app_search_log">Error app in search operation processing!</string>
+
 </resources>
