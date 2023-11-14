@@ -3,9 +3,6 @@ package ru.practicum.android.diploma.search.presentation.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -32,26 +31,27 @@ import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.presentation.states.StateFilters
-import ru.practicum.android.diploma.search.presentation.states.ToastState
+import ru.practicum.android.diploma.search.presentation.states.StateSearch
 import ru.practicum.android.diploma.search.presentation.view_model.SearchViewModel
-import ru.practicum.android.diploma.util.DataStatus
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class Search : DefaultFragment<FragmentSearchBinding>() {
 
     companion object {
-        const val APP_ERROR_SEARCH = 0
+        const val TOAST_DEBOUNCE_DELAY_ML = 10000L
         const val PER_PAGE = 20
         const val START_PAGE_INDEX = 0
         const val INIT_TEXT = ""
         const val ONE_PAGE_INDEX = 1
+        const val INIT_INT = 0
     }
 
     private val viewModel: SearchViewModel by viewModel()
 
     private var _adapter: VacancyAdapter? = null
     private val adapter get() = _adapter
+    private val listVacancy: ArrayList<Vacancy> = arrayListOf()
+    private var tempListVacancy: List<Vacancy> = arrayListOf()
 
     private var modelForQuery: QuerySearchMdl = QuerySearchMdl(
         page = START_PAGE_INDEX, perPage = PER_PAGE, text = INIT_TEXT
@@ -60,7 +60,12 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private val maxPage get() = _maxPage
     private var isSearchRequest = false
     private var isGetParamsFragment = false
+    private var filterData: FilterData? = null
     private var currentPage: Int = START_PAGE_INDEX
+    private var tempValueEditText: String = INIT_TEXT
+    private var tempInfoSearchResult: Int = INIT_INT
+    private var isShowToast = true
+
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -80,7 +85,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 else -> false
             }
         }
-        binding.editTextSearch.addTextChangedListener(getTextWatcherForSearch())
+        binding.editTextSearch.doOnTextChanged(textWatcherForEditText)
         binding.recycleViewSearchResult.addOnScrollListener(onScrollListener())
     }
 
@@ -89,22 +94,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
-            showMsgDialog("Фильтры поменялись")
-            viewModel.getParamsFilters()
-
-            // Star new search
-            modelForQuery.text = binding.editTextSearch.text.toString()
-            modelForQuery.page = START_PAGE_INDEX
-            viewModel.searchDebounce(modelForQuery)
-
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFilters.collect {
-                    renderFiltersUi(it)
-                }
-            }
+            isGetParamsFragment = true
+            binding.editTextSearch.setText(tempValueEditText)
         }
 
         lifecycleScope.launch {
@@ -114,19 +105,9 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 }
             }
         }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateToast.collect {
-                    renderToast(it)
-                    viewModel.setToastNoMessage()
-                }
-            }
-        }
         initRecycler()
-        viewModel.getParamsFilters()
+        getParamsFilter()
     }
-
 
     /**
      * Function to open required vacancy details
@@ -140,59 +121,29 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
-    private fun renderFiltersUi(state: StateFilters) {
+    private fun renderSearchUi(state:StateSearch) {
         when (state) {
-            is StateFilters.NoUseFilters -> {
-                renderNoFilters()
-            }
+            is StateSearch.Default -> {renderSearchDefaultUi()}
 
-            is StateFilters.UseFilters -> {
-                renderUseFilters(state.content)
-            }
+            is StateSearch.Error -> {renderSearchErrorUi()}
+
+            is StateSearch.Loading -> {renderSearchLoadingUi()}
+
+            is StateSearch.NoConnecting -> {renderSearchNoConnectingUi()}
+
+            is StateSearch.Content -> {renderSearchContentUi(state.data)}
+
+            is StateSearch.EmptyContent -> {renderSearchEmptyUi()}
         }
-    }
-
-    private fun renderSearchUi(state: DataStatus<AnswerVacancyList>) {
-        when (state) {
-            is DataStatus.Default -> {
-                renderSearchDefaultUi()
-            }
-
-            is DataStatus.Error -> {
-                renderSearchErrorUi(state.code)
-            }
-
-            is DataStatus.Loading -> {
-                renderSearchLoadingUi()
-            }
-
-            is DataStatus.NoConnecting -> {
-                renderSearchNoConnectingUi()
-            }
-
-            is DataStatus.Content -> {
-                renderSearchContentUi(state.data)
-            }
-
-            is DataStatus.EmptyContent -> {
-                renderSearchEmptyUi()
-            }
-        }
-    }
-
-    private fun renderToast(state: ToastState) {
-        when (state) {
-            is ToastState.ShowMessage -> showToast(state.message)
-            is ToastState.NoneMessage -> {}
-        }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     private fun renderSearchDefaultUi() {
         with(binding) {
+            if(filterData == null){
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+            }else{
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+            }
             infoSearchResultCount.isVisible = false
             recycleViewSearchResult.isVisible = false
             progressBar.isVisible = false
@@ -205,7 +156,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun renderSearchErrorUi(codeError: Int) {
+    private fun renderSearchErrorUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
                 infoSearchResultCount.isVisible = false
@@ -217,17 +168,18 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 textPlaceholder.setText(R.string.server_error)
                 textPlaceholder.isVisible = true
             }
-            setLogForError(codeError)
         } else {
             with(binding) {
+                infoSearchResultCount.text =
+                    requireContext().getString(R.string.found_vacancies_count, tempInfoSearchResult)
                 infoSearchResultCount.isVisible = true
                 recycleViewSearchResult.isVisible = true
                 progressBar.isVisible = false
                 progressBarBottom.isVisible = false
                 imagePlaceholder.isVisible = false
                 textPlaceholder.isVisible = false
-                setLogForError(codeError)
-                viewModel.showToastDebounce(getString(R.string.error_for_toast))
+                isSearchRequest = true
+                showToastMessage(getString(R.string.error_for_toast))
             }
         }
     }
@@ -235,6 +187,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchLoadingUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
+                if(filterData == null){
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+                }else{
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+                }
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = true
@@ -257,6 +214,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchNoConnectingUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
+                if(filterData == null){
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+                }else{
+                    binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+                }
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = false
@@ -268,13 +230,15 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             }
         } else {
             with(binding) {
+                infoSearchResultCount.text =
+                    requireContext().getString(R.string.found_vacancies_count, tempInfoSearchResult)
                 infoSearchResultCount.isVisible = true
                 recycleViewSearchResult.isVisible = true
                 progressBar.isVisible = false
                 progressBarBottom.isVisible = false
                 imagePlaceholder.isVisible = false
                 textPlaceholder.isVisible = false
-                viewModel.showToastDebounce(getString(R.string.no_internet_for_toast))
+                showToastMessage(getString(R.string.no_internet_for_toast))
                 isSearchRequest = true
             }
         }
@@ -282,6 +246,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun renderSearchEmptyUi() {
         with(binding) {
+            if(filterData == null){
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+            }else{
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+            }
             infoSearchResultCount.setText(R.string.no_found_vacancies_count)
             infoSearchResultCount.isVisible = true
             recycleViewSearchResult.isVisible = false
@@ -297,15 +266,24 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     @SuppressLint("SuspiciousIndentation")
     private fun renderSearchContentUi(data: AnswerVacancyList?) {
         with(binding) {
+            if(filterData == null){
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
+            }else{
+                binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
+            }
             infoSearchResultCount.text =
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
+            tempInfoSearchResult = data.found
             _maxPage = data.maxPages
             currentPage = data.currentPages
             if (data.currentPages == START_PAGE_INDEX) {
-                adapter!!.updateList(data.listVacancy, true, true)
+                adapter!!.updateList(data.listVacancy, false)
             } else {
+                if(!data.listVacancy.equals(tempListVacancy)){
                 adapter!!.updateList(data.listVacancy, true)
+                tempListVacancy = data.listVacancy
+                }
             }
             isSearchRequest = true
 
@@ -317,20 +295,17 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun renderNoFilters() {
-        binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
-    }
-
-    private fun renderUseFilters(content: FilterData) {
-        binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
-        addFilterInModel(content)
+    private fun getParamsFilter(){
+        filterData = viewModel.getParamsFilters()
+        if(filterData != null){
+            addFilterInModel(filterData!!)
+        }
     }
 
     private fun addFilterInModel(content: FilterData) {
         with(modelForQuery) {
             page = START_PAGE_INDEX
             perPage = PER_PAGE
-            text = INIT_TEXT
             area = content.idArea
             parentArea = content.idCountry
             industry = content.idIndustry
@@ -340,24 +315,14 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun getTextWatcherForSearch(): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //not use
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                hideIcDellText(p0)
-                if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
-                    modelForQuery.text = p0.toString()
-                    modelForQuery.page = START_PAGE_INDEX
-                    viewModel.searchDebounce(modelForQuery)
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                //not use
-            }
+    val textWatcherForEditText = { text: CharSequence?, start: Int, before: Int, count: Int ->
+        hideIcDellText(text)
+        tempValueEditText = text.toString()
+        if (binding.editTextSearch.hasFocus() || isGetParamsFragment) {
+            modelForQuery.text = text.toString()
+            modelForQuery.page = START_PAGE_INDEX
+            isGetParamsFragment = false
+            viewModel.searchDebounce(modelForQuery)
         }
     }
 
@@ -387,9 +352,10 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 if ((motionEvent.action == MotionEvent.ACTION_UP) &&
                     (motionEvent.rawX >= (editText.right - iconClear.bounds.width() * 2))
                 ) {
+                    editText.isEnabled = false
                     viewModel.setDefaultState()
                 }
-                true
+                false
             }
         }
     }
@@ -422,7 +388,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             resources.getDimensionPixelSize(R.dimen.recycle_top_search_screen_margin)
         val itemDecoration = TopSpaceItemDecoration(spaceHeightInPixels)
 
-        _adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
+        _adapter = VacancyAdapter(listVacancy, object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
                 openFragmentVacancy(vacancyToShow = vacancy.id)
             }
@@ -437,13 +403,17 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
+        binding.editTextSearch.isEnabled = true
     }
 
-    private fun setLogForError(codeError: Int) {
-        if (codeError == APP_ERROR_SEARCH) {
-            Log.e("AppErrorSearch", R.string.error_app_search_log.toString())
-        } else {
-            Log.e("ServerErrorSearch", "${R.string.error_sever_log} $codeError")
-        }
+    private fun showToastMessage(message:String){
+        if(isShowToast) {
+            isShowToast = false
+            Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+            lifecycleScope.launch {
+                delay(TOAST_DEBOUNCE_DELAY_ML)
+                isShowToast = true
+               }
+            }
     }
 }

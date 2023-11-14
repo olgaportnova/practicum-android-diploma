@@ -35,12 +35,8 @@ class VacancyAdapter(
     fun updateList(
         newVacancyList: List<Vacancy>,
         isPagination: Boolean = false,
-        newSearch: Boolean = false
     ) {
         if (isPagination) {
-            if (newSearch) {
-                vacancyList.clear()
-            }
             val newListForCompare = vacancyList.map { it } as ArrayList<Vacancy>
             newListForCompare.addAll(newVacancyList)
             vacancyList.addAll(newVacancyList)

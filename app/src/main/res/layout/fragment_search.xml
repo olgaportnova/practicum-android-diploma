@@ -51,7 +51,7 @@
     <TextView
         android:id="@+id/info_search_result_count"
         tools:text="@string/no_found_vacancies_count"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_text_search"
@@ -59,11 +59,11 @@
 
     <ImageView
         android:id="@+id/image_placeholder"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:src="@drawable/placeholder_empty_result"
+        android:src="@drawable/placeholder_start_of_search"
         app:layout_constraintTop_toBottomOf="@id/edit_text_search"
         style="@style/placeholder_image" />
 
