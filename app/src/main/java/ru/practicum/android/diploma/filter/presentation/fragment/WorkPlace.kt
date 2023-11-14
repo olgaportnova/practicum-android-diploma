@@ -7,25 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkPlaceBinding
-import ru.practicum.android.diploma.filter.domain.models.AbstractData
-import ru.practicum.android.diploma.filter.domain.models.AreaData
-import ru.practicum.android.diploma.filter.presentation.util.AREA_ID
-import ru.practicum.android.diploma.filter.presentation.util.AREA_NAME
-import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
-import ru.practicum.android.diploma.filter.presentation.util.KEY_COUNTRY_RESULT
-import ru.practicum.android.diploma.filter.presentation.util.KEY_DISTRICT_RESULT
+import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
+import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
 import ru.practicum.android.diploma.filter.presentation.view_model.WorkPlaceVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     private val vm: WorkPlaceVm by viewModel()
-    private val viewModel: FilterSharedVm by activityViewModels()
+    private val sharedFiltersVm: FilterSharedVm by activityViewModels()
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -44,10 +42,7 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             layoutDistrict.setOnClickListener {
-                val parentId = when (vm.countryChosen.value) {
-                    null -> 113
-                    else -> vm.countryChosen.value!!.id
-                }
+                val parentId: Int = vm.getParentAreaIdToSearch() ?: 113
 
                 findNavController().navigate(
                     R.id.action_to_district,
@@ -55,20 +50,15 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             btnClrCountry.setOnClickListener {
-                vm.chooseAnotherCountry(null)
+                vm.clearCountry()
             }
 
             btnClrDistrict.setOnClickListener {
-                vm.chooseAnotherDistrict(null)
+                vm.clearDistrict()
             }
 
             btnChooseAll.setOnClickListener {
-                vm.countryChosen.value?.let {
-                    viewModel.setCountry(AbstractData(id = it.id, name = it.name))
-                }
-                vm.districtChosen.value?.let {
-                    viewModel.setDistrict(AbstractData(id = it.id, name = it.name))
-                }
+                sharedFiltersVm.setFilter(remoteFilter = vm.getUpdatedFilterSet())
                 findNavController().popBackStack()
             }
         }
@@ -79,63 +69,52 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         findNavController().popBackStack()
     }
 
+    override fun onResume() {
+        super.onResume()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setFragmentResultListener(KEY_DISTRICT_RESULT) { requestKey, bundle ->
-            val areaName = bundle.getString(AREA_NAME)
-            val areaId = bundle.getInt(AREA_ID)
-
-            val result = saveNewArea(areaName, areaId, WorkPlaceVm.AREA_TYPE_AREA)
-            if (!result) vm.chooseAnotherDistrict(null)// Стираем отображение страны
+        // При возвращении на фрагмент собираем потенциально полученную информацию
+        // от фрагментов выбора страны, региона, профессии
+        sharedFiltersVm.getFilters()?.let {
+            vm.loadFilterSetFromSharedModel(it)
         }
-
-
-        setFragmentResultListener(KEY_COUNTRY_RESULT) { requestKey, bundle ->
-            val areaName = bundle.getString(AREA_NAME)
-            val areaId = bundle.getInt(AREA_ID)
-
-            val result = saveNewArea(areaName, areaId, WorkPlaceVm.AREA_TYPE_COUNTRY)
-            if (!result) vm.chooseAnotherCountry(null) // Стираем отображение региона
-        }
-    }
-
-    private fun saveNewArea(name: String?, id: Int, areaType: Int): Boolean {
-        if (name.isNullOrEmpty()) return false
-        else {
-            val area = AreaData(
-                id = id,
-                name = name,
-                parentId = null,
-                areas = emptyList()
-            )
-
-            if (areaType == WorkPlaceVm.AREA_TYPE_COUNTRY) vm.chooseAnotherCountry(newCountry = area)
-            else vm.chooseAnotherDistrict(newDistrict = area)
-        }
-        return true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        vm.countryChosen.observe(viewLifecycleOwner) {
-            binding.lblChooseCountry.isVisible = it != null
-
-            if (it != null) setCountrySelectedState(it)
-            else setDefaultCountryState()
-        }
-
-        vm.districtChosen.observe(viewLifecycleOwner) {
-            binding.lblChooseDistrict.isVisible = it != null
-
-            if (it != null) setDistrictSelectedState(it)
-            else setDefaultDistrictState()
-        }
-
         vm.errorMsg.observe(viewLifecycleOwner) { showMsgDialog(it) }
 
-        vm.acceptChanges.observe(viewLifecycleOwner) { binding.btnChooseAll.isVisible = it }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.screenState.collect {
+                    if (it is ScreenWorkPlaceState.Content) {
+                        renderScreen(it.filterSet)
+                        renderAcceptButton(it.btnAcceptVisibility)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun renderScreen(filterSet: FilterData) {
+        // Заполняем поле страны
+        if (filterSet.nameCountry.isNullOrEmpty()) {
+            setDefaultCountryState()
+        } else {
+            setCountrySelectedState(filterSet.nameCountry)
+        }
+
+        // Заполняем поле района
+        if (filterSet.nameArea.isNullOrEmpty()) {
+            setDefaultDistrictState()
+        } else {
+            setDistrictSelectedState(filterSet.nameArea)
+        }
+    }
+
+    private fun renderAcceptButton(visibility: Boolean) {
+        binding.btnChooseAll.isVisible = visibility
     }
 
     private fun getColorOnPrimary(): Int {
@@ -146,8 +125,8 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
 
     private fun getGreyColor() = resources.getColor(R.color.grey_dark, requireContext().theme)
 
-    private fun setCountrySelectedState(area: AreaData) {
-        binding.txtChooseCountry.text = area.name
+    private fun setCountrySelectedState(name: String) {
+        binding.txtChooseCountry.text = name
         binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
         binding.txtChooseCountry.setTextColor(getColorOnPrimary())
     }
@@ -158,8 +137,8 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         binding.txtChooseCountry.setTextColor(getGreyColor())
     }
 
-    private fun setDistrictSelectedState(area: AreaData) {
-        binding.txtChooseDistrict.text = area.name
+    private fun setDistrictSelectedState(name: String) {
+        binding.txtChooseDistrict.text = name
         binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
         binding.txtChooseDistrict.setTextColor(getColorOnPrimary())
     }

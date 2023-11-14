@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,10 +19,6 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
 
     init {
-        Log.e("LOG","Init")
-        val num = "-45".toIntOrNull()
-        Log.e("LOG","num = $num")
-
         loadFilterSet()
     }
 
@@ -38,8 +33,8 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
     fun getFilters() = newFilterSet
 
-    fun setNewSalaryToFilter(incomeStr: CharSequence?):String {
-        if(incomeStr.isNullOrEmpty()){
+    fun setNewSalaryToFilter(incomeStr: CharSequence?): String {
+        if (incomeStr.isNullOrEmpty()) {
             // If text from salaryInput has been cleared via delete button
             // Set salary to zero
             newFilterSet = newFilterSet.copy(salary = 0)
@@ -51,7 +46,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
         val newSalary = incomeStr.toString().toIntOrNull()
 
-        return if(newSalary!==null && newSalary>=0){
+        return if (newSalary !== null && newSalary >= 0) {
             // if inputSalary is correct, save salary in new filter set
             newFilterSet = newFilterSet.copy(salary = newSalary)
 
@@ -59,7 +54,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
             _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
 
             newFilterSet.salary.toString()
-        } else{
+        } else {
             newFilterSet.salary.toString()
         }
     }
@@ -91,14 +86,15 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
-    fun clearWorkPlace(){
-        newFilterSet = newFilterSet.copy(idCountry = null,idArea = null, nameCountry = null, nameArea = null)
+    fun clearWorkPlace() {
+        newFilterSet =
+            newFilterSet.copy(idCountry = null, idArea = null, nameCountry = null, nameArea = null)
 
         // Invalidate screen
         _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
     }
 
-    fun clearIndustry(){
+    fun clearIndustry() {
         newFilterSet = newFilterSet.copy(idIndustry = null, nameIndustry = null)
 
         // Invalidate screen

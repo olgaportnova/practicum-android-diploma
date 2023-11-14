@@ -96,7 +96,12 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 exitExtraWhenSystemBackPushed()
             }
 
-            btnDeclineFilterSet.setOnClickListener { vm.abortFilters() }
+            btnDeclineFilterSet.setOnClickListener {
+                vm.abortFilters()
+
+                // Загружаем прежние данные в sharedViewModel
+                sharedViewModel.setFilter(vm.getFilters())
+            }
 
             btnClrWorkPlace.setOnClickListener {
                 vm.clearWorkPlace()

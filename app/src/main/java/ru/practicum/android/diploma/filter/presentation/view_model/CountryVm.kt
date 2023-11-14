@@ -13,10 +13,8 @@ class CountryVm(private val areaController: AreaController) : DefaultViewModel()
         loadCountryList()
     }
 
-    fun loadCountryList() {
+    private fun loadCountryList() {
         viewModelScope.launch {
-            //Данные названия не менял на getAreas и getDistricts соответственно. Можно поменять.
-
             areaController.loadCountries().collect {
                 when (it) {
                     is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
