@@ -34,7 +34,8 @@ class ViewModelModule {
         viewModel {
             VacancyDetailsViewModel(
                 vacancyDetailsInteractor = get(),
-                favoriteInteractor = get()
+                favoriteInteractor = get(),
+                sharingInteractor = get(),
             )
         }
 

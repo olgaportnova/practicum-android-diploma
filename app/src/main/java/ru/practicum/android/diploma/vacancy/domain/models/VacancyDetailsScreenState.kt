@@ -11,7 +11,5 @@ sealed interface VacancyDetailsScreenState {
         val foundVacancy: Vacancy?, val favoriteStatus: Boolean
     ) : VacancyDetailsScreenState
 
-    data class SimilarVacanciesButtonState(
-        val visibility: Boolean
-    ) : VacancyDetailsScreenState
+    data class SimilarVacanciesButtonState(val visibility: Boolean) : VacancyDetailsScreenState
 }

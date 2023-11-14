@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -28,22 +27,15 @@ import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.vacancy.presentation.view_model.VacancyDetailsViewModel
 import ru.practicum.android.diploma.util.SalaryUtil
-
-
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_VACANCY = "vacancy_model"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Vacancy.newInstance] factory method to
- * create an instance of this fragment.
- */
+import ru.practicum.android.diploma.vacancy.presentation.PhonesAdapter
 
 class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
     private val vacancyDetailsViewModel by viewModel<VacancyDetailsViewModel>()
     private var paramVacancyId: String? = null
     private var isClickAllowed = true
+    private var phonesAdapter: PhonesAdapter? = null
+    lateinit var onItemClickDebounce: (Phone) -> Unit
 
     override fun bindingInflater(
         inflater: LayoutInflater,
@@ -84,14 +76,8 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
     private fun updateUI(state: VacancyDetailsScreenState) {
         when (state) {
             is VacancyDetailsScreenState.Loading -> showLoading()
-
-            is VacancyDetailsScreenState.Content -> showContent(
-                state.foundVacancy,
-                state.favoriteStatus
-            )
-
+            is VacancyDetailsScreenState.Content -> showContent(state.foundVacancy, state.favoriteStatus)
             is VacancyDetailsScreenState.Error -> showError()
-
             is VacancyDetailsScreenState.SimilarVacanciesButtonState -> changeButtonVisibility(state.visibility)
         }
     }
@@ -102,11 +88,11 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 findNavController().popBackStack()
             }
 
-            /*ibShare.setOnClickListener {
-                if (paramVacancyId != null) {
-                    vacancyDetailsViewModel.shareVacancy(vacancy?.logoUrl)
-                }
-            }*/
+            ibShare.setOnClickListener {
+                val vacancy = vacancyDetailsViewModel.currentVacancy.value
+                if (clickDebounce() && vacancy?.alternateUrl != null)
+                    vacancyDetailsViewModel.shareVacancy(vacancy.alternateUrl)
+            }
 
             ibFavorite.setOnClickListener {
                 val vacancy = vacancyDetailsViewModel.currentVacancy.value
@@ -115,15 +101,11 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 }
             }
 
-            /*tvPhoneNumberValue.setOnClickListener {
-                if (clickDebounce() && vacancy?.contacts?.phones != null)
-                    vacancyDetailsViewModel.makeCall(tvPhoneNumberValue.text.toString())
-            }
-
             tvContactEmailValue.setOnClickListener {
+                val vacancy = vacancyDetailsViewModel.currentVacancy.value
                 if (clickDebounce() && vacancy?.contacts?.email != null)
-                    vacancyDetailsViewModel.openEmail(vacancy?.contacts?.email)
-            }*/
+                    vacancyDetailsViewModel.openEmail(vacancy.contacts.email)
+            }
 
             tvSimilarVacanciesButton.setOnClickListener {
                 findNavController().navigate(R.id.action_to_similar, Bundle().apply {
@@ -190,8 +172,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
             tvSalary.text = SalaryUtil.formSalary(vacancy?.salary, requireContext())
 
-            val roundCorners =
-                RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy))
+            val roundCorners = RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy))
             val options = RequestOptions().transform(CenterCrop(), roundCorners)
 
             Glide.with(requireContext())
@@ -251,36 +232,22 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             }
 
             if (vacancy?.contacts?.phones?.isNotEmpty() == true) {
-                tvPhoneNumberValue.text = createPhones(vacancy.contacts.phones).joinToString("\n")
                 tvPhoneNumber.isVisible = true
-                tvPhoneNumberValue.isVisible = true
+                if (clickDebounce()) {
+                    setPhonesAdapter(vacancy)
+                }
             }
 
-            if (vacancy?.comment.isNullOrEmpty()) {
-                tvComment.isVisible = false
-                tvCommentValue.isVisible = false
-            } else {
-                tvCommentValue.text = vacancy?.comment
+            if (vacancy?.comment?.isNotEmpty() == true) {
+                tvCommentValue.text = vacancy.comment
+                tvComment.isVisible = true
+                tvCommentValue.isVisible = true
             }
-
         }
     }
-
 
     private fun String.addSpacesBetweenParagraphs(): String {
         return this.replace(Regex("<li>\\s<p>|<li>"), "<li>\u00A0")
-    }
-
-    private fun createPhones(phones: List<Phone?>?): List<String> {
-        if (phones == null) return emptyList()
-        val phoneList = mutableListOf<String>()
-        repeat(phones.size) { phone ->
-            val contactComment = phones.getOrNull(0)?.comment ?: ""
-            val number: String = "+" + phones[phone]?.country +
-                    " (${phones[phone]?.city}) " + phones[phone]?.number + "\n" + contactComment
-            phoneList.add(phone, number)
-        }
-        return phoneList
     }
 
     private fun changeButtonVisibility(visibility: Boolean) {
@@ -292,23 +259,24 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         if (isClickAllowed) {
             isClickAllowed = false
             viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }
         return current
     }
 
+    private fun setPhonesAdapter(vacancy: Vacancy) {
+        phonesAdapter = vacancy.contacts?.phones?.let {
+            PhonesAdapter(it) { phone -> onItemClickDebounce(phone) }
+        }
+
+        onItemClickDebounce = { phone -> vacancyDetailsViewModel.makeCall(phone) }
+
+        binding.phonesList.adapter = phonesAdapter
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param vacancyModel Vacancy model
-         * @return A new instance of fragment Vacancy.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
         fun newInstance(vacancyId: String) =
             Vacancy().apply {
                 arguments = Bundle().apply {
@@ -316,6 +284,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 }
             }
 
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+        const val ARG_VACANCY = "vacancy_model"
     }
 }

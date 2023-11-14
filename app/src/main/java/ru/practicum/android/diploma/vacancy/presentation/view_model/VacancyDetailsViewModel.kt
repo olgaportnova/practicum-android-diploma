@@ -8,14 +8,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.favorite.domain.FavoriteInteractor
+import ru.practicum.android.diploma.search.domain.models.Phone
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DataStatus
+import ru.practicum.android.diploma.vacancy.domain.interactor.SharingInteractor
 import ru.practicum.android.diploma.vacancy.domain.interactor.VacancyDetailsInteractor
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 
 class VacancyDetailsViewModel(
     private val vacancyDetailsInteractor: VacancyDetailsInteractor,
     private val favoriteInteractor: FavoriteInteractor,
+    private val sharingInteractor: SharingInteractor,
 ) : ViewModel() {
 
     private val _screenState =
@@ -34,20 +37,16 @@ class VacancyDetailsViewModel(
                     is DataStatus.Content -> {
                         _currentVacancy.value = it.data
                         val isFavorite = isVacancyFavorite(vacancyId)
-                        _screenState.value =
-                            VacancyDetailsScreenState.SimilarVacanciesButtonState(true)
-                        _screenState.value =
-                            VacancyDetailsScreenState.Content(it.data!!, isFavorite)
+                        _screenState.value = VacancyDetailsScreenState.SimilarVacanciesButtonState(true)
+                        _screenState.value = VacancyDetailsScreenState.Content(it.data!!, isFavorite)
                     }
 
                     is DataStatus.NoConnecting -> {
                         if (isVacancyFavorite(vacancyId)) {
                             getVacancyFromDb(vacancyId.toInt())
-                            _screenState.value =
-                                VacancyDetailsScreenState.SimilarVacanciesButtonState(false)
+                            _screenState.value = VacancyDetailsScreenState.SimilarVacanciesButtonState(false)
                         } else
-                            _screenState.value =
-                                VacancyDetailsScreenState.Error
+                            _screenState.value = VacancyDetailsScreenState.Error
                     }
 
                     is DataStatus.Error -> _screenState.value = VacancyDetailsScreenState.Error
@@ -62,11 +61,10 @@ class VacancyDetailsViewModel(
         viewModelScope.launch {
             val vacancyFromDb = favoriteInteractor.getFavouriteVacancyById(vacancyId)
             _currentVacancy.value = vacancyFromDb
-            _screenState.value =
-                VacancyDetailsScreenState.Content(
-                    foundVacancy = vacancyFromDb,
-                    favoriteStatus = true
-                )
+            _screenState.value = VacancyDetailsScreenState.Content(
+                foundVacancy = vacancyFromDb,
+                favoriteStatus = true
+            )
         }
     }
 
@@ -75,7 +73,6 @@ class VacancyDetailsViewModel(
     }
 
     fun onFavoriteClicked(vacancy: Vacancy) {
-
         viewModelScope.launch {
             val vacancyId = vacancy.id
             val favoriteStatus = isVacancyFavorite(vacancyId.toString())
@@ -89,15 +86,24 @@ class VacancyDetailsViewModel(
 
             } else {
                 vacancy.let { favoriteInteractor.insertVacancyToFavoriteList(it) }
-                _screenState.value =
-                    VacancyDetailsScreenState.Content(foundVacancy = vacancy, favoriteStatus = true)
+                _screenState.value = VacancyDetailsScreenState.Content(
+                    foundVacancy = vacancy,
+                    favoriteStatus = true
+                )
             }
-
         }
     }
 
-    /*fun shareVacancy(vacancyUrl: String) {
+    fun shareVacancy(vacancyUrl: String) {
         sharingInteractor.shareVacancy(vacancyUrl)
-    }*/
+    }
+
+    fun openEmail(email: String) {
+        sharingInteractor.openEmail(email)
+    }
+
+    fun makeCall(phone: Phone) {
+        sharingInteractor.makeCall(phone)
+    }
 
 }
