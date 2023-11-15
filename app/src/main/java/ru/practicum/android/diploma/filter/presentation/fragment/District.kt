@@ -20,8 +20,8 @@ open class District : ParentDataFragment() {
         val newArea = vm.dataToSendBack
 
         newArea?.let {
-            Log.e("LOG", "parent = ${it.parentId}")
-            vm.getParentName(it.parentId)
+            //Log.e("LOG", "parent = ${it.parentId}")
+            //vm.getParentName(it.parentId)
         }
 
 
