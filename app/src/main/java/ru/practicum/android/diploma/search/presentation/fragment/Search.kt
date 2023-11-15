@@ -122,6 +122,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     }
 
     private fun renderSearchUi(state:StateSearch) {
+        checkFilterState()
         when (state) {
             is StateSearch.Default -> {renderSearchDefaultUi()}
 
@@ -139,7 +140,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun renderSearchDefaultUi() {
         with(binding) {
-            checkFilterState()
             infoSearchResultCount.isVisible = false
             recycleViewSearchResult.isVisible = false
             progressBar.isVisible = false
@@ -155,7 +155,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchErrorUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
-                checkFilterState()
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = false
@@ -184,7 +183,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchLoadingUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
-                checkFilterState()
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = true
@@ -207,7 +205,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     private fun renderSearchNoConnectingUi() {
         if (modelForQuery.page == START_PAGE_INDEX) {
             with(binding) {
-                checkFilterState()
                 infoSearchResultCount.isVisible = false
                 recycleViewSearchResult.isVisible = false
                 progressBar.isVisible = false
@@ -235,7 +232,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun renderSearchEmptyUi() {
         with(binding) {
-            checkFilterState()
             infoSearchResultCount.setText(R.string.no_found_vacancies_count)
             infoSearchResultCount.isVisible = true
             recycleViewSearchResult.isVisible = false
@@ -251,7 +247,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     @SuppressLint("SuspiciousIndentation")
     private fun renderSearchContentUi(data: AnswerVacancyList?) {
         with(binding) {
-            checkFilterState()
             infoSearchResultCount.text =
                 requireContext().getString(R.string.found_vacancies_count, data!!.found)
             infoSearchResultCount.isVisible = true
