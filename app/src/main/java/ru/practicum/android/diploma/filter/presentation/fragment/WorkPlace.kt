@@ -42,11 +42,18 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
             }
 
             layoutDistrict.setOnClickListener {
-                val parentId: Int = vm.getParentAreaIdToSearch() ?: 113
+                val parentId = vm.getParentAreaIdToSearch()
 
-                findNavController().navigate(
-                    R.id.action_to_district,
-                    Bundle().apply { putInt(ARG_COUNTRY_ID, parentId) })
+                parentId?.let {
+                    findNavController().navigate(
+                        R.id.action_to_district,
+                        Bundle().apply { putInt(ARG_COUNTRY_ID, it) })
+                }
+                if (parentId == null) {
+                    findNavController().navigate(R.id.action_to_district)
+                }
+
+
             }
 
             btnClrCountry.setOnClickListener {

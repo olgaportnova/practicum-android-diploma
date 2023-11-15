@@ -25,13 +25,14 @@ class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaReposit
                 200 -> {
                     result.data?.let {
                         if (it.isEmpty()) emit(DataStatus.EmptyContent())
-                        else{
+                        else {
                             val lst = it.map { el -> CountryConverter().convertFromDto(el) }
                             emit(DataStatus.Content(lst))
                         }
                     }
                 }
-                0->emit(DataStatus.NoConnecting())
+
+                0 -> emit(DataStatus.NoConnecting())
                 else -> emit(DataStatus.Error(result.code))
             }
         }
@@ -50,6 +51,29 @@ class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaReposit
                     emit(DataStatus.Content(DistrictConverter().convertFromDto(result.data!!)))
                 }
             }
+        }
+            .catch { Log.e("LOG", it.message.toString()) }
+            .flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun loadAreaTree(): Flow<DataStatus<List<AreaData>>> {
+        return flow {
+            emit(DataStatus.Loading()) // Отправка информации о старте загрузки
+
+            val result = networkClient.getAreaTree()
+
+            when (result.code) {
+                200 -> {
+                    result.data?.let {
+                        if (it.isEmpty()) emit(DataStatus.EmptyContent())
+                        val areaList = it.map { area -> DistrictConverter().convertFromDto(area) }
+                        emit(DataStatus.Content(areaList))
+                    }
+                }
+                0 -> emit(DataStatus.NoConnecting())
+                else -> emit(DataStatus.Error(result.code))
+            }
+
         }
             .catch { Log.e("LOG", it.message.toString()) }
             .flowOn(Dispatchers.IO)
