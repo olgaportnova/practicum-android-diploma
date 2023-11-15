@@ -6,24 +6,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.practicum.android.diploma.filter.domain.interfaces.FiltersController
 import ru.practicum.android.diploma.filter.domain.models.FilterData
-import ru.practicum.android.diploma.filter.presentation.util.ScreenState
+import ru.practicum.android.diploma.filter.presentation.fragment.ScreenFiltersState
+import kotlin.math.log
 
 class FiltersVm(private val filtersController: FiltersController) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading(null))
-    val screenState = _screenState as StateFlow<ScreenState>
+    private val _screenState =
+        MutableStateFlow<ScreenFiltersState>(ScreenFiltersState.Loading(null))
+    val screenState = _screenState as StateFlow<ScreenFiltersState>
 
-    private var oldFiltersSet = filtersController.getDefaultSettings()
-    private var newFilterSet = filtersController.getDefaultSettings()
+    private val defaultFilterSet = filtersController.getDefaultSettings()
+    private var oldFiltersSet = defaultFilterSet.copy()
+    private var newFilterSet = defaultFilterSet.copy()
 
     var userInput = false
 
 
     init {
-        Log.e("LOG","Init")
-        val num = "-45".toIntOrNull()
-        Log.e("LOG","num = $num")
-
         loadFilterSet()
     }
 
@@ -33,34 +32,42 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         newFilterSet = oldFiltersSet.copy()
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(oldFiltersSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(oldFiltersSet, compareFilters(), compareFiltersWithDefault())
     }
 
     fun getFilters() = newFilterSet
 
-    fun setNewSalaryToFilter(incomeStr: CharSequence?):String {
-        if(incomeStr.isNullOrEmpty()){
-            // If text from salaryInput has been cleared via delete button
-            // Set salary to zero
-            newFilterSet = newFilterSet.copy(salary = 0)
-
+    fun setNewSalaryToFilter(incomeStr: CharSequence?): String? {
+        if(incomeStr.isNullOrEmpty()) {
+            newFilterSet = newFilterSet.copy(salary = null)
             // Invalidate screen (to update accept_button visibility
-            _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
-            return "0"
+            _screenState.value = ScreenFiltersState.Content(
+                newFilterSet,
+                compareFilters(),
+                compareFiltersWithDefault()
+            )
+            return ""
         }
 
         val newSalary = incomeStr.toString().toIntOrNull()
 
-        return if(newSalary!==null && newSalary>=0){
+        return if (newSalary !== null && newSalary >= 0) {
             // if inputSalary is correct, save salary in new filter set
             newFilterSet = newFilterSet.copy(salary = newSalary)
 
             // Invalidate screen (to update accept_button visibility
-            _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+            _screenState.value = ScreenFiltersState.Content(
+                newFilterSet,
+                compareFilters(),
+                compareFiltersWithDefault()
+            )
 
             newFilterSet.salary.toString()
-        } else{
-            newFilterSet.salary.toString()
+        } else {
+            Log.e("Log","return ${newFilterSet.salary.toString()}")
+            if (newFilterSet.salary!=null) return newFilterSet.salary.toString()
+            else return ""
         }
     }
 
@@ -68,19 +75,26 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         newFilterSet = newFilterSet.copy(onlyWithSalary = isChecked)
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
     }
 
     fun updateFiltersWithRemote(receivedFilterSettings: FilterData) {
         this.newFilterSet = receivedFilterSettings
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
     }
 
     private fun compareFilters(): Boolean {
         return oldFiltersSet != newFilterSet
     }
+
+    private fun compareFiltersWithDefault(): Boolean {
+        return defaultFilterSet != newFilterSet
+    }
+
 
     fun saveNewFilterSet() {
         filtersController.saveFilterSettings(newFilterSet)
@@ -88,29 +102,36 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
         oldFiltersSet = newFilterSet.copy()
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
     }
 
-    fun clearWorkPlace(){
-        newFilterSet = newFilterSet.copy(idCountry = null,idArea = null, nameCountry = null, nameArea = null)
+    fun clearWorkPlace() {
+        newFilterSet =
+            newFilterSet.copy(idCountry = null, idArea = null, nameCountry = null, nameArea = null)
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
     }
 
-    fun clearIndustry(){
+    fun clearIndustry() {
         newFilterSet = newFilterSet.copy(idIndustry = null, nameIndustry = null)
 
         // Invalidate screen
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
     }
 
     fun abortFilters() {
-        newFilterSet = oldFiltersSet.copy()
+        newFilterSet = defaultFilterSet.copy()
+        oldFiltersSet = defaultFilterSet.copy()
+        filtersController.saveFilterSettings(newFilterSet)
 
         // Invalidate screen
         userInput = true
-        _screenState.value = ScreenState.FilterSettings(newFilterSet, compareFilters())
+        _screenState.value =
+            ScreenFiltersState.Content(oldFiltersSet, compareFilters(), compareFiltersWithDefault())
     }
 }
 

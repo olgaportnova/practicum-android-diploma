@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.presentation.sharedviewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.FilterData
@@ -9,26 +8,11 @@ class FilterSharedVm : ViewModel() {
     private var filters: FilterData? = null
 
     fun setFilter(remoteFilter: FilterData) {
-        if(filters==null) filters = remoteFilter
-        Log.e("LOG", "Shared $filters")
-
+        filters = remoteFilter
     }
 
-    fun deleteFilters(){
+    fun deleteFilters() {
         filters = null
-    }
-
-    fun setCountry(country: AbstractData) {
-        filters?.let {
-            filters = it.copy(idCountry = country.id.toString(), nameCountry = country.name)
-        }
-
-    }
-
-    fun setDistrict(district: AbstractData) {
-        filters?.let {
-            filters = it.copy(idArea = district.id.toString(), nameArea = district.name)
-        }
     }
 
     fun setIndustry(industry: AbstractData) {
