@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,6 +11,9 @@ import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.util.DataStatus
 
 open class DistrictVm(private val areaController: AreaController) : DefaultViewModel() {
+
+    private val areaFullList = mutableListOf<AreaData>()
+
     fun loadDistrictList(parentAreaId: Int) {
         viewModelScope.launch {
             areaController.loadDistricts(parentId = parentAreaId).collect {
@@ -27,7 +31,7 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
         viewModelScope.launch {
             areaController.loadAreaTree().collect {
                 if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(null)
-                if (it is DataStatus.Content) loadAllDistricts(it.data!!)
+                if (it is DataStatus.Content) listAreaTree(it.data!!)
 
                 if (it is DataStatus.NoConnecting) mutableErrorMsg.value = "No Connection"
                 if (it is DataStatus.EmptyContent) mutableErrorMsg.value = "Empty Content"
@@ -36,11 +40,14 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
         }
     }
 
-    private fun loadAllDistricts(lstAreas: List<AreaData>) {
+    private fun listAreaTree(lstAreas: List<AreaData>) {
         fullDataList.clear()
+        areaFullList.addAll(lstAreas)
+
         viewModelScope.launch(Dispatchers.IO) {
             lstAreas.forEach {
-                findCityRecursive(it)
+                findCityRecursive(it, it.id)
+                areaFullList.add(it)
             }
 
             // Отправляем итоговый лист в recycler
@@ -49,20 +56,31 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
 
     }
 
-
     private fun loadAllCityList(parentArea: AreaData) {
         fullDataList.clear()
         viewModelScope.launch(Dispatchers.IO) {
             // Рекурсивно заполняем лист городами
-            findCityRecursive(parentArea)
+            findCityRecursive(parentArea, null)
 
             // Отправляем итоговый лист в recycler
             changeRecyclerContent(fullDataList)
         }
     }
 
-    private fun findCityRecursive(area: AreaData) {
-        if (area.areas.isEmpty()) fullDataList.add(areaToAbstract(area))
-        else area.areas.forEach { findCityRecursive(it) }
+    private fun findCityRecursive(area: AreaData, parentId: Int?) {
+        if (area.areas.isEmpty()) {
+
+            var lightArea = areaToAbstract(area).copy(parentId = parentId)
+
+            fullDataList.add(lightArea)
+
+        } else area.areas.forEach { findCityRecursive(it, parentId) }
+    }
+
+    fun getParentName(id:Int?):String{
+        val el = areaFullList.filter { area ->
+            area.id==id
+        }
+        return el.first().name
     }
 }

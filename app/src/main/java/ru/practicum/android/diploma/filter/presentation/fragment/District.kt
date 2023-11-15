@@ -19,11 +19,31 @@ open class District : ParentDataFragment() {
         val filterSet = sharedFiltersVm.getFilters()
         val newArea = vm.dataToSendBack
 
+        newArea?.let {
+            Log.e("LOG", "parent = ${it.parentId}")
+            vm.getParentName(it.parentId)
+        }
+
+
         filterSet?.let {
             val filter = when (newArea) {
                 null -> it.copy(idArea = null, nameArea = null)
-                else -> it.copy(idArea = newArea.id.toString(), nameArea = newArea.name)
+                else -> {
+                    if (paramCountryId != null) it.copy(
+                        idArea = newArea.id.toString(),
+                        nameArea = newArea.name
+                    )
+                    else {
+                        it.copy(
+                            idArea = newArea.id.toString(),
+                            nameArea = newArea.name,
+                            idCountry = newArea.parentId.toString(),
+                            nameCountry = vm.getParentName(newArea.parentId)
+                        )
+                    }
+                }
             }
+
 
             // Передаем изменения в sharedFiltersVm
             sharedFiltersVm.setFilter(remoteFilter = filter)
@@ -46,9 +66,8 @@ open class District : ParentDataFragment() {
 
         if (paramCountryId != null) {
             paramCountryId?.let { id -> vm.loadDistrictList(id) }
-        }
-        else{
-            Log.e("LOG","No parent")
+        } else {
+            Log.e("LOG", "district fragment No parent")
             vm.loadAreaTree()
         }
 
