@@ -22,7 +22,6 @@ import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
-import ru.practicum.android.diploma.filter.presentation.util.ScreenState
 import ru.practicum.android.diploma.filter.presentation.view_model.FiltersVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
@@ -76,7 +75,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                         val pStr = vm.setNewSalaryToFilter(s)
 
                         // Ноль отображаем как пустое поле для ввода зп
-                        if (pStr == "0") binding.txtSalaryInput.setText("")
+                        if (pStr == null) binding.txtSalaryInput.setText("")
                         else {
                             binding.txtSalaryInput.setText(pStr)
                             binding.txtSalaryInput.setSelection(pStr.length)
@@ -96,7 +95,12 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 exitExtraWhenSystemBackPushed()
             }
 
-            btnDeclineFilterSet.setOnClickListener { vm.abortFilters() }
+            btnDeclineFilterSet.setOnClickListener {
+                vm.abortFilters()
+
+                // Загружаем прежние данные в sharedViewModel
+                sharedViewModel.setFilter(vm.getFilters())
+            }
 
             btnClrWorkPlace.setOnClickListener {
                 vm.clearWorkPlace()
@@ -126,9 +130,10 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.screenState.collect {
-                    if (it is ScreenState.FilterSettings) {
-                        renderFilterSettings(it.filters)
+                    if (it is ScreenFiltersState.Content) {
+                        renderFilterSettings(it.filterSet)
                         renderAcceptChangeBtn(it.btnAcceptVisibility)
+                        renderDeclineChangeBtn(it.btnDeclineVisibility)
                     }
                 }
             }
@@ -137,13 +142,12 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
 
     override fun onResume() {
         super.onResume()
-        Log.e("LOG", "OnResume")
-
 
         // При возвращении на фрагмент собираем потенциально полученную информацию
         // от фрагментов выбора страны, региона, профессии
         sharedViewModel.getFilters()?.let {
             vm.updateFiltersWithRemote(it)
+            Log.e("LOG", "OnResume $it")
         }
     }
 
@@ -203,6 +207,9 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
 
     private fun renderAcceptChangeBtn(visibility: Boolean) {
         binding.btnAcceptFilterSet.isVisible = visibility
+    }
+
+    private fun renderDeclineChangeBtn(visibility: Boolean) {
         binding.btnDeclineFilterSet.isVisible = visibility
     }
 }

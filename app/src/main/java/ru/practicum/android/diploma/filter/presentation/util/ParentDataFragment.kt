@@ -17,16 +17,7 @@ import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 import ru.practicum.android.diploma.util.DefaultFragment
 
 const val ARG_COUNTRY_ID = "country_id_pram"
-
-const val KEY_DISTRICT_RESULT = "district_result"
-const val KEY_COUNTRY_RESULT = "area_result"
-const val KEY_INDUSTRY_RESULT = "industry_result"
-const val KEY_FILTERS_RESULT ="filters_result"
-
-const val AREA_ID = "area_id_param"
-const val AREA_NAME = "area_name_param"
-const val INDUSTRY_ID = "industry_id_param"
-const val INDUSTRY_NAME = "industry_name_param"
+const val KEY_FILTERS_RESULT = "filters_result"
 
 open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     protected var paramCountryId: Int? = null // Считывается из аргументов в onCreate
@@ -93,15 +84,6 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
         binding.areaRecycler.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    open fun getBackSendData(): Bundle {
-        return Bundle().apply {
-            vm?.dataToSendBack?.let { data ->
-                putInt(AREA_ID, data.id)
-                putString(AREA_NAME, data.name)
-            }
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpAdapter()
@@ -137,6 +119,4 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             else -> {}
         }
     }
-
-
 }
