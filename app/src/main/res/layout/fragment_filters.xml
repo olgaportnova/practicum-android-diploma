@@ -10,6 +10,7 @@
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:contentInsetStartWithNavigation="@dimen/margin_16"
         app:titleTextAppearance="@style/ToolbarTitleText"
         app:titleTextColor="?attr/colorSecondary"
         app:navigationIconTint="?attr/colorSecondary"
