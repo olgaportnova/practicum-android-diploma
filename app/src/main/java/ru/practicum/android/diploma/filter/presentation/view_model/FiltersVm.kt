@@ -1,11 +1,13 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.practicum.android.diploma.filter.domain.interfaces.FiltersController
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.fragment.ScreenFiltersState
+import kotlin.math.log
 
 class FiltersVm(private val filtersController: FiltersController) : ViewModel() {
 
@@ -36,19 +38,16 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
     fun getFilters() = newFilterSet
 
-    fun setNewSalaryToFilter(incomeStr: CharSequence?): String {
-        if (incomeStr.isNullOrEmpty()) {
-            // If text from salaryInput has been cleared via delete button
-            // Set salary to zero
-            newFilterSet = newFilterSet.copy(salary = 0)
-
+    fun setNewSalaryToFilter(incomeStr: CharSequence?): String? {
+        if(incomeStr.isNullOrEmpty()) {
+            newFilterSet = newFilterSet.copy(salary = null)
             // Invalidate screen (to update accept_button visibility
             _screenState.value = ScreenFiltersState.Content(
                 newFilterSet,
                 compareFilters(),
                 compareFiltersWithDefault()
             )
-            return "0"
+            return ""
         }
 
         val newSalary = incomeStr.toString().toIntOrNull()
@@ -66,7 +65,9 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
             newFilterSet.salary.toString()
         } else {
-            newFilterSet.salary.toString()
+            Log.e("Log","return ${newFilterSet.salary.toString()}")
+            if (newFilterSet.salary!=null) return newFilterSet.salary.toString()
+            else return ""
         }
     }
 

@@ -75,7 +75,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                         val pStr = vm.setNewSalaryToFilter(s)
 
                         // Ноль отображаем как пустое поле для ввода зп
-                        if (pStr == "0") binding.txtSalaryInput.setText("")
+                        if (pStr == null) binding.txtSalaryInput.setText("")
                         else {
                             binding.txtSalaryInput.setText(pStr)
                             binding.txtSalaryInput.setSelection(pStr.length)
