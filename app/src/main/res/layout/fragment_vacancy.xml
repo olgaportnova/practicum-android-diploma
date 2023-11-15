@@ -100,7 +100,7 @@
                 android:id="@+id/ivEmployerLogo"
                 android:layout_width="@dimen/recycle_art_work_size"
                 android:layout_height="@dimen/recycle_art_work_size"
-                android:src="@drawable/placeholder_employer_logo"
+                android:src="@drawable/logo_placeholder"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -193,7 +193,6 @@
                 android:id="@+id/KeySkillsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
                 app:layout_constraintTop_toBottomOf="@id/tvVacancyDescriptionValue">
 
                 <TextView
@@ -219,7 +218,6 @@
                 android:id="@+id/ContactsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/KeySkillsContainer"
                 tools:visibility="visible">
