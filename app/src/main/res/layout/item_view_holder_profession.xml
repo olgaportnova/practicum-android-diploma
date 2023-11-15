@@ -1,40 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-
     android:paddingStart="@dimen/work_place_info_margin_start">
 
     <TextView
         android:id="@+id/txt_area_name"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-
-        android:layout_marginEnd="4dp"
-        android:layout_gravity="center_vertical"
-
-
-        android:textColor="?attr/colorOnPrimary"
-        android:ellipsize="end"
-        android:singleLine="true"
         android:text="@string/work_place_country_title"
-        android:textSize="16sp"
-        android:fontFamily="@font/ys_display_regular"/>
+        style="@style/name_recycle_item_filter" />
 
     <RadioButton
         android:id="@+id/btn_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        app:tint="@color/blue_main"
-        />
+        android:buttonTint="@color/blue_main"/>
 </LinearLayout>
 
 

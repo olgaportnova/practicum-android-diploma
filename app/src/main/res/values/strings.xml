@@ -27,6 +27,9 @@
     <string name="filters_industry">Отрасль</string>
     <string name="filters_accept">Применить</string>
     <string name="filters_decline">Сбросить</string>
+    <string name="hint_for_edit_text_region">Введите регион</string>
+    <string name="hint_for_edit_text_industry">Введите отрасль</string>
+    <string name="filters_choose_industry">Выбор отрасли</string>
 
 
     <!--    WORKPLACE FRAGMENT NAMES    -->

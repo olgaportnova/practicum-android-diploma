@@ -158,14 +158,16 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         filterSet.nameCountry?.let {
             binding.lblChooseWorkPlace.isVisible = true
             binding.txtChooseWorkPlace.isVisible = true
+            binding.lblChooseWorkPlaceInitialBig.isVisible = false
             binding.txtChooseWorkPlace.text = it
+            binding.btnClrWorkPlace.setImageResource(R.drawable.ic_clear_small)
         }
 
         filterSet.nameArea?.let {
             binding.txtChooseWorkPlace.text =
                 with(StringBuilder()) {
                     append(filterSet.nameCountry.toString())
-                    append(",")
+                    append(", ")
                     append(it)
                 }.toString()
         }
@@ -173,7 +175,9 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         filterSet.nameIndustry?.let {
             binding.lblChooseIndustry.isVisible = true
             binding.txtChooseIndustry.isVisible = true
+            binding.lblChooseIndustryInitialBig.isVisible = false
             binding.txtChooseIndustry.text = it
+            binding.btnClrIndustry.setImageResource(R.drawable.ic_clear_small)
         }
 
         filterSet.salary?.let {
@@ -191,12 +195,18 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
 
         if (filterSet.idCountry == null) {
             binding.lblChooseWorkPlace.isVisible = false
-            binding.txtChooseWorkPlace.text = resources.getString(R.string.filters_work_place)
+            binding.txtChooseWorkPlace.isVisible = false
+            binding.lblChooseWorkPlaceInitialBig.isVisible = true
+            binding.lblChooseWorkPlaceInitialBig.text = resources.getString(R.string.filters_work_place)
+            binding.btnClrWorkPlace.setImageResource(R.drawable.baseline_arrow)
         }
 
         if (filterSet.idIndustry == null) {
             binding.lblChooseIndustry.isVisible = false
+            binding.txtChooseIndustry.isVisible = false
+            binding.lblChooseIndustryInitialBig.isVisible = true
             binding.txtChooseIndustry.text = resources.getString(R.string.filters_industry)
+            binding.btnClrIndustry.setImageResource(R.drawable.baseline_arrow)
         }
 
         if (filterSet.salary == null) {
