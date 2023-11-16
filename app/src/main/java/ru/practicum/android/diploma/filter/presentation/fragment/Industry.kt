@@ -14,7 +14,15 @@ import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 
 class Industry : ParentDataFragment() {
     override val vm: IndustryVm by viewModel()
-    private val viewModel: FilterSharedVm by activityViewModels()
+    private val sharedFilterViewModel: FilterSharedVm by activityViewModels()
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Если в настройках фильтрации есть выбранная профессия, записываем в переменную
+        vm.setPreselectedIndustryId(sharedFilterViewModel.getFilters()?.idIndustry?.toIntOrNull())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,7 +41,7 @@ class Industry : ParentDataFragment() {
     override fun exitExtraWhenSystemBackPushed() {
         // Для поиска вакансии по региону необходимо передать в поисковый запрос id региона
         vm.dataToSendBack?.let {
-            viewModel.setIndustry(AbstractData(id = it.id, name = it.name))
+            sharedFilterViewModel.setIndustry(AbstractData(id = it.id, name = it.name))
         }
         findNavController().popBackStack()
     }
