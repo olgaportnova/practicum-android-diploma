@@ -36,6 +36,4 @@
         <item name="android:textColorHint">@color/white_text_dark_mode</item>
     </style>
 
-
-
 </resources>

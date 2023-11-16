@@ -49,7 +49,6 @@
         app:layout_constraintTop_toBottomOf="@id/txt_search"
         tools:listitem="@layout/item_view_holder_area" />
 
-
     <ImageView
         android:id="@+id/image_placeholder"
         android:visibility="visible"

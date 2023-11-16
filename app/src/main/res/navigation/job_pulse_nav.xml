@@ -60,7 +60,6 @@
             app:destination="@id/country" />
     </fragment>
 
-
     <fragment
         android:id="@+id/district"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.District"

@@ -61,5 +61,4 @@
         tools:text="@string/no_internet"
         style="@style/placeholder_text" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

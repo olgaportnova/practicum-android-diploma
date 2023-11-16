@@ -28,7 +28,6 @@ interface ApiHH {
     @GET("areas/{id}")
     suspend fun getDistricts(@Path("id") id: Int): Response<AreaDto>
 
-
     @Headers(
         "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
@@ -43,12 +42,6 @@ interface ApiHH {
     @GET("professional_roles")
     suspend fun getIndustries(): Response<CategoryResponse>
 
-
-    /**
-     * Function for get list vacancy with additional parameters in Map
-     * @param options where String - key, Any - type for String and Int value.
-     * @return [Response<T>]
-     */
     @Headers(
         "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
@@ -56,12 +49,6 @@ interface ApiHH {
     @GET("vacancies")
     suspend fun getVacancies(@QueryMap options: HashMap<String, Any>): Response<AnswerVacancyListDto>
 
-
-    /**
-     * Function for get similar vacancy
-     * @param id
-     * @return [Response]
-     */
     @Headers(
         "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
@@ -69,12 +56,6 @@ interface ApiHH {
     @GET("vacancies/{vacancy_id}/similar_vacancies")
     suspend fun getSimilarVacancy(@Path("vacancy_id") id: String): Response<AnswerVacancyListDto>
 
-
-    /**
-     * Function for get details vacancy
-     * @param id vacancy
-     * @return [Response]
-     */
     @Headers(
         "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
         "HH-User-Agent: JobPulse/1.0(yep4yep@gmail.com)"
