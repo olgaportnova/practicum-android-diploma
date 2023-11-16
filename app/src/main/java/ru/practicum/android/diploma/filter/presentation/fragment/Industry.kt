@@ -7,8 +7,9 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
-import ru.practicum.android.diploma.filter.presentation.util.ParentDataFragment
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
+import ru.practicum.android.diploma.filter.presentation.util.ARG_INDUSTRY_ID
+import ru.practicum.android.diploma.filter.presentation.util.ParentDataFragment
 import ru.practicum.android.diploma.filter.presentation.view_model.IndustryVm
 import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 
@@ -21,7 +22,9 @@ class Industry : ParentDataFragment() {
         super.onCreate(savedInstanceState)
 
         // Если в настройках фильтрации есть выбранная профессия, записываем в переменную
-        vm.setPreselectedIndustryId(sharedFilterViewModel.getFilters()?.idIndustry?.toIntOrNull())
+        arguments?.let {
+            vm.setPreselectedIndustryId(it.getInt(ARG_INDUSTRY_ID))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
