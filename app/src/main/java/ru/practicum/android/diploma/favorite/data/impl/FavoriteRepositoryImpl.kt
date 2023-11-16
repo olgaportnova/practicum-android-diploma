@@ -34,7 +34,6 @@ class FavoriteRepositoryImpl(
         return if (favoriteVacancyEntity != null) {
             vacancyConvertor.vacancyEntityToVacancy(favoriteVacancyEntity)
         } else {
-            //TODO обсудить с Таней, что возвращать на экран деталей если ошибка получения информации из БД
             null
         }
     }
