@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.filter.presentation.util
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -44,12 +46,53 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             }
 
             txtSearch.doOnTextChanged { text, start, before, count ->
-                vm?.txtSearchChanged(text)
+                editTextDrawableEnd(text)
             }
 
             btnChooseAll.setOnClickListener {
                 exitExtraWhenSystemBackPushed()
             }
+
+
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun editTextDrawableEnd(text: CharSequence?) {
+        if (text.isNullOrEmpty()) {
+            binding.txtSearch.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_search,
+                0
+            )
+            binding.txtSearch.setOnTouchListener { _, motionEvent ->
+                false
+            }
+        } else {
+            binding.txtSearch.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_clear,
+                0
+            )
+            val iconClear = binding.txtSearch.compoundDrawables[2]
+            binding.txtSearch.setOnTouchListener { _, motionEvent ->
+                if ((motionEvent.action == MotionEvent.ACTION_UP) &&
+                    (motionEvent.rawX >= (binding.txtSearch.right - iconClear.bounds.width() * 2))
+                ) {
+                    binding.txtSearch.setText("")
+                    binding.txtSearch.setCompoundDrawablesWithIntrinsicBounds(
+                        0,
+                        0,
+                        R.drawable.ic_search,
+                        0
+                    )
+                    vm?.txtSearchChanged("")
+                }
+                true
+            }
+            vm?.txtSearchChanged(binding.txtSearch.text)
         }
     }
 
