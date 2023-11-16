@@ -84,9 +84,10 @@ open class DefaultViewModel : ViewModel() {
 
     fun txtSearchChanged(inputText: CharSequence?) {
         this.searchInputText = inputText.toString()
-
         searchJob?.cancel()
-        startSearching()
+        if(_screenState.value!=ScreenState.Error(null)) {
+            startSearching()
+        }
     }
 
 

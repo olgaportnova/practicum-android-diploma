@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -117,35 +116,35 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         binding.btnChooseAll.isVisible = visibility
     }
 
-    private fun getColorOnPrimary(): Int {
-        val textColor = TypedValue()
-        requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColor, true)
-        return resources.getColor(textColor.resourceId, requireContext().theme)
-    }
-
-    private fun getGreyColor() = resources.getColor(R.color.grey_dark, requireContext().theme)
-
     private fun setCountrySelectedState(name: String) {
         binding.txtChooseCountry.text = name
-        binding.btnClrCountry.setImageResource(R.drawable.ic_clear)
-        binding.txtChooseCountry.setTextColor(getColorOnPrimary())
+        binding.btnClrCountry.setImageResource(R.drawable.ic_clear_small)
+        binding.lblChooseCountryInitialBig.visibility=View.GONE
+        binding.txtChooseCountry.visibility=View.VISIBLE
+        binding.lblChooseCountry.visibility=View.VISIBLE
     }
 
     private fun setDefaultCountryState() {
-        binding.txtChooseCountry.text = getString(R.string.work_place_country_title)
-        binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow_forward_24)
-        binding.txtChooseCountry.setTextColor(getGreyColor())
+        binding.lblChooseCountryInitialBig.text = getString(R.string.work_place_country_title)
+        binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow)
+        binding.lblChooseCountryInitialBig.visibility=View.VISIBLE
+        binding.txtChooseCountry.visibility=View.GONE
+        binding.lblChooseCountry.visibility=View.GONE
     }
 
     private fun setDistrictSelectedState(name: String) {
         binding.txtChooseDistrict.text = name
-        binding.btnClrDistrict.setImageResource(R.drawable.ic_clear)
-        binding.txtChooseDistrict.setTextColor(getColorOnPrimary())
+        binding.btnClrDistrict.setImageResource(R.drawable.ic_clear_small)
+        binding.lblChooseDistrictInitialBig.visibility=View.GONE
+        binding.txtChooseDistrict.visibility=View.VISIBLE
+        binding.lblChooseDistrict.visibility=View.VISIBLE
     }
 
     private fun setDefaultDistrictState() {
-        binding.txtChooseDistrict.text = getString(R.string.work_place_district_title)
-        binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow_forward_24)
-        binding.txtChooseDistrict.setTextColor(getGreyColor())
+        binding.lblChooseDistrictInitialBig.text = getString(R.string.work_place_district_title)
+        binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow)
+        binding.lblChooseDistrictInitialBig.visibility=View.VISIBLE
+        binding.txtChooseDistrict.visibility=View.GONE
+        binding.lblChooseDistrict.visibility=View.GONE
     }
 }

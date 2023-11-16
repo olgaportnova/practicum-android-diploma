@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.presentation.util.ParentDataFragment
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
@@ -17,7 +18,9 @@ class Industry : ParentDataFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.navigationBar.title = "Индустрия"
+        binding.navigationBar.setTitle(R.string.filters_choose_industry)
+        binding.txtSearch.setHint(R.string.hint_for_edit_text_industry)
+        binding.textPlaceholderEmptyList.setText(R.string.no_such_industry)
         adapter.setAdapterType(AreaAdapter.CATEGORIES) // Поменяли тип recycler
 
         // Переопределяем поведение при нажатии на элемент recycler

@@ -13,7 +13,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleMarginStart="16dp"
+        android:layout_marginTop="@dimen/margin_8"
+        app:titleMarginStart="@dimen/margin_16"
         app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
 

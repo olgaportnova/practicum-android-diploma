@@ -49,6 +49,7 @@ class AreaRepositoryImpl(private val networkClient: NetworkClient) : AreaReposit
                 200 -> {
                     emit(DataStatus.Content(DistrictConverter().convertFromDto(result.data!!)))
                 }
+                0->emit(DataStatus.NoConnecting())
             }
         }
             .catch { Log.e("LOG", it.message.toString()) }
