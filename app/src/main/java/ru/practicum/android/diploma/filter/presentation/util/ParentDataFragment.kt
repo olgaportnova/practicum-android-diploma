@@ -103,23 +103,36 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
                 adapter.changeData(newScreenState.data)
                 binding.areaRecycler.isVisible = true
                 binding.imagePlaceholder.isVisible = false
-                binding.textPlaceholder.isVisible = false
+                binding.textPlaceholderEmptyList.isVisible = false
+                binding.progressBar.isVisible = false
+                binding.textPlaceholderError.isVisible = false
+            }
+
+            is ScreenState.Loading -> {
+                binding.progressBar.isVisible = true
+                binding.areaRecycler.isVisible = false
+                binding.imagePlaceholder.isVisible = false
+                binding.textPlaceholderEmptyList.isVisible = false
+                binding.textPlaceholderError.isVisible = false
             }
 
             is ScreenState.EmptyContent -> {
+                Log.d("status", newScreenState.code.toString())
                 binding.areaRecycler.isVisible = false
                 binding.imagePlaceholder.isVisible = true
-                binding.textPlaceholder.isVisible = true
+                binding.textPlaceholderEmptyList.isVisible = true
+                binding.textPlaceholderError.isVisible = false
                 binding.imagePlaceholder.setImageResource(R.drawable.placeholder_empty_result)
-                binding.textPlaceholder.text = newScreenState.code.toString()
+                binding.progressBar.isVisible = false
             }
 
             is ScreenState.Error ->  {
                 binding.areaRecycler.isVisible = false
                 binding.imagePlaceholder.isVisible = true
-                binding.textPlaceholder.isVisible = true
+                binding.textPlaceholderError.isVisible = true
                 binding.imagePlaceholder.setImageResource(R.drawable.placeholder_enable_to_get_list_region)
-                binding.textPlaceholder.setText(R.string.enable_to_get_list)
+                binding.textPlaceholderError.setText(R.string.enable_to_get_list)
+                binding.progressBar.isVisible = false
             }
             else -> {}
         }

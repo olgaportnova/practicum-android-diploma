@@ -21,6 +21,15 @@
         app:titleTextAppearance="@style/ToolbarTitleText"
         app:titleTextColor="?attr/colorSecondary" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/progress_bar" />
+
     <EditText
         android:id="@+id/txt_search"
         style="@style/edit_text"
@@ -43,7 +52,7 @@
 
     <ImageView
         android:id="@+id/image_placeholder"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,8 +61,17 @@
         style="@style/placeholder_image" />
 
     <TextView
-        android:id="@+id/text_placeholder"
-        android:visibility="gone"
+        android:id="@+id/text_placeholder_empty_list"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_placeholder"
+        tools:text="@string/enable_to_get_list"
+        style="@style/placeholder_text" />
+
+    <TextView
+        android:id="@+id/text_placeholder_error"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_placeholder"

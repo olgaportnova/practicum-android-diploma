@@ -20,6 +20,7 @@ class Industry : ParentDataFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.navigationBar.setTitle(R.string.filters_choose_industry)
         binding.txtSearch.setHint(R.string.hint_for_edit_text_industry)
+        binding.textPlaceholderEmptyList.setText(R.string.no_such_industry)
         adapter.setAdapterType(AreaAdapter.CATEGORIES) // Поменяли тип recycler
 
         // Переопределяем поведение при нажатии на элемент recycler
