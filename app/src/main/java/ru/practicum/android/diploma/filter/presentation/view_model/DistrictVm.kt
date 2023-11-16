@@ -1,11 +1,8 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.util.DefaultViewModel
@@ -20,14 +17,12 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
         viewModelScope.launch {
             areaController.loadDistricts(parentId = parentAreaId).collect {
                 if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(parentAreaId)
-                if (it is DataStatus.Error)  _screenState.value = ScreenState.Error(errorMsg.toString())
-                if (it is DataStatus.EmptyContent)  _screenState.value = ScreenState.EmptyContent(null)
+                if (it is DataStatus.Error) _screenState.value =
+                    ScreenState.Error(errorMsg.toString())
+                if (it is DataStatus.EmptyContent) _screenState.value =
+                    ScreenState.EmptyContent(null)
                 if (it is DataStatus.NoConnecting) _screenState.value = ScreenState.Error(null)
                 if (it is DataStatus.Content) loadAllCityList(it.data!!)
-
-                if (it is DataStatus.NoConnecting) mutableErrorMsg.value = "No Connection"
-                if (it is DataStatus.EmptyContent) mutableErrorMsg.value = "Empty Content"
-                if (it is DataStatus.Error) mutableErrorMsg.value = "${it.code}"
             }
         }
     }
@@ -37,10 +32,9 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
             areaController.loadAreaTree().collect {
                 if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(null)
                 if (it is DataStatus.Content) listAreaTree(it.data!!)
-
-                if (it is DataStatus.NoConnecting) mutableErrorMsg.value = "No Connection"
-                if (it is DataStatus.EmptyContent) mutableErrorMsg.value = "Empty Content"
-                if (it is DataStatus.Error) mutableErrorMsg.value = "${it.code}"
+                if (it is DataStatus.EmptyContent) _screenState.value =
+                    ScreenState.EmptyContent(null)
+                if (it is DataStatus.NoConnecting) _screenState.value = ScreenState.Error(null)
             }
         }
     }
@@ -75,16 +69,18 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
     private fun findCityRecursive(area: AreaData, parentId: Int?) {
         if (area.areas.isEmpty()) {
 
-            var lightArea = areaToAbstract(area).copy(parentId = parentId)
+            // Прокидываем id родительского региона
+            val lightArea = areaToAbstract(area).copy(parentId = parentId)
 
+            // Добавляем регион в список для отображения в recycler
             fullDataList.add(lightArea)
 
         } else area.areas.forEach { findCityRecursive(it, parentId) }
     }
 
-    fun getParentName(id:Int?):String{
+    fun getParentName(id: Int?): String {
         val el = areaFullList.filter { area ->
-            area.id==id
+            area.id == id
         }
         return el.first().name
     }
