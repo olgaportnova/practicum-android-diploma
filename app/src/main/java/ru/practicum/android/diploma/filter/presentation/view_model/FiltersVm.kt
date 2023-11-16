@@ -1,13 +1,11 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.practicum.android.diploma.filter.domain.interfaces.FiltersController
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.fragment.ScreenFiltersState
-import kotlin.math.log
 
 class FiltersVm(private val filtersController: FiltersController) : ViewModel() {
 
@@ -39,7 +37,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
     fun getFilters() = newFilterSet
 
     fun setNewSalaryToFilter(incomeStr: CharSequence?): String? {
-        if(incomeStr.isNullOrEmpty()) {
+        if (incomeStr.isNullOrEmpty()) {
             newFilterSet = newFilterSet.copy(salary = null)
             // Invalidate screen (to update accept_button visibility
             _screenState.value = ScreenFiltersState.Content(
@@ -65,8 +63,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
 
             newFilterSet.salary.toString()
         } else {
-            Log.e("Log","return ${newFilterSet.salary.toString()}")
-            if (newFilterSet.salary!=null) return newFilterSet.salary.toString()
+            if (newFilterSet.salary != null) return newFilterSet.salary.toString()
             else return ""
         }
     }
