@@ -126,32 +126,32 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
     private fun setCountrySelectedState(name: String) {
         binding.txtChooseCountry.text = name
         binding.btnClrCountry.setImageResource(R.drawable.ic_clear_small)
-        binding.lblChooseCountryInitialBig.visibility=View.GONE
-        binding.txtChooseCountry.visibility=View.VISIBLE
-        binding.lblChooseCountry.visibility=View.VISIBLE
+        binding.lblChooseCountryInitialBig.visibility = View.GONE
+        binding.txtChooseCountry.visibility = View.VISIBLE
+        binding.lblChooseCountry.visibility = View.VISIBLE
     }
 
     private fun setDefaultCountryState() {
         binding.lblChooseCountryInitialBig.text = getString(R.string.work_place_country_title)
         binding.btnClrCountry.setImageResource(R.drawable.baseline_arrow)
-        binding.lblChooseCountryInitialBig.visibility=View.VISIBLE
-        binding.txtChooseCountry.visibility=View.GONE
-        binding.lblChooseCountry.visibility=View.GONE
+        binding.lblChooseCountryInitialBig.visibility = View.VISIBLE
+        binding.txtChooseCountry.visibility = View.GONE
+        binding.lblChooseCountry.visibility = View.GONE
     }
 
     private fun setDistrictSelectedState(name: String) {
         binding.txtChooseDistrict.text = name
         binding.btnClrDistrict.setImageResource(R.drawable.ic_clear_small)
-        binding.lblChooseDistrictInitialBig.visibility=View.GONE
-        binding.txtChooseDistrict.visibility=View.VISIBLE
-        binding.lblChooseDistrict.visibility=View.VISIBLE
+        binding.lblChooseDistrictInitialBig.visibility = View.GONE
+        binding.txtChooseDistrict.visibility = View.VISIBLE
+        binding.lblChooseDistrict.visibility = View.VISIBLE
     }
 
     private fun setDefaultDistrictState() {
         binding.lblChooseDistrictInitialBig.text = getString(R.string.work_place_district_title)
         binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow)
-        binding.lblChooseDistrictInitialBig.visibility=View.VISIBLE
-        binding.txtChooseDistrict.visibility=View.GONE
-        binding.lblChooseDistrict.visibility=View.GONE
+        binding.lblChooseDistrictInitialBig.visibility = View.VISIBLE
+        binding.txtChooseDistrict.visibility = View.GONE
+        binding.lblChooseDistrict.visibility = View.GONE
     }
 }

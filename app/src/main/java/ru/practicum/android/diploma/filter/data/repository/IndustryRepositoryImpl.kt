@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.data.repository
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -10,7 +9,6 @@ import ru.practicum.android.diploma.filter.data.mappers.CategoryConverter
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustryRepository
 import ru.practicum.android.diploma.filter.domain.models.CategoryData
 import ru.practicum.android.diploma.hhApi.NetworkClient
-import ru.practicum.android.diploma.hhApi.dto.RequestWrapper
 import ru.practicum.android.diploma.util.DataStatus
 
 class IndustryRepositoryImpl(private val networkClient: NetworkClient) : IndustryRepository {

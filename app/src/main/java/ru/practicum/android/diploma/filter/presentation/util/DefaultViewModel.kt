@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.AreaData
-import ru.practicum.android.diploma.filter.domain.models.RoleData
 
 open class DefaultViewModel : ViewModel() {
     protected val mutableErrorMsg = MutableLiveData<String>()
@@ -59,7 +58,7 @@ open class DefaultViewModel : ViewModel() {
                         // Если элемент присутствует в списке, снимаем выделение
                         if (prevSelItemPos != -1) {
                             activeList[prevSelItemPos].isSelected = false
-                            withContext(Dispatchers.Main){
+                            withContext(Dispatchers.Main) {
                                 _itemPosToUpdate.value = prevSelItemPos
                             }
 
@@ -83,7 +82,7 @@ open class DefaultViewModel : ViewModel() {
     fun txtSearchChanged(inputText: CharSequence?) {
         this.searchInputText = inputText.toString()
         searchJob?.cancel()
-        if(_screenState.value!=ScreenState.Error(null)) {
+        if (_screenState.value != ScreenState.Error(null)) {
             startSearching()
         }
     }
@@ -119,4 +118,3 @@ open class DefaultViewModel : ViewModel() {
         const val SEARCH_DELAY_mills = 150L
     }
 }
-

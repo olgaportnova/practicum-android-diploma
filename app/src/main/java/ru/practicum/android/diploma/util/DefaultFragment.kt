@@ -22,17 +22,9 @@ abstract class DefaultFragment<T : ViewBinding> : Fragment() {
         }
     }
 
-    /**
-     * Set all ui listeners here
-     */
     abstract fun setUiListeners()
 
-    /**
-     * Override this fun if you need special behaviour onExit
-     * call your own exit fun via fragmentManager or navController
-     */
     open fun exitExtraWhenSystemBackPushed() {
-        //findNavController().popBackStack()
     }
 
     override fun onAttach(context: Context) {
@@ -51,7 +43,6 @@ abstract class DefaultFragment<T : ViewBinding> : Fragment() {
     ): View {
         _binding = bindingInflater(inflater, container)
 
-        //requireActivity().onBackPressedDispatcher.addCallback(this.viewLifecycleOwner,this.backPressedCallback)
         return binding.root
     }
 

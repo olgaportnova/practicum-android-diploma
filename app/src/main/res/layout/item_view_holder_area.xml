@@ -24,5 +24,3 @@
         app:tint="?attr/colorSecondary"
         android:src="@drawable/baseline_arrow" />
 </LinearLayout>
-
-
