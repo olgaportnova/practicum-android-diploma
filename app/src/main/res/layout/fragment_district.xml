@@ -60,7 +60,6 @@
         tools:text="@string/enable_to_get_list"
         style="@style/placeholder_text" />
 
-
     <TextView
         android:id="@+id/btn_choose_all"
         style="@style/big_blue_button"

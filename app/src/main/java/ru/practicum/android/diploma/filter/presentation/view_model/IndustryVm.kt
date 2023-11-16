@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.domain.interfaces.IndustriesController
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.CategoryData
@@ -19,9 +21,13 @@ class IndustryVm(private val industriesController: IndustriesController) : Defau
     private fun loadIndustries() {
         viewModelScope.launch {
             industriesController.getIndustries().collect {
+                Log.d("status", it.toString())
                 when (it) {
                     is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
                     is DataStatus.Content -> loadAllRoles(it.data!!)
+                    is DataStatus.EmptyContent -> _screenState.value = ScreenState.EmptyContent(R.string.no_such_industry)
+                    is DataStatus.Error -> _screenState.value = ScreenState.Error(errorMsg.toString())
+                    is DataStatus.NoConnecting -> _screenState.value = ScreenState.Error(errorMsg.toString())
                     else -> {}
                 }
             }

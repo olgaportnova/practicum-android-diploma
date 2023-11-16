@@ -145,6 +145,6 @@ class WorkPlace : DefaultFragment<FragmentWorkPlaceBinding>() {
         binding.btnClrDistrict.setImageResource(R.drawable.baseline_arrow)
         binding.lblChooseDistrictInitialBig.visibility=View.VISIBLE
         binding.txtChooseDistrict.visibility=View.GONE
-        binding.txtChooseDistrict.visibility=View.GONE
+        binding.lblChooseDistrict.visibility=View.GONE
     }
 }

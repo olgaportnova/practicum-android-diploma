@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filter.presentation.util
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDistrictBinding
 import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 import ru.practicum.android.diploma.util.DefaultFragment
@@ -93,29 +95,32 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     }
 
     private fun setFragmentScreenState(newScreenState: ScreenState) {
+        Log.d("status", newScreenState.toString())
         when (newScreenState) {
-            is ScreenState.Loading -> {
-                binding.areaRecycler.isVisible = false
-                binding.progressLoading.isVisible = true
-                binding.progressLoading.text = "Loading"
-            }
 
             is ScreenState.Content -> {
                 // TODO: need to do in background
                 adapter.changeData(newScreenState.data)
                 binding.areaRecycler.isVisible = true
-                binding.progressLoading.isVisible = false
-                binding.progressLoading.text = "Content"
-
+                binding.imagePlaceholder.isVisible = false
+                binding.textPlaceholder.isVisible = false
             }
 
             is ScreenState.EmptyContent -> {
                 binding.areaRecycler.isVisible = false
-                binding.progressLoading.isVisible = true
-                binding.progressLoading.text = "Empty content"
+                binding.imagePlaceholder.isVisible = true
+                binding.textPlaceholder.isVisible = true
+                binding.imagePlaceholder.setImageResource(R.drawable.placeholder_empty_result)
+                binding.textPlaceholder.text = newScreenState.code.toString()
             }
 
-            is ScreenState.Error -> showMsgDialog(newScreenState.exception)
+            is ScreenState.Error ->  {
+                binding.areaRecycler.isVisible = false
+                binding.imagePlaceholder.isVisible = true
+                binding.textPlaceholder.isVisible = true
+                binding.imagePlaceholder.setImageResource(R.drawable.placeholder_enable_to_get_list_region)
+                binding.textPlaceholder.setText(R.string.enable_to_get_list)
+            }
             else -> {}
         }
     }

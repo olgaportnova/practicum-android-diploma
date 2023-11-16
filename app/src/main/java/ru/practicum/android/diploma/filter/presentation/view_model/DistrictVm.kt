@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.domain.interfaces.AreaController
 import ru.practicum.android.diploma.filter.domain.models.AreaData
 import ru.practicum.android.diploma.filter.presentation.util.DefaultViewModel
@@ -16,6 +17,8 @@ open class DistrictVm(private val areaController: AreaController) : DefaultViewM
         viewModelScope.launch {
             areaController.loadDistricts(parentId = parentAreaId).collect {
                 if (it is DataStatus.Loading) _screenState.value = ScreenState.Loading(parentAreaId)
+                if (it is DataStatus.EmptyContent)  _screenState.value = ScreenState.EmptyContent(R.string.no_such_region)
+                if (it is DataStatus.NoConnecting) _screenState.value = ScreenState.Error(errorMsg.toString())
                 if (it is DataStatus.Content) loadAllCityList(it.data!!)
             }
         }

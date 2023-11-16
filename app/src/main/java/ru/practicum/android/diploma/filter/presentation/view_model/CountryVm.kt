@@ -22,6 +22,7 @@ class CountryVm(private val areaController: AreaController) : DefaultViewModel()
                         val countryList = it.data!!.map { area -> areaToAbstract(area) }
                         changeRecyclerContent(countryList)
                     }
+                    is DataStatus.NoConnecting -> _screenState.value = ScreenState.Error(errorMsg.toString())
                     else -> {}
                 }
             }
