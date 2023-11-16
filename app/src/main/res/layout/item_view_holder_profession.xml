@@ -19,5 +19,3 @@
         android:layout_height="wrap_content"
         android:buttonTint="@color/blue_main"/>
 </LinearLayout>
-
-

@@ -11,4 +11,3 @@ data class FilterData(
     val salary:Int?,
     val onlyWithSalary:Boolean,
 )
-
