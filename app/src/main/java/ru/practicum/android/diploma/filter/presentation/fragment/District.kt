@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.filter.presentation.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -63,7 +62,6 @@ open class District : ParentDataFragment() {
         if (paramCountryId != null) {
             paramCountryId?.let { id -> vm.loadDistrictList(id) }
         } else {
-            Log.e("LOG", "district fragment No parent")
             vm.loadAreaTree()
         }
 

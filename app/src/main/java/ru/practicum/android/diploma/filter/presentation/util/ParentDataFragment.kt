@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.filter.presentation.util
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -139,7 +138,6 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
     }
 
     private fun setFragmentScreenState(newScreenState: ScreenState) {
-        Log.d("status", newScreenState.toString())
         when (newScreenState) {
 
             is ScreenState.Content -> {
@@ -161,7 +159,6 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
             }
 
             is ScreenState.EmptyContent -> {
-                Log.d("status", newScreenState.code.toString())
                 binding.areaRecycler.isVisible = false
                 binding.imagePlaceholder.isVisible = true
                 binding.textPlaceholderEmptyList.isVisible = true
@@ -170,7 +167,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
                 binding.progressBar.isVisible = false
             }
 
-            is ScreenState.Error ->  {
+            is ScreenState.Error -> {
                 binding.areaRecycler.isVisible = false
                 binding.imagePlaceholder.isVisible = true
                 binding.textPlaceholderError.isVisible = true
@@ -178,6 +175,7 @@ open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
                 binding.textPlaceholderError.setText(R.string.enable_to_get_list)
                 binding.progressBar.isVisible = false
             }
+
             else -> {}
         }
     }

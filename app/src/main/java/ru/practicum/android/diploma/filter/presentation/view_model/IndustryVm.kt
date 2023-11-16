@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +20,6 @@ class IndustryVm(private val industriesController: IndustriesController) : Defau
     private fun loadIndustries() {
         viewModelScope.launch {
             industriesController.getIndustries().collect {
-                Log.d("status", it.toString())
                 when (it) {
                     is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
                     is DataStatus.Content -> loadAllRoles(it.data!!)

@@ -39,8 +39,6 @@ open class DefaultViewModel : ViewModel() {
 
     fun areaToAbstract(area: AreaData) = AbstractData(area.id, area.name)
 
-    fun roleToAbstract(role: RoleData) = AbstractData(role.id, role.name)
-
     fun selectItemInDataList(selectedData: AbstractData) {
         viewModelScope.launch(Dispatchers.IO) {
             // Сравнение производим со списком в recycler для избежания ситуации, когда после выделения
@@ -61,7 +59,7 @@ open class DefaultViewModel : ViewModel() {
                         // Если элемент присутствует в списке, снимаем выделение
                         if (prevSelItemPos != -1) {
                             activeList[prevSelItemPos].isSelected = false
-                            withContext(Dispatchers.Main){
+                            withContext(Dispatchers.Main) {
                                 _itemPosToUpdate.value = prevSelItemPos
                             }
 
@@ -85,7 +83,7 @@ open class DefaultViewModel : ViewModel() {
     fun txtSearchChanged(inputText: CharSequence?) {
         this.searchInputText = inputText.toString()
         searchJob?.cancel()
-        if(_screenState.value!=ScreenState.Error(null)) {
+        if (_screenState.value != ScreenState.Error(null)) {
             startSearching()
         }
     }

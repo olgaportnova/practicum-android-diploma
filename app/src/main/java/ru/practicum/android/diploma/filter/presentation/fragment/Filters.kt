@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.filter.presentation.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -124,7 +123,6 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         // Загружаем набор настроек фильтрации в объединенную модель при первой загрузке фрагмента
         // Внутри объединенной модели так же есть проверка, что не было многократной перезаписи
         sharedViewModel.setFilter(vm.getFilters())
-        Log.e("LOG", "On create")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -150,7 +148,6 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
         // от фрагментов выбора страны, региона, профессии
         sharedViewModel.getFilters()?.let {
             vm.updateFiltersWithRemote(it)
-            Log.e("LOG", "OnResume $it")
         }
     }
 
