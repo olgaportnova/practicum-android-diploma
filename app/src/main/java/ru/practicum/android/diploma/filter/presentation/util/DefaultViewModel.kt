@@ -39,8 +39,6 @@ open class DefaultViewModel : ViewModel() {
 
     fun areaToAbstract(area: AreaData) = AbstractData(area.id, area.name)
 
-    fun roleToAbstract(role: RoleData) = AbstractData(role.id, role.name)
-
     fun selectItemInDataList(selectedData: AbstractData) {
         viewModelScope.launch(Dispatchers.IO) {
             // Сравнение производим со списком в recycler для избежания ситуации, когда после выделения
