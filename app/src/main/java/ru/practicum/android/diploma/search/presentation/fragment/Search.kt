@@ -275,6 +275,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         filterData = viewModel.getParamsFilters()
         if(filterData != null){
             addFilterInModel(filterData!!)
+        }else{
+            clearModel()
         }
     }
 
@@ -398,5 +400,19 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }else{
             binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
         }
+    }
+
+    private fun clearModel(){
+       with(modelForQuery){
+           page = START_PAGE_INDEX
+           perPage = PER_PAGE
+           text = INIT_TEXT
+           area = null
+           parentArea = null
+           industry = null
+           currency = null
+           salary = null
+           onlyWithSalary = false
+       }
     }
 }
