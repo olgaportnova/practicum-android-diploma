@@ -21,6 +21,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
+import ru.practicum.android.diploma.filter.presentation.util.ARG_INDUSTRY_ID
 import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.filter.presentation.view_model.FiltersVm
 import ru.practicum.android.diploma.util.DefaultFragment
@@ -49,7 +50,9 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             layoutIndustry.setOnClickListener {
                 findNavController().navigate(R.id.action_filters_to_industry,
                     Bundle().apply {
-
+                        vm.getFilters().idIndustry?.toIntOrNull()?.let { industry->
+                            putInt(ARG_INDUSTRY_ID,industry)
+                        }
                     })
             }
 

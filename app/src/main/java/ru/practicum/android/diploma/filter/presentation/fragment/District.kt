@@ -20,12 +20,6 @@ open class District : ParentDataFragment() {
         val filterSet = sharedFiltersVm.getFilters()
         val newArea = vm.dataToSendBack
 
-        newArea?.let {
-            //Log.e("LOG", "parent = ${it.parentId}")
-            //vm.getParentName(it.parentId)
-        }
-
-
         filterSet?.let {
             val filter = when (newArea) {
                 null -> it.copy(idArea = null, nameArea = null)
@@ -74,9 +68,11 @@ open class District : ParentDataFragment() {
         }
 
 
+        // Переопределение функции нажания на элемент списка
         adapter.setNewItemClickListener() {
             vm.dataToSendBack = it
-            vm.selectItemInDataList(it)
+            // vm.selectItemInDataList(it) // Выделение элемента списка по старому ТЗ
+            exitExtraWhenSystemBackPushed()
         }
     }
 

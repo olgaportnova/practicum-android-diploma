@@ -21,6 +21,7 @@ import ru.practicum.android.diploma.filter.recycler.AreaAdapter
 import ru.practicum.android.diploma.util.DefaultFragment
 
 const val ARG_COUNTRY_ID = "country_id_pram"
+const val ARG_INDUSTRY_ID = "industry_id_pram"
 const val KEY_FILTERS_RESULT = "filters_result"
 
 open class ParentDataFragment : DefaultFragment<FragmentDistrictBinding>() {
