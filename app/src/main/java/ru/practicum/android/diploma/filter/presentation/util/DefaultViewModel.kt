@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.AreaData
-import ru.practicum.android.diploma.filter.domain.models.RoleData
 
 open class DefaultViewModel : ViewModel() {
     protected val mutableErrorMsg = MutableLiveData<String>()
@@ -130,4 +129,3 @@ open class DefaultViewModel : ViewModel() {
         const val SEARCH_DELAY_mills = 150L
     }
 }
-

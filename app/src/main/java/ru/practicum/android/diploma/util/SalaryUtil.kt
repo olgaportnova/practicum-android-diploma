@@ -6,7 +6,6 @@ import ru.practicum.android.diploma.search.domain.models.Salary
 import java.text.NumberFormat
 import java.util.Locale
 
-
 class SalaryUtil {
     companion object {
 
@@ -66,4 +65,3 @@ class SalaryUtil {
 
     }
 }
-

@@ -14,10 +14,6 @@ class FiltersStorageImpl(
         const val KEY_SAVED_PARAMS_FILTER = "key_saved_params"
     }
 
-    /**
-     * Simple function for get saved filters from storage.
-     * @return ParamsFilterModelDto
-     */
     override fun getParamsFilters(): FilterDto? {
         val jsonSavedParams = sharedPref.getString(KEY_SAVED_PARAMS_FILTER,null)
         val itemType = object : TypeToken<FilterDto>(){}.type
@@ -28,9 +24,6 @@ class FiltersStorageImpl(
         return gson.fromJson(jsonSavedParams,itemType)
     }
 
-    /**
-     * Simple function for add filters in storage.
-     */
     override fun addParamsFilters(params: FilterDto) {
          sharedPref.edit()
              .putString(KEY_SAVED_PARAMS_FILTER,gson.toJson(params))

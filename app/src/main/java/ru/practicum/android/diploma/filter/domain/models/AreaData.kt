@@ -9,5 +9,3 @@ data class AreaData(
     val name: String,
     val areas: List<AreaData>
 ): Parcelable
-
-
