@@ -51,7 +51,6 @@
         <item name="android:titleTextColor">?attr/colorSecondary</item>
     </style>
 
-
     <style name="edit_text">
         <item name="android:layout_marginHorizontal">@dimen/edit_text_margin_horizontal</item>
         <item name="android:layout_marginVertical">@dimen/edit_text_margin_vertical</item>
@@ -265,8 +264,5 @@
         <item name="android:imeOptions">actionDone</item>
         <item name="android:textColor">@color/black_text</item>
     </style>
-
-
-
 
 </resources>

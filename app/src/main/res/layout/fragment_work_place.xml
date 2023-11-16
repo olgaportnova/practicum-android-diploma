@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".filter.presentation.fragment.WorkPlace">
 
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"

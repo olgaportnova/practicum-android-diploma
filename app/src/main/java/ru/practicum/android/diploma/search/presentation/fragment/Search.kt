@@ -109,12 +109,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         getParamsFilter()
     }
 
-    /**
-     * Function to open required vacancy details
-     * @param vacancyToShow represent vacancy model
-     * @author Oleg
-     */
-    // TODO: change param type
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
             R.id.action_search_to_vacancy,
