@@ -45,7 +45,7 @@ open class DefaultViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             // Сравнение производим со списком в recycler для избежания ситуации, когда после выделения
             // пользователь ввел фильтрующий запрос, и список был изменен
-            val activeList = asyncSearchInputText(searchInputText).await()
+            val activeList = fullDataList
 
             if (activeList.isNotEmpty()) {
                 // Поиск позиции в списке
@@ -116,17 +116,6 @@ open class DefaultViewModel : ViewModel() {
         else _screenState.value = ScreenState.Content(list)
     }
 
-    private fun asyncSearchInputText(inputText: CharSequence?): Deferred<List<AbstractData>> =
-        viewModelScope.async(Dispatchers.Default) {
-            searchInputText = inputText.toString()
-            return@async if (inputText.isNullOrBlank()) {
-                fullDataList
-            } else {
-                fullDataList.filter {
-                    it.name.contains(other = inputText, ignoreCase = true)
-                }
-            }
-        }
 
     companion object {
         const val SEARCH_DELAY_mills = 150L
