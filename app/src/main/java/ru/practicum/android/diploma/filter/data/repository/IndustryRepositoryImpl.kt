@@ -19,9 +19,9 @@ class IndustryRepositoryImpl(private val networkClient: NetworkClient) : Industr
             emit(DataStatus.Loading())
 
             val result = networkClient.getIndustries()
-            Log.d("status", result.toString())
+
             when (result.code) {
-                200 -> {
+                QUERY_DONE -> {
                     result.data?.let {
                         if (it.categories.isEmpty()) emit(DataStatus.EmptyContent())
                         else {
@@ -33,11 +33,16 @@ class IndustryRepositoryImpl(private val networkClient: NetworkClient) : Industr
                     }
                 }
 
-                0 -> emit(DataStatus.NoConnecting())
+                NO_CONNECT -> emit(DataStatus.NoConnecting())
                 else -> emit(DataStatus.Error(result.code))
             }
         }
             .catch { emit(DataStatus.Error(errorMessage = it.message.toString())) }
             .flowOn(Dispatchers.IO)
+    }
+
+    companion object {
+        const val NO_CONNECT = 0
+        const val QUERY_DONE = 200
     }
 }

@@ -27,7 +27,7 @@ class IndustryVm(private val industriesController: IndustriesController) : Defau
                     is DataStatus.Content -> loadAllRoles(it.data!!)
                     is DataStatus.EmptyContent -> _screenState.value = ScreenState.EmptyContent(null)
                     is DataStatus.Error -> _screenState.value = ScreenState.Error(errorMsg.toString())
-                    is DataStatus.NoConnecting -> _screenState.value = ScreenState.Error(errorMsg.toString())
+                    is DataStatus.NoConnecting -> _screenState.value = ScreenState.Error(null)
                     else -> {}
                 }
 

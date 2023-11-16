@@ -101,10 +101,18 @@ class NetworkClientImpl(
     }
 
     override suspend fun getIndustries(): ResponseWrapper<CategoryResponse> {
-        val response = hhApi.getIndustries()
-
-        return if (response.code() == 200) ResponseWrapper(response.code(), response.body())
-        else ResponseWrapper(response.code(), data = null)
+        return withContext(Dispatchers.IO)  {
+            if (!isConnected()) {
+                ResponseWrapper(NO_CONNECT, data = null)
+            } else {
+                val response = hhApi.getIndustries()
+                if (response.code() == 200) {
+                    ResponseWrapper(response.code(), response.body())
+                } else {
+                    ResponseWrapper(response.code(), data = null)
+                }
+            }
+        }
     }
 
 
