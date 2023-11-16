@@ -254,5 +254,19 @@
         <item name="android:paddingStart">@dimen/work_place_info_margin_start</item>
     </style>
 
+    <style name="CursorForInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">?attr/colorOnSecondary</item>
+        <item name="android:textColorHint">@color/grey_dark</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+
+
 
 </resources>

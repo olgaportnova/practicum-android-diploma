@@ -7,7 +7,7 @@
 
     <style name="Theme.PracticumAndroidDiploma" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/haki</item>
+        <item name="colorPrimary">@color/blue_main</item>
         <item name="colorPrimaryVariant">@color/grey_light</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -15,7 +15,7 @@
         <item name="colorSecondaryVariant">@color/white_text_dark_mode</item>
         <item name="colorOnSecondary">@color/grey_light</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorSecondaryVariant</item>
         <!-- Customize your theme here. -->
 
     </style>

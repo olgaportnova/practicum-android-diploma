@@ -39,7 +39,9 @@
     <dimen name="margin_64">64dp</dimen>
     <dimen name="margin_32">32dp</dimen>
     <dimen name="margin_59">59dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_17">17dp</dimen>
     <dimen name="margin_16">16dp</dimen>
     <dimen name="margin_10">10dp</dimen>
     <dimen name="margin_8">8dp</dimen>
@@ -67,6 +69,7 @@
     <dimen name="filters_decline_btn_padding">20dp</dimen>
     <dimen name="filters_txt_size">16sp</dimen>
     <dimen name="filters_small_txt_size">12sp</dimen>
+    <dimen name="height_0_dp">0dp</dimen>
     <dimen name="icon_padding_filters">17dp</dimen>
 
 </resources>

@@ -30,6 +30,9 @@
     <string name="hint_for_edit_text_region">Введите регион</string>
     <string name="hint_for_edit_text_industry">Введите отрасль</string>
     <string name="filters_choose_industry">Выбор отрасли</string>
+    <string name="no_such_region">Такого региона нет</string>
+    <string name="enable_to_get_list">Не удалось получить \n список</string>
+
 
 
     <!--    WORKPLACE FRAGMENT NAMES    -->
