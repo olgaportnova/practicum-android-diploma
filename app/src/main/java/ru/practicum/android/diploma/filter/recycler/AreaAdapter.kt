@@ -90,7 +90,7 @@ class AreaAdapter(
                 binding.ingArrow.setImageResource(R.drawable.ic_main_favorite)
             }
             else{
-                binding.ingArrow.setImageResource(R.drawable.baseline_arrow_forward_24)
+                binding.ingArrow.setImageResource(R.drawable.baseline_arrow)
             }
 
             binding.root.setOnClickListener {

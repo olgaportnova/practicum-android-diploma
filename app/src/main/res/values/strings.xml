@@ -11,22 +11,32 @@
     <string name="hint_for_edit_text">Введите запрос</string>
     <string name="no_search_result">Не удалось получить \n список вакансий</string>
     <string name="no_internet">Нет интернета</string>
+    <string name="no_internet_for_toast">Проверьте подключение к интернету</string>
+    <string name="error_for_toast">Произошла ошибка</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="found_vacancies_count">Найдено %1$d вакансий</string>
 
-
-
     <!--    FILTERS FRAGMENT NAMES    -->
     <string name="filters_fragment_title">Настройки фильтрации</string>
-
-
+    <string name="salary_expected">Ожидаемая зарплата</string>
+    <string name="input_expected_salary">Введите сумму</string>
+    <string name="do_not_show_without_salary">Не показывать без зарплаты</string>
+    <string name="filters_work_place">Место работы</string>
+    <string name="filters_industry">Отрасль</string>
+    <string name="filters_accept">Применить</string>
+    <string name="filters_decline">Сбросить</string>
+    <string name="hint_for_edit_text_region">Введите регион</string>
+    <string name="hint_for_edit_text_industry">Введите отрасль</string>
+    <string name="filters_choose_industry">Выбор отрасли</string>
+    <string name="no_such_region">Такого региона нет</string>
+    <string name="no_such_industry">Такой отрасли нет</string>
+    <string name="enable_to_get_list">Не удалось получить \n список</string>
 
     <!--    WORKPLACE FRAGMENT NAMES    -->
     <string name="work_place_fragment_title">Выбор места работы</string>
     <string name="work_place_country_title">Страна</string>
     <string name="work_place_district_title">Регион</string>
     <string name="btn_choose_title">Выбрать</string>
-
 
     <!--    COUNTRY FRAGMENT NAMES    -->
     <string name="country_fragment_title">Выбор страны</string>
@@ -49,7 +59,6 @@
     <string name="salary_to">до %1$s %2$s</string>
     <string name="salary_from_to">от %1$s до %2$s %3$s</string>
 
-
     <!--    SIMILAR FRAGMENT NAMES    -->
     <string name="similar_vacancies">Похожие вакансии</string>
 
@@ -67,5 +76,17 @@
     <string name="error_get_data_empty">Error get data. Your data is empty.</string>
     <string name="error_sever_log">Error on server: </string>
     <string name="error_app_search_log">Error app in search operation processing!</string>
+
+    <!--    CURRENCY CONVECTOR   -->
+    <string name="currency_symbol_rub">₽</string>
+    <string name="currency_symbol_byr">Br</string>
+    <string name="currency_symbol_usd">$</string>
+    <string name="currency_symbol_eur">€</string>
+    <string name="currency_symbol_kzt">₸</string>
+    <string name="currency_symbol_uah">₴</string>
+    <string name="currency_symbol_azn">₼</string>
+    <string name="currency_symbol_uzs">сўм</string>
+    <string name="currency_symbol_gel">₾</string>
+    <string name="currency_symbol_kgt">сом</string>
 
 </resources>

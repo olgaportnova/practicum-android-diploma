@@ -2,55 +2,40 @@ package ru.practicum.android.diploma.vacancy.presentation.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
+import androidx.core.text.HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
-import ru.practicum.android.diploma.filter.presentation.util.ARG_COUNTRY_ID
-import ru.practicum.android.diploma.search.domain.models.Contacts
 import ru.practicum.android.diploma.search.domain.models.Phone
-import ru.practicum.android.diploma.search.domain.models.Salary
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DefaultFragment
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.vacancy.presentation.view_model.VacancyDetailsViewModel
-import ru.practicum.android.diploma.search.domain.models.Vacancy
-import java.text.NumberFormat
-import java.util.Currency
-import java.util.Locale
-
-
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_VACANCY = "vacancy_model"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Vacancy.newInstance] factory method to
- * create an instance of this fragment.
- */
+import ru.practicum.android.diploma.util.SalaryUtil
+import ru.practicum.android.diploma.vacancy.presentation.PhonesAdapter
 
 class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
     private val vacancyDetailsViewModel by viewModel<VacancyDetailsViewModel>()
-
-    private var vacancyId: String? = null
-    private var vacancy: Vacancy? = null
     private var paramVacancyId: String? = null
     private var isClickAllowed = true
+    private var phonesAdapter: PhonesAdapter? = null
+    lateinit var onItemClickDebounce: (Phone) -> Unit
 
     override fun bindingInflater(
         inflater: LayoutInflater,
@@ -75,9 +60,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vacancyDetailsViewModel.screenState.collect {
-                    Log.d("VAC state", it.toString())
                     updateUI(it)
-
                 }
             }
         }
@@ -93,8 +76,9 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
     private fun updateUI(state: VacancyDetailsScreenState) {
         when (state) {
             is VacancyDetailsScreenState.Loading -> showLoading()
-            is VacancyDetailsScreenState.Content -> showContent(state.foundVacancy)
+            is VacancyDetailsScreenState.Content -> showContent(state.foundVacancy, state.favoriteStatus)
             is VacancyDetailsScreenState.Error -> showError()
+            is VacancyDetailsScreenState.SimilarVacanciesButtonState -> changeButtonVisibility(state.visibility)
         }
     }
 
@@ -104,27 +88,24 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 findNavController().popBackStack()
             }
 
-            /*ibShare.setOnClickListener {
-                if (vacancy != null) {
-                    vacancyDetailsViewModel.shareVacancy(vacancy?.logoUrl)
-                }
+            ibShare.setOnClickListener {
+                val vacancy = vacancyDetailsViewModel.currentVacancy.value
+                if (clickDebounce() && vacancy?.alternateUrl != null)
+                    vacancyDetailsViewModel.shareVacancy(vacancy.alternateUrl)
             }
 
             ibFavorite.setOnClickListener {
+                val vacancy = vacancyDetailsViewModel.currentVacancy.value
                 if (vacancy != null) {
                     vacancyDetailsViewModel.onFavoriteClicked(vacancy)
                 }
             }
 
-            tvPhoneNumberValue.setOnClickListener {
-                if (clickDebounce() && vacancy?.contacts?.phones != null)
-                    vacancyDetailsViewModel.makeCall(tvPhoneNumberValue.text.toString())
-            }
-
             tvContactEmailValue.setOnClickListener {
+                val vacancy = vacancyDetailsViewModel.currentVacancy.value
                 if (clickDebounce() && vacancy?.contacts?.email != null)
-                    vacancyDetailsViewModel.openEmail(vacancy?.contacts?.email)
-            }*/
+                    vacancyDetailsViewModel.openEmail(vacancy.contacts.email)
+            }
 
             tvSimilarVacanciesButton.setOnClickListener {
                 findNavController().navigate(R.id.action_to_similar, Bundle().apply {
@@ -140,12 +121,12 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         findNavController().popBackStack()
     }
 
-
     private fun showLoading() {
         binding.apply {
             ProgressBar.isVisible = true
             ivPlaceholderServerError.isVisible = false
             tvPlaceholderServerError.isVisible = false
+            ibFavorite.isClickable = false
             tvVacancyName.isVisible = false
             tvSalary.isVisible = false
             EmployerCard.isVisible = false
@@ -158,6 +139,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             ivPlaceholderServerError.isVisible = true
             tvPlaceholderServerError.isVisible = true
             ProgressBar.isVisible = false
+            ibFavorite.isClickable = false
             tvVacancyName.isVisible = false
             tvSalary.isVisible = false
             EmployerCard.isVisible = false
@@ -165,49 +147,56 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         }
     }
 
-    private fun showContent(vacancy: Vacancy?) {
+    private fun showContent(vacancy: Vacancy?, isFavotite: Boolean) {
         binding.apply {
             ivPlaceholderServerError.isVisible = false
             tvPlaceholderServerError.isVisible = false
             ProgressBar.isVisible = false
+            ibFavorite.isClickable = true
             tvVacancyName.isVisible = true
             tvSalary.isVisible = true
             EmployerCard.isVisible = true
             VacancyDetails.isVisible = true
             fillVacancyDetails(vacancy)
+
+            if (isFavotite) ibFavorite.setImageResource(R.drawable.ic_vacancy_favorite_red)
+            else ibFavorite.setImageResource(R.drawable.ic_vacancy_favorite)
         }
     }
 
     private fun fillVacancyDetails(vacancy: Vacancy?) {
 
-        Log.d("VAC logo url", vacancy?.logoUrl.toString())
-
         binding.apply {
 
             tvVacancyName.text = vacancy?.vacancyName
 
-            tvSalary.text = formSalary(vacancy?.salary)
+            tvSalary.text = SalaryUtil.formSalary(vacancy?.salary, requireContext())
+
+            val roundCorners = RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy))
+            val options = RequestOptions().transform(CenterInside(), roundCorners)
 
             Glide.with(requireContext())
                 .load(vacancy?.logoUrl)
-                .placeholder(R.drawable.placeholder_employer_logo)
-                .centerCrop()
-                .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corners_radius_art_work_vacancy)))
+                .placeholder(R.drawable.logo_placeholder)
+                .apply(options)
                 .into(ivEmployerLogo)
 
             tvEmployerName.text = vacancy?.companyName
 
-            tvCity.text = vacancy?.city
+            tvCity.text = if (vacancy?.address.isNullOrEmpty()) vacancy?.city else vacancy?.address
 
             tvRequiredExperienceValue.text = vacancy?.experience
 
-            tvEmploymentAndShedule.text = vacancy?.employment
+            val employmentAndSchedule =
+                StringBuilder().append(vacancy?.employment).append(", ").append(vacancy?.schedule)
+                    .toString()
+            tvEmploymentAndShedule.text = employmentAndSchedule
 
             tvVacancyDescriptionValue.text =
                 vacancy?.description?.let {
                     HtmlCompat.fromHtml(
-                        it,
-                        FROM_HTML_MODE_COMPACT
+                        vacancy.description.addSpacesBetweenParagraphs(),
+                        FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
                     )
                 }
 
@@ -217,7 +206,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             } else {
                 var keySkills = ""
                 vacancy?.keySkills?.forEach { keySkill ->
-                    keySkills += "• ${keySkill}\n"
+                    keySkills += "•  ${keySkill}\n"
                 }
                 tvKeySkillsValue.text = keySkills
             }
@@ -229,67 +218,40 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             ) {
                 ContactsContainer.isVisible = true
             }
+
             if (vacancy?.contacts?.name?.isNotEmpty() == true) {
                 tvContactPersonValue.text = vacancy.contacts.name
                 tvContactPerson.isVisible = true
                 tvContactPersonValue.isVisible = true
             }
+
             if (vacancy?.contacts?.email?.isNotEmpty() == true) {
                 tvContactEmailValue.text = vacancy.contacts.email
                 tvContactEmail.isVisible = true
                 tvContactEmailValue.isVisible = true
             }
 
-            tvCommentValue.text = vacancy?.comment
+            if (vacancy?.contacts?.phones?.isNotEmpty() == true) {
+                tvPhoneNumber.isVisible = true
+                if (clickDebounce()) {
+                    setPhonesAdapter(vacancy)
+                }
+            }
 
-        }
-    }
-
-    private fun formSalary(salary: Salary?): String {
-        salary ?: return requireContext().getString(R.string.salary_not_indicated)
-
-        return when {
-            salary.from != null && salary.to != null && salary.currency != null ->
-                requireContext().getString(
-                    R.string.salary_from_to,
-                    formatNumberWithSpaces(salary.from),
-                    formatNumberWithSpaces(salary.to),
-                    getCurrencySymbol(salary.currency)
-                )
-
-            salary.from != null && salary.currency != null ->
-                requireContext().getString(
-                    R.string.salary_from,
-                    formatNumberWithSpaces(salary.from),
-                    getCurrencySymbol(salary.currency)
-                )
-
-            salary.to != null && salary.currency != null ->
-                requireContext().getString(
-                    R.string.salary_to,
-                    formatNumberWithSpaces(salary.to),
-                    getCurrencySymbol(salary.currency)
-                )
-
-            else -> requireContext().getString(R.string.salary_not_indicated)
-        }
-    }
-
-    private fun formatNumberWithSpaces(number: Int): String {
-        val formatter = NumberFormat.getNumberInstance(Locale.FRENCH)
-        return formatter.format(number)
-    }
-
-    private fun getCurrencySymbol(currencyCode: String): String {
-        return if (currencyCode == "RUR" || currencyCode == "RUB") {
-            "₽"
-        } else {
-            try {
-                Currency.getInstance(currencyCode).symbol
-            } catch (e: IllegalArgumentException) {
-                currencyCode
+            if (vacancy?.comment?.isNotEmpty() == true) {
+                tvCommentValue.text = vacancy.comment
+                tvComment.isVisible = true
+                tvCommentValue.isVisible = true
             }
         }
+    }
+
+    private fun String.addSpacesBetweenParagraphs(): String {
+        return this.replace(Regex("<li>\\s<p>|<li>"), "<li>\u00A0")
+    }
+
+    private fun changeButtonVisibility(visibility: Boolean) {
+        binding.tvSimilarVacanciesButton.isVisible = visibility
     }
 
     private fun clickDebounce(): Boolean {
@@ -297,29 +259,24 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
         if (isClickAllowed) {
             isClickAllowed = false
             viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }
         return current
     }
 
-    private fun changeFavoriteIcon(isFavorite: Boolean) {
-        if (isFavorite) {
-            binding.ibFavorite.setImageResource(R.color.red)
+    private fun setPhonesAdapter(vacancy: Vacancy) {
+        phonesAdapter = vacancy.contacts?.phones?.let {
+            PhonesAdapter(it) { phone -> onItemClickDebounce(phone) }
         }
+
+        onItemClickDebounce = { phone -> vacancyDetailsViewModel.makeCall(phone) }
+
+        binding.phonesList.adapter = phonesAdapter
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param vacancyModel Vacancy model
-         * @return A new instance of fragment Vacancy.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
         fun newInstance(vacancyId: String) =
             Vacancy().apply {
                 arguments = Bundle().apply {
@@ -327,6 +284,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 }
             }
 
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+        const val ARG_VACANCY = "vacancy_model"
     }
 }

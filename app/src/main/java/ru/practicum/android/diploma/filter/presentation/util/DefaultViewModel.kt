@@ -5,14 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.filter.domain.models.AbstractData
 import ru.practicum.android.diploma.filter.domain.models.AreaData
-import ru.practicum.android.diploma.filter.domain.models.RoleData
 
 open class DefaultViewModel : ViewModel() {
     protected val mutableErrorMsg = MutableLiveData<String>()
@@ -30,49 +32,79 @@ open class DefaultViewModel : ViewModel() {
 
     protected val fullDataList = mutableListOf<AbstractData>()
 
-    protected var searchInputText = String()
+    private var searchInputText = String()
+
+    private var searchJob: Job? = null
 
     fun areaToAbstract(area: AreaData) = AbstractData(area.id, area.name)
 
-    fun roleToAbstract(role: RoleData) = AbstractData(role.id, role.name)
-
     fun selectItemInDataList(selectedData: AbstractData) {
-        //val activeList = searchInputData(searchInputText)
-        viewModelScope.launch {
-            val activeList = asyncSearchInputText(searchInputText).await()
+        viewModelScope.launch(Dispatchers.IO) {
+            // Сравнение производим со списком в recycler для избежания ситуации, когда после выделения
+            // пользователь ввел фильтрующий запрос, и список был изменен
+            val activeList = fullDataList
 
             if (activeList.isNotEmpty()) {
-                val selectedItemIndex = activeList.indexOf(selectedData) // Поиск позиции в списке
+                // Поиск позиции в списке
+                val selectedItemIndex = activeList.indexOfFirst { it == selectedData }
+
                 if (selectedItemIndex != -1) {
-                    // Снимаем выделение с предыдущего выделенного элемента
+                    // Если выбранный элемент найден в листе,
+                    // снимаем выделение с предыдущего выделенного элемента
                     previouslySelectedItemPos?.let {
-                        val prevSelItemPos = activeList.indexOf(it)
-                        if(prevSelItemPos!=-1){
+                        // Если до этого существовал выделенный элемент, ищем его в обновленном списке
+                        val prevSelItemPos = activeList.indexOfFirst { data -> data == it }
+
+                        // Если элемент присутствует в списке, снимаем выделение
+                        if (prevSelItemPos != -1) {
                             activeList[prevSelItemPos].isSelected = false
-                            _itemPosToUpdate.value = prevSelItemPos
+                            withContext(Dispatchers.Main) {
+                                _itemPosToUpdate.value = prevSelItemPos
+                            }
+
                         }
                     }
 
                     // Устанавливаем выделение на выбранный элемент
-                    activeList[selectedItemIndex].isSelected = true
-                    _itemPosToUpdate.value = selectedItemIndex
+                    activeList[selectedItemIndex].apply {
+                        isSelected = true
+                        previouslySelectedItemPos = this
+                    }
+                    withContext(Dispatchers.Main) {
+                        _itemPosToUpdate.value = selectedItemIndex
+                    }
 
-                    previouslySelectedItemPos = selectedData
                 }
             }
         }
     }
 
-    fun searchInputData(inputText: CharSequence?) {
+    fun txtSearchChanged(inputText: CharSequence?) {
         this.searchInputText = inputText.toString()
+        searchJob?.cancel()
+        if (_screenState.value != ScreenState.Error(null)) {
+            startSearching()
+        }
+    }
+
+
+    private fun searchInputData(inputText: CharSequence?) {
         if (inputText.isNullOrBlank()) {
             changeRecyclerContent(fullDataList)
         } else {
             viewModelScope.launch {
-                changeRecyclerContent(fullDataList.filter {
-                    it.name.contains(other = inputText, ignoreCase = true)
-                })
+                val filteredList = withContext(Dispatchers.Default) {
+                    fullDataList.filter { it.name.contains(other = inputText, ignoreCase = true) }
+                }
+                changeRecyclerContent(filteredList)
             }
+        }
+    }
+
+    private fun startSearching() {
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DELAY_mills)
+            searchInputData(searchInputText)
         }
     }
 
@@ -81,16 +113,8 @@ open class DefaultViewModel : ViewModel() {
         else _screenState.value = ScreenState.Content(list)
     }
 
-    suspend fun asyncSearchInputText(inputText: CharSequence?): Deferred<List<AbstractData>> =
-        viewModelScope.async {
-            searchInputText = inputText.toString()
-            return@async if (inputText.isNullOrBlank()) {
-                fullDataList
-            } else {
-                fullDataList.filter {
-                    it.name.contains(other = inputText, ignoreCase = true)
-                }
-            }
-        }
-}
 
+    companion object {
+        const val SEARCH_DELAY_mills = 150L
+    }
+}

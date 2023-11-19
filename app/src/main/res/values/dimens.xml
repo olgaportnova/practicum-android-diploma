@@ -6,45 +6,59 @@
     <dimen name="recycle_margin_start_end">16dp</dimen>
     <dimen name="recycle_art_work_size">48dp</dimen>
     <dimen name="recycle_text_margin_start">12dp</dimen>
-
     <dimen name="edit_text_paddings_vertical">16dp</dimen>
     <dimen name="edit_text_margin_horizontal">16dp</dimen>
     <dimen name="edit_text_margin_vertical">8dp</dimen>
-
     <dimen name="info_count_paddings_vertical">4dp</dimen>
     <dimen name="info_count_padding_horizontal">12dp</dimen>
     <dimen name="info_count_margin_top">11dp</dimen>
-
     <dimen name="recycle_whole_margin_top">8dp</dimen>
-
     <dimen name="placeholder_image_margin_top">151dp</dimen>
     <dimen name="placeholder_text_margin_top">16dp</dimen>
-
     <dimen name="margin_start_toolbar">16dp</dimen>
-
     <dimen name="progress_bar_size">48dp</dimen>
-
     <dimen name="regular_text_size">16sp</dimen>
     <dimen name="big_text_size">22sp</dimen>
     <dimen name="super_big_text_size">32sp</dimen>
     <dimen name="corners_radius_art_work_vacancy">12dp</dimen>
-
-
+    <dimen name="height_divider">1dp</dimen>
+    <dimen name="padding_logo">1dp</dimen>
 
     <!--    VACANCY FRAGMENT     -->
     <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_64">64dp</dimen>
     <dimen name="margin_32">32dp</dimen>
     <dimen name="margin_59">59dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_17">17dp</dimen>
     <dimen name="margin_16">16dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
     <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_6">6dp</dimen>
+    <dimen name="margin_4">4dp</dimen>
+    <dimen name="margin_0">0dp</dimen>
     <dimen name="margin_20">20dp</dimen>
     <dimen name="bold_text_size">32sp</dimen>
 
     <!--    WORKPLACE FRAGMENT     -->
-    <dimen name="work_place_icon_padding">12dp</dimen>
+    <dimen name="work_place_icon_padding_horizontal">16dp</dimen>
+    <dimen name="work_place_icon_padding_vertical">13dp</dimen>
     <dimen name="work_place_distance_after_toolbar">22dp</dimen>
     <dimen name="work_place_info_margin_start">16dp</dimen>
     <dimen name="work_place_lbl_top_margin">6dp</dimen>
+    <dimen name="recycle_top_search_screen_margin">38dp</dimen>
+
+    <!--    FILTER FRAGMENT     -->
+    <dimen name="filters_icon_padding">12dp</dimen>
+    <dimen name="filters_distance_after_toolbar">22dp</dimen>
+    <dimen name="filters_margin_start">16dp</dimen>
+    <dimen name="filters_lbl_top_margin">24dp</dimen>
+    <dimen name="filters_search_screen_margin">38dp</dimen>
+    <dimen name="filters_decline_btn_padding">20dp</dimen>
+    <dimen name="filters_txt_size">16sp</dimen>
+    <dimen name="filters_small_txt_size">12sp</dimen>
+    <dimen name="height_0_dp">0dp</dimen>
+    <dimen name="icon_padding_filters">17dp</dimen>
+
 </resources>

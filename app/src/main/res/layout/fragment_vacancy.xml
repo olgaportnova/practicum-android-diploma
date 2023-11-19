@@ -33,9 +33,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:navigationIconTint="@color/navigation_icon_color"
             app:title="@string/vacancy_fragment_title"
-            app:titleTextAppearance="@style/ToolbarTitleText"
-            app:titleTextColor="@color/black_text">
+            app:titleTextAppearance="@style/ToolbarTitleText">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_24"
             android:fontFamily="@font/ys_display_bold"
-            android:textColor="@color/black_text"
+            android:textColor="?attr/colorSecondary"
             android:textSize="@dimen/bold_text_size"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
@@ -100,7 +100,7 @@
                 android:id="@+id/ivEmployerLogo"
                 android:layout_width="@dimen/recycle_art_work_size"
                 android:layout_height="@dimen/recycle_art_work_size"
-                android:src="@drawable/placeholder_employer_logo"
+                android:src="@drawable/logo_placeholder"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,6 +112,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ivEmployerLogo"
                 app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/black_text"
                 tools:text="Едаааааааааааааааааааааааааааааааааааааааааааааааа" />
 
             <TextView
@@ -121,6 +122,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tvEmployerName"
                 app:layout_constraintTop_toBottomOf="@id/tvEmployerName"
+                android:textColor="@color/black_text"
                 tools:text="Москваааааааааааааааааааааааааааааааааааааааааааа" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -191,7 +193,6 @@
                 android:id="@+id/KeySkillsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
                 app:layout_constraintTop_toBottomOf="@id/tvVacancyDescriptionValue">
 
                 <TextView
@@ -217,9 +218,9 @@
                 android:id="@+id/ContactsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/KeySkillsContainer">
+                app:layout_constraintTop_toBottomOf="@id/KeySkillsContainer"
+                tools:visibility="visible">
 
                 <TextView
                     android:id="@+id/tvContacts"
@@ -235,6 +236,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/contact_person"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContacts" />
 
                 <TextView
@@ -242,6 +244,7 @@
                     style="@style/item_viewholder_regular_text"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/info_count_paddings_vertical"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactPerson"
                     tools:text="Ирина" />
 
@@ -252,6 +255,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/contact_email"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactPersonValue" />
 
                 <TextView
@@ -260,6 +264,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/info_count_paddings_vertical"
                     android:textColor="@color/blue_main"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactEmail"
                     tools:text="i.lozgkina@yandex.ru" />
 
@@ -270,16 +275,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/contact_phone"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvContactEmailValue" />
 
-                <TextView
-                    android:id="@+id/tvPhoneNumberValue"
-                    style="@style/item_viewholder_regular_text"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/phonesList"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/info_count_paddings_vertical"
-                    android:textColor="@color/blue_main"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber"
-                    tools:text="+7 (904) 329-27-71" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_viewholder_phone"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tvComment"
@@ -288,13 +298,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/placeholder_text_margin_top"
                     android:text="@string/comment"
-                    app:layout_constraintTop_toBottomOf="@id/tvPhoneNumberValue" />
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/phonesList" />
 
                 <TextView
                     android:id="@+id/tvCommentValue"
                     style="@style/item_viewholder_regular_text"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/info_count_paddings_vertical"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tvComment"
                     tools:text="Заполнить анкету по форме можно на нашем сайте" />
 
@@ -318,7 +330,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/navigationBar"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <ImageView
             android:id="@+id/ivPlaceholderServerError"
@@ -330,7 +342,7 @@
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@id/navigationBar"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/tvPlaceholderServerError"
@@ -341,7 +353,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivPlaceholderServerError"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

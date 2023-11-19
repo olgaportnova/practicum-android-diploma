@@ -11,6 +11,8 @@ import ru.practicum.android.diploma.search.data.dto.models.VacancyDto
 interface NetworkClient {
     suspend fun getAreas(): ResponseWrapper<List<CountryDto>>
 
+    suspend fun getAreaTree():ResponseWrapper<List<AreaDto>>
+
     suspend fun getDistricts(request: RequestWrapper<Int>): ResponseWrapper<AreaDto>
 
     suspend fun getVacancies(request: RequestWrapper<HashMap<String, Any>>): ResponseWrapper<AnswerVacancyListDto>

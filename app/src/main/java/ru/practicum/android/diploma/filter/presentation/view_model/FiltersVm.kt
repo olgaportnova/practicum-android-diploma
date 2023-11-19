@@ -1,40 +1,134 @@
 package ru.practicum.android.diploma.filter.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.practicum.android.diploma.filter.domain.interfaces.FiltersController
 import ru.practicum.android.diploma.filter.domain.models.FilterData
-import ru.practicum.android.diploma.filter.presentation.util.ScreenState
+import ru.practicum.android.diploma.filter.presentation.fragment.ScreenFiltersState
 
 class FiltersVm(private val filtersController: FiltersController) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading(null))
-    val screenState = _screenState as StateFlow<ScreenState>
+    private val _screenState =
+        MutableStateFlow<ScreenFiltersState>(ScreenFiltersState.Loading(null))
+    val screenState = _screenState as StateFlow<ScreenFiltersState>
+
+    private val defaultFilterSet = filtersController.getDefaultSettings()
+    private var oldFiltersSet = defaultFilterSet.copy()
+    private var newFilterSet = defaultFilterSet.copy()
+
+    var userInput = false
 
 
-    fun loadFilterSet(){
-        val fSet = filtersController.getFilterSettings()
-        Log.e("Log",fSet.toString())
-
-        if (fSet == null) safeDefaultFilter()
-        else _screenState.value = ScreenState.FilterSettings(fSet)
+    init {
+        loadFilterSet()
     }
 
-    private fun safeDefaultFilter() {
-        val defaultSettings = FilterData(
-            idCountry = "-1",
-            idArea = "-1",
-            idIndustry = "-1",
-            nameCountry = null,
-            nameArea = null,
-            nameIndustry = null,
-            currency = null,
-            salary = -1,
-            onlyWithSalary = false,
-        )
-        filtersController.saveFilterSettings(defaultSettings)
-        _screenState.value = ScreenState.FilterSettings(defaultSettings)
+    private fun loadFilterSet() {
+        // Загружаем данные из SharedPrefs
+        oldFiltersSet = filtersController.getFilterSettings()
+        newFilterSet = oldFiltersSet.copy()
+
+        // Invalidate screen
+        _screenState.value =
+            ScreenFiltersState.Content(oldFiltersSet, compareFilters(), compareFiltersWithDefault())
+    }
+
+    fun getFilters() = newFilterSet
+
+    fun setNewSalaryToFilter(incomeStr: CharSequence?): String? {
+        if (incomeStr.isNullOrEmpty()) {
+            newFilterSet = newFilterSet.copy(salary = null)
+            // Invalidate screen (to update accept_button visibility
+            _screenState.value = ScreenFiltersState.Content(
+                newFilterSet,
+                compareFilters(),
+                compareFiltersWithDefault()
+            )
+            return ""
+        }
+
+        val newSalary = incomeStr.toString().toIntOrNull()
+
+        return if (newSalary !== null && newSalary >= 0) {
+            // if inputSalary is correct, save salary in new filter set
+            newFilterSet = newFilterSet.copy(salary = newSalary)
+
+            // Invalidate screen (to update accept_button visibility
+            _screenState.value = ScreenFiltersState.Content(
+                newFilterSet,
+                compareFilters(),
+                compareFiltersWithDefault()
+            )
+
+            newFilterSet.salary.toString()
+        } else {
+            if (newFilterSet.salary != null) return newFilterSet.salary.toString()
+            else return ""
+        }
+    }
+
+    fun setWithSalaryParam(isChecked: Boolean) {
+        newFilterSet = newFilterSet.copy(onlyWithSalary = isChecked)
+
+        // Invalidate screen
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
+    }
+
+    fun updateFiltersWithRemote(receivedFilterSettings: FilterData) {
+        this.newFilterSet = receivedFilterSettings
+
+        // Invalidate screen
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
+    }
+
+    private fun compareFilters(): Boolean {
+        return oldFiltersSet != newFilterSet
+    }
+
+    private fun compareFiltersWithDefault(): Boolean {
+        return defaultFilterSet != newFilterSet
+    }
+
+
+    fun saveNewFilterSet() {
+        filtersController.saveFilterSettings(newFilterSet)
+
+        oldFiltersSet = newFilterSet.copy()
+
+        // Invalidate screen
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
+    }
+
+    fun clearWorkPlace() {
+        newFilterSet =
+            newFilterSet.copy(idCountry = null, idArea = null, nameCountry = null, nameArea = null)
+
+        // Invalidate screen
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
+    }
+
+    fun clearIndustry() {
+        newFilterSet = newFilterSet.copy(idIndustry = null, nameIndustry = null)
+
+        // Invalidate screen
+        _screenState.value =
+            ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
+    }
+
+    fun abortFilters() {
+        newFilterSet = defaultFilterSet.copy()
+        oldFiltersSet = defaultFilterSet.copy()
+        filtersController.saveFilterSettings(newFilterSet)
+
+        // Invalidate screen
+        userInput = true
+        _screenState.value =
+            ScreenFiltersState.Content(oldFiltersSet, compareFilters(), compareFiltersWithDefault())
     }
 }
+

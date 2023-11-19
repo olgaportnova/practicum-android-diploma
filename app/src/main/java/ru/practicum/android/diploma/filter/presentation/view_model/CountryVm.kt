@@ -13,10 +13,8 @@ class CountryVm(private val areaController: AreaController) : DefaultViewModel()
         loadCountryList()
     }
 
-    fun loadCountryList() {
+    private fun loadCountryList() {
         viewModelScope.launch {
-            //Данные названия не менял на getAreas и getDistricts соответственно. Можно поменять.
-
             areaController.loadCountries().collect {
                 when (it) {
                     is DataStatus.Loading -> _screenState.value = ScreenState.Loading(null)
@@ -24,6 +22,7 @@ class CountryVm(private val areaController: AreaController) : DefaultViewModel()
                         val countryList = it.data!!.map { area -> areaToAbstract(area) }
                         changeRecyclerContent(countryList)
                     }
+                    is DataStatus.NoConnecting -> _screenState.value = ScreenState.Error(errorMsg.toString())
                     else -> {}
                 }
             }

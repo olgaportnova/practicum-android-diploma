@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.favorite.recycle_view
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -30,11 +31,31 @@ class VacancyAdapter(
         fun onItemClick(vacancy: Vacancy)
     }
 
-    fun updateList(newVacancyList: List<Vacancy>) {
-        val diffResult = DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))
-        vacancyList.clear()
-        vacancyList.addAll(newVacancyList)
-        diffResult.dispatchUpdatesTo(this)
+    @SuppressLint("SuspiciousIndentation")
+    fun updateList(
+        newVacancyList: List<Vacancy>,
+        isPagination: Boolean = false,
+    ) {
+        if (isPagination) {
+            val newListForCompare = vacancyList.map { it } as ArrayList<Vacancy>
+            newListForCompare.addAll(newVacancyList)
+            vacancyList.addAll(newVacancyList)
+            val diffResult =
+                DiffUtil.calculateDiff(
+                    VacancyDiffCallback(
+                        vacancyList,
+                        newListForCompare as List<Vacancy>
+                    )
+                )
+            diffResult.dispatchUpdatesTo(this)
+        } else {
+            val diffResult =
+                DiffUtil.calculateDiff(VacancyDiffCallback(vacancyList, newVacancyList))
+
+            vacancyList.clear()
+            vacancyList.addAll(newVacancyList)
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
 }

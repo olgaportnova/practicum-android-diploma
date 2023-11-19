@@ -1,25 +1,32 @@
 package ru.practicum.android.diploma.vacancy.presentation.view_model
 
-import android.app.Application
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.favorite.domain.FavoriteInteractor
+import ru.practicum.android.diploma.search.domain.models.Phone
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DataStatus
+import ru.practicum.android.diploma.vacancy.domain.interactor.SharingInteractor
 import ru.practicum.android.diploma.vacancy.domain.interactor.VacancyDetailsInteractor
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailsScreenState
 
 class VacancyDetailsViewModel(
-    private val application: Application,
-    private val vacancyDetailsInteractor: VacancyDetailsInteractor
+    private val vacancyDetailsInteractor: VacancyDetailsInteractor,
+    private val favoriteInteractor: FavoriteInteractor,
+    private val sharingInteractor: SharingInteractor,
 ) : ViewModel() {
 
     private val _screenState =
         MutableStateFlow<VacancyDetailsScreenState>(VacancyDetailsScreenState.Loading)
     val screenState = _screenState as StateFlow<VacancyDetailsScreenState>
+
+    private val _currentVacancy = MutableLiveData<Vacancy?>(null)
+    val currentVacancy = _currentVacancy as LiveData<Vacancy?>
 
     fun getVacancyDetails(vacancyId: String) {
         viewModelScope.launch {
@@ -28,12 +35,19 @@ class VacancyDetailsViewModel(
                     is DataStatus.Loading -> _screenState.value = VacancyDetailsScreenState.Loading
 
                     is DataStatus.Content -> {
-                        _screenState.value =
-                            VacancyDetailsScreenState.Content(it.data!!)
-                        Log.d("VAC found", it.data.toString())
+                        _currentVacancy.value = it.data
+                        val isFavorite = isVacancyFavorite(vacancyId)
+                        _screenState.value = VacancyDetailsScreenState.SimilarVacanciesButtonState(true)
+                        _screenState.value = VacancyDetailsScreenState.Content(it.data!!, isFavorite)
                     }
 
-                    is DataStatus.NoConnecting -> _screenState.value = VacancyDetailsScreenState.Error
+                    is DataStatus.NoConnecting -> {
+                        if (isVacancyFavorite(vacancyId)) {
+                            getVacancyFromDb(vacancyId.toInt())
+                            _screenState.value = VacancyDetailsScreenState.SimilarVacanciesButtonState(false)
+                        } else
+                            _screenState.value = VacancyDetailsScreenState.Error
+                    }
 
                     is DataStatus.Error -> _screenState.value = VacancyDetailsScreenState.Error
 
@@ -43,27 +57,53 @@ class VacancyDetailsViewModel(
         }
     }
 
-    /*fun shareVacancy(vacancyUrl: String) {
-        sharingInteractor.shareVacancy(vacancyUrl)
+    private fun getVacancyFromDb(vacancyId: Int) {
+        viewModelScope.launch {
+            val vacancyFromDb = favoriteInteractor.getFavouriteVacancyById(vacancyId)
+            _currentVacancy.value = vacancyFromDb
+            _screenState.value = VacancyDetailsScreenState.Content(
+                foundVacancy = vacancyFromDb,
+                favoriteStatus = true
+            )
+        }
+    }
+
+    private suspend fun isVacancyFavorite(vacancyId: String): Boolean {
+        return favoriteInteractor.doesVacancyInFavoriteList(vacancyId.toInt())
     }
 
     fun onFavoriteClicked(vacancy: Vacancy) {
         viewModelScope.launch {
-            val newFavoriteStatus = if (!vacancy.isFavorite) {
-                favoriteInteractor.insertVacancyToFavoriteList(vacancy)
-                true
+            val vacancyId = vacancy.id
+            val favoriteStatus = isVacancyFavorite(vacancyId.toString())
+
+            if (favoriteStatus) {
+                vacancy.let { favoriteInteractor.deleteVacancyFromFavoriteList(it) }
+                _screenState.value = VacancyDetailsScreenState.Content(
+                    foundVacancy = vacancy,
+                    favoriteStatus = false
+                )
+
             } else {
-                favoriteInteractor.deleteVacancyFromFavoriteList(vacancy)
-                false
+                vacancy.let { favoriteInteractor.insertVacancyToFavoriteList(it) }
+                _screenState.value = VacancyDetailsScreenState.Content(
+                    foundVacancy = vacancy,
+                    favoriteStatus = true
+                )
             }
-
-            _screenState.value = newFavoriteStatus
-
         }
     }
 
-    suspend fun isVacancyFavorite(vacancyId: String): Boolean {
-        favoriteInteractor.doesVacancyInFavoriteList()
-    }*/
+    fun shareVacancy(vacancyUrl: String) {
+        sharingInteractor.shareVacancy(vacancyUrl)
+    }
+
+    fun openEmail(email: String) {
+        sharingInteractor.openEmail(email)
+    }
+
+    fun makeCall(phone: Phone) {
+        sharingInteractor.makeCall(phone)
+    }
 
 }

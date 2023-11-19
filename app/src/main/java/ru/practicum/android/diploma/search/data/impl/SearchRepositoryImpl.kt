@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.data.mappers.FilterConverter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.hhApi.NetworkClient
@@ -33,38 +32,37 @@ class SearchRepositoryImpl(
 
         return flow {
 
-            emit(DataStatus.Loading())
-
             val mapped = QuerySearchMapper.qrSearchMdlToQrSearchMdlDto(searchRequest)
             val response = networkClient.getVacancies(RequestWrapper(createQueryMap(mapped)))
 
             when (response.code) {
-               NO_CONNECT -> {
-                   emit(DataStatus.NoConnecting())
-               }
-               QUERY_DONE -> {
-                   if(response.data == null || response.data.found == 0 || response.data.listVacancy.isEmpty()){
-                       emit(DataStatus.EmptyContent())
-                   }
-                   else{
-                       emit(DataStatus.Content(AnswerSearchDtoMapper.answSearchDtoInSearch(response.data)))
-                   }
-               }
-                else->{
+                NO_CONNECT -> {
+                    emit(DataStatus.NoConnecting())
+                }
+
+                QUERY_DONE -> {
+                    if (response.data == null || response.data.found == 0 || response.data.listVacancy.isEmpty()) {
+                        emit(DataStatus.EmptyContent())
+                    } else {
+                        emit(DataStatus.Content(AnswerSearchDtoMapper.answSearchDtoInSearch(response.data)))
+                    }
+                }
+
+                else -> {
                     emit(DataStatus.Error(response.code))
                 }
             }
 
         }.catch { emit(DataStatus.Error()) }
-         .flowOn(Dispatchers.IO)
+            .flowOn(Dispatchers.IO)
     }
 
 
     override fun getParamsFilters(): FilterData? {
         val params = filtersStorage.getParamsFilters()
 
-        if(params != null)
-          return FilterConverter().convertFromDto(params)
+        if (params != null)
+            return FilterConverter().convertFromDto(params)
         else return null
     }
 

@@ -5,11 +5,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/item_viewholder_main_layout">
 
-    <ImageView
-        android:id="@+id/art_work"
-        tools:src="@tools:sample/avatars"
-        android:background="@drawable/background_for_art_work"
-        style="@style/art_work_vacancy" />
+    <FrameLayout
+        style="@style/art_work_vacancy"
+        android:background="@drawable/background_for_art_work">
+
+        <ImageView
+            android:id="@+id/art_work"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:padding="@dimen/padding_logo"
+            android:src="@drawable/logo_placeholder" />
+    </FrameLayout>
 
     <LinearLayout
         style="@style/item_viewholder_text_layout">

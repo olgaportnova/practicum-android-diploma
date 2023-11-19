@@ -9,7 +9,7 @@
         android:id="@+id/search"
         android:name="ru.practicum.android.diploma.search.presentation.fragment.Search"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_to_filters"
             app:destination="@id/filters" />
@@ -27,11 +27,13 @@
             android:id="@+id/action_favourite_to_vacancy"
             app:destination="@id/vacancy" />
     </fragment>
+
     <fragment
         android:id="@+id/crew"
         android:name="ru.practicum.android.diploma.team.presentation.Crew"
         android:label="CrewFragment"
-        tools:layout="@layout/fragment_crew"/>
+        tools:layout="@layout/fragment_crew" />
+
     <fragment
         android:id="@+id/filters"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.Filters"
@@ -49,7 +51,7 @@
         android:id="@+id/workPlace"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.WorkPlace"
         android:label="fragment_work_place"
-        tools:layout="@layout/fragment_work_place" >
+        tools:layout="@layout/fragment_work_place">
         <action
             android:id="@+id/action_to_district"
             app:destination="@id/district" />
@@ -58,12 +60,12 @@
             app:destination="@id/country" />
     </fragment>
 
-
     <fragment
         android:id="@+id/district"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.District"
         android:label="District"
-        tools:layout="@layout/fragment_district"/>
+        tools:layout="@layout/fragment_district" />
+
     <fragment
         android:id="@+id/vacancy"
         android:name="ru.practicum.android.diploma.vacancy.presentation.fragment.Vacancy"
@@ -73,19 +75,26 @@
             android:id="@+id/action_to_similar"
             app:destination="@id/similar" />
     </fragment>
+
     <fragment
         android:id="@+id/similar"
         android:name="ru.practicum.android.diploma.similar.presentation.fragment.Similar"
         android:label="fragment_similar"
-        tools:layout="@layout/fragment_similar" />
+        tools:layout="@layout/fragment_similar">
+        <action
+            android:id="@+id/action_similar_to_vacancy"
+            app:destination="@id/vacancy" />
+    </fragment>
+
     <fragment
         android:id="@+id/country"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.Country"
         android:label="Country"
-        tools:layout="@layout/fragment_district"/>
+        tools:layout="@layout/fragment_district" />
+
     <fragment
         android:id="@+id/industry"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.Industry"
         android:label="Industry"
-        tools:layout="@layout/fragment_district"/>
+        tools:layout="@layout/fragment_district" />
 </navigation>

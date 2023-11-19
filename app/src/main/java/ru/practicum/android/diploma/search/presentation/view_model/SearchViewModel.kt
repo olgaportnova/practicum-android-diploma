@@ -1,83 +1,93 @@
 package ru.practicum.android.diploma.search.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.search.domain.SearchInteractor
-import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
-import ru.practicum.android.diploma.search.presentation.states.StateFilters
+import ru.practicum.android.diploma.search.presentation.states.StateSearch
 import ru.practicum.android.diploma.util.DataStatus
 
-class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
+class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_ML = 2000L
     }
 
-
-    val _stateFilters = MutableStateFlow<StateFilters>(StateFilters.NoUseFilters)
-    val stateFilters = _stateFilters as StateFlow<StateFilters>
-
-    val _stateSearch = MutableStateFlow<DataStatus<AnswerVacancyList>>(DataStatus.Default())
-    val stateSearch = _stateSearch as StateFlow<DataStatus<AnswerVacancyList>>
+    private val _stateSearch = MutableStateFlow<StateSearch>(StateSearch.Default)
+    val stateSearch = _stateSearch.asStateFlow()
 
     private var searchJob: Job? = null
-    fun doRequestSearch(modelForQuery: QuerySearchMdl){
+    fun doRequestSearch(modelForQuery: QuerySearchMdl) {
 
-        viewModelScope.launch {
-            searchInteractor.doRequestSearch(modelForQuery).collect{
-                 when(it){
-                   is DataStatus.Content -> {
-                       _stateSearch.value = DataStatus.Content(it.data!!)
-                   }
-                   is DataStatus.Loading ->{
-                       _stateSearch.value = DataStatus.Loading()
-                   }
-                   is DataStatus.Error -> {
-                       _stateSearch.value = DataStatus.Error()
-                   }
-                   is DataStatus.EmptyContent -> {
-                       _stateSearch.value = DataStatus.EmptyContent()
-                   }
-                   is DataStatus.NoConnecting ->{
-                       _stateSearch.value = DataStatus.NoConnecting()
-                   }
-                   is DataStatus.Default ->{
-                       _stateSearch.value = DataStatus.Default()
-                   }
-                   else -> {
-                       _stateSearch.value = DataStatus.Default()
-                   }
+        if (modelForQuery.text != "") {
+            viewModelScope.launch {
+                _stateSearch.value = StateSearch.Loading
+                searchInteractor.doRequestSearch(modelForQuery).collect {
+                    when (it) {
+                        is DataStatus.Content -> {
+                            _stateSearch.value = StateSearch.Content(it.data!!)
+                        }
 
-                 }
+                        is DataStatus.Error -> {
+                            _stateSearch.value = StateSearch.Error(it.code)
+                        }
+
+                        is DataStatus.EmptyContent -> {
+                            _stateSearch.value = StateSearch.EmptyContent
+                        }
+
+                        is DataStatus.NoConnecting -> {
+                            _stateSearch.value = StateSearch.NoConnecting
+                        }
+
+                        is DataStatus.Default -> {
+                            _stateSearch.value = StateSearch.Default
+                        }
+
+                        else -> {
+                            _stateSearch.value = StateSearch.Default
+                        }
+                    }
+                }
             }
         }
-
     }
 
-    fun getParamsFilters(){
+    fun getParamsFilters(): FilterData? {
         val params = searchInteractor.getParamsFilters()
-
-        if(params == null) _stateFilters.value = StateFilters.NoUseFilters
-        else _stateFilters.value = StateFilters.UseFilters(params)
-    }
-
-    fun searchDebounce(modelForQuery: QuerySearchMdl){
-
-       searchJob?.cancel()
-
-        searchJob = viewModelScope.launch {
-            delay(SEARCH_DEBOUNCE_DELAY_ML)
-            doRequestSearch(modelForQuery)
+        return if (params == null) {
+            null
+        } else if (params.idArea == null &&
+                params.idCountry == null &&
+                params.idIndustry == null &&
+                params.currency == null &&
+                params.salary == null &&
+                !params.onlyWithSalary
+        ) {
+            null
+        } else {
+            params
         }
     }
 
+    fun searchDebounce(modelForQuery: QuerySearchMdl) {
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            if (modelForQuery.text != "") {
+                delay(SEARCH_DEBOUNCE_DELAY_ML)
+                doRequestSearch(modelForQuery)
+            }
+        }
+    }
+
+    fun setDefaultState() {
+        _stateSearch.value = StateSearch.Default
+    }
 }

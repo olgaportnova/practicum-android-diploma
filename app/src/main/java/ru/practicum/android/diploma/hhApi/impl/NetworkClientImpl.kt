@@ -39,6 +39,22 @@ class NetworkClientImpl(
             }
         }
     }
+
+    override suspend fun getAreaTree(): ResponseWrapper<List<AreaDto>> {
+        return withContext(Dispatchers.IO) {
+
+            if (!isConnected()) {
+                ResponseWrapper(NO_CONNECT, data = null)
+            } else {
+                val response = hhApi.getAreaTree()
+                if (response.code() == 200)
+                    ResponseWrapper(response.code(), response.body())
+                else
+                    ResponseWrapper(response.code(), data = null)
+            }
+        }
+    }
+
     //id: Int
     override suspend fun getDistricts(id:RequestWrapper<Int>): ResponseWrapper<AreaDto> {
         return withContext(Dispatchers.IO) {
@@ -101,10 +117,18 @@ class NetworkClientImpl(
     }
 
     override suspend fun getIndustries(): ResponseWrapper<CategoryResponse> {
-        val response = hhApi.getIndustries()
-
-        return if (response.code() == 200) ResponseWrapper(response.code(), response.body())
-        else ResponseWrapper(response.code(), data = null)
+        return withContext(Dispatchers.IO)  {
+            if (!isConnected()) {
+                ResponseWrapper(NO_CONNECT, data = null)
+            } else {
+                val response = hhApi.getIndustries()
+                if (response.code() == 200) {
+                    ResponseWrapper(response.code(), response.body())
+                } else {
+                    ResponseWrapper(response.code(), data = null)
+                }
+            }
+        }
     }
 
 

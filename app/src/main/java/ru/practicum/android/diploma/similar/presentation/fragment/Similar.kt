@@ -20,8 +20,6 @@ import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.similar.presentation.view_model.SimilarViewModel
 
-private const val ARG_VACANCY = "vacancy_model"
-
 class Similar : DefaultFragment<FragmentSimilarBinding>() {
 
     private val similarViewModel by viewModel<SimilarViewModel>()
@@ -34,7 +32,6 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     ): FragmentSimilarBinding {
         return FragmentSimilarBinding.inflate(inflater, container, false)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +50,6 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 similarViewModel.screenState.collect {
                     updateUI(it)
-
                 }
             }
         }
@@ -70,13 +66,18 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
     private fun initRecyclerView() {
         adapter = VacancyAdapter(arrayListOf(), object : VacancyAdapter.OnClickListener {
             override fun onItemClick(vacancy: Vacancy) {
-                // TODO: тут не должен быть переход на детали вакансии?
+                openFragmentVacancy(vacancyToShow = vacancy.id)
             }
         })
         binding.recycleViewSimilarSearchResult.adapter = adapter
         binding.recycleViewSimilarSearchResult.layoutManager = LinearLayoutManager(context)
     }
 
+    private fun openFragmentVacancy(vacancyToShow: Int) {
+        findNavController().navigate(
+            R.id.action_similar_to_vacancy,
+            Bundle().apply { putInt(ARG_VACANCY, vacancyToShow) })
+    }
 
     override fun setUiListeners() {
         with(binding) {
@@ -141,4 +142,7 @@ class Similar : DefaultFragment<FragmentSimilarBinding>() {
         }
     }
 
+    companion object {
+        private const val ARG_VACANCY = "vacancy_model"
+    }
 }

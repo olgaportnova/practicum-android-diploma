@@ -3,82 +3,52 @@ package ru.practicum.android.diploma.filter.presentation.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import ru.practicum.android.diploma.filter.domain.interfaces.FiltersController
-import ru.practicum.android.diploma.filter.domain.models.AreaData
+import ru.practicum.android.diploma.filter.domain.models.FilterData
+import ru.practicum.android.diploma.filter.presentation.fragment.ScreenWorkPlaceState
 
 class WorkPlaceVm(private val filtersController: FiltersController) : ViewModel() {
-    private val _countryChosen = MutableLiveData<AreaData?>(null)
-    val countryChosen = _countryChosen as LiveData<AreaData?>
-
-    private val _districtChosen = MutableLiveData<AreaData?>(null)
-    val districtChosen = _districtChosen as LiveData<AreaData?>
-
-    private val _acceptChanges = MutableLiveData<Boolean>(false)
-    val acceptChanges = _acceptChanges as LiveData<Boolean>
+    private var _screenState =
+        MutableStateFlow<ScreenWorkPlaceState>(ScreenWorkPlaceState.Loading(null))
+    val screenState = _screenState as StateFlow<ScreenWorkPlaceState>
 
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg = _errorMsg as LiveData<String>
 
-    init {
-        loadFilterSet()
+    private var initFilterSet: FilterData? = null
+    private var newFilterSet: FilterData = filtersController.getDefaultSettings()
+
+    fun loadFilterSetFromSharedModel(sharedFilterSet: FilterData) {
+        // initFilterSet заполняется только первый раз
+        // Дальнейшие изменения затрагивают только newFilterSet
+        // Для обеспечения возможности сравнения первичного сета настроек фильтрации и обновленного
+        if (initFilterSet == null) initFilterSet = sharedFilterSet
+
+        newFilterSet = sharedFilterSet
+
+        _screenState.value = ScreenWorkPlaceState.Content(newFilterSet, checkAcceptCondition())
     }
 
-    private fun loadFilterSet() {
-        val fSet = filtersController.getFilterSettings()
+    fun clearCountry() {
+        newFilterSet = newFilterSet.copy(idCountry = null, nameCountry = null)
 
-        if (fSet != null) {
-            if (!fSet.nameCountry.isNullOrEmpty() && !fSet.idCountry.isNullOrEmpty()) {
-                _countryChosen.value = AreaData(
-                    fSet.idCountry!!.toInt(),
-                    null,
-                    fSet.nameCountry!!,
-                    emptyList()
-                )
-            }
-
-            if (!fSet.nameArea.isNullOrEmpty() && !fSet.idArea.isNullOrEmpty()) {
-                _districtChosen.value = AreaData(
-                    fSet.idArea!!.toInt(),
-                    null,
-                    fSet.nameArea!!,
-                    emptyList()
-                )
-            }
-        }
+        _screenState.value = ScreenWorkPlaceState.Content(newFilterSet, checkAcceptCondition())
     }
 
-    fun saveAreasToFilter() {
-        val filterSettings = filtersController.getFilterSettings()
-        if (filterSettings != null) {
-            _countryChosen.value?.let {
-                filterSettings.idCountry = it.id.toString()
-                filterSettings.nameCountry = it.name
-            }
-            _districtChosen.value?.let {
-                filterSettings.idArea = it.id.toString()
-                filterSettings.nameArea = it.name
-            }
-            filtersController.saveFilterSettings(filterToSave = filterSettings)
-        }
+    fun clearDistrict() {
+        newFilterSet = newFilterSet.copy(idArea = null, nameArea = null)
+
+        _screenState.value = ScreenWorkPlaceState.Content(newFilterSet, checkAcceptCondition())
     }
 
-    fun chooseAnotherCountry(newCountryId: Int?, newCountryName: String?) {
-        if (newCountryId != null && newCountryName != null) {
-            _countryChosen.value = AreaData(newCountryId, null, newCountryName, emptyList())
-        } else _countryChosen.value = null
+    fun getParentAreaIdToSearch() = newFilterSet.idCountry?.toIntOrNull()
 
-        checkAcceptCondition()
+    fun getUpdatedFilterSet() = this.newFilterSet
+
+    private fun checkAcceptCondition(): Boolean {
+        return newFilterSet != initFilterSet
     }
 
-    fun chooseAnotherDistrict(newCountryId: Int?, newCountryName: String?) {
-        if (newCountryId != null && newCountryName != null) {
-            _districtChosen.value = AreaData(newCountryId, null, newCountryName, emptyList())
-        } else _districtChosen.value = null
-
-        checkAcceptCondition()
-    }
-
-    private fun checkAcceptCondition() {
-        _acceptChanges.value = _countryChosen.value != null || _districtChosen.value != null
-    }
 }

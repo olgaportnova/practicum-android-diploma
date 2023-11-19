@@ -16,7 +16,9 @@ import ru.practicum.android.diploma.search.domain.SearchRepository
 import ru.practicum.android.diploma.similar.data.impl.SimilarRepositoryImpl
 import ru.practicum.android.diploma.similar.domain.SimilarRepository
 import ru.practicum.android.diploma.util.mappers.VacancyEntityMapper
+import ru.practicum.android.diploma.vacancy.data.impl.ExternalNavigatorImpl
 import ru.practicum.android.diploma.vacancy.data.impl.VacancyDetailsRepositoryImpl
+import ru.practicum.android.diploma.vacancy.domain.repository.ExternalNavigator
 import ru.practicum.android.diploma.vacancy.domain.repository.VacancyDetailsRepository
 
 class RepositoryModule {
@@ -55,6 +57,8 @@ class RepositoryModule {
         single<SimilarRepository> {
             SimilarRepositoryImpl(networkClient = get(), converter = get())
         }
+
+        single<ExternalNavigator> { ExternalNavigatorImpl(context = get()) }
 
     }
 

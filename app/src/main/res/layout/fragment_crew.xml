@@ -9,7 +9,6 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/navigation_bar"
         app:title="@string/crew"
-        app:titleTextColor="@color/black_text"
         app:titleTextAppearance="@style/ToolbarTitleText"
         style="@style/toolbar_style" />
 

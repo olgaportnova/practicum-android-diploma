@@ -24,7 +24,7 @@ class FavoriteRepositoryImpl(
             .deleteVacancyFromFavoriteList(vacancyConvertor.vacancyVacancyToEntity(vacancy))
     }
 
-    override fun getAllFavouriteVacancies(): Flow<List<Vacancy>> = flow {
+    override suspend fun getAllFavouriteVacancies(): Flow<List<Vacancy>> = flow {
         val favoriteVacancies = appDatabase.favoriteVacancyDao().getAllFavouriteVacancies()
         emit(convertFromVacancyEntityToVacancy(favoriteVacancies))
     }
@@ -34,7 +34,6 @@ class FavoriteRepositoryImpl(
         return if (favoriteVacancyEntity != null) {
             vacancyConvertor.vacancyEntityToVacancy(favoriteVacancyEntity)
         } else {
-            //TODO обсудить с Таней, что возвращать на экран деталей если ошибка получения информации из БД
             null
         }
     }

@@ -32,7 +32,11 @@ class ViewModelModule {
         }
 
         viewModel {
-            VacancyDetailsViewModel(application = get(), vacancyDetailsInteractor = get())
+            VacancyDetailsViewModel(
+                vacancyDetailsInteractor = get(),
+                favoriteInteractor = get(),
+                sharingInteractor = get(),
+            )
         }
 
         viewModel {
