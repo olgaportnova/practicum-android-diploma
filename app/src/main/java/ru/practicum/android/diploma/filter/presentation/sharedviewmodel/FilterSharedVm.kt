@@ -9,6 +9,7 @@ class FilterSharedVm : ViewModel() {
     private var filters: FilterData? = null
 
     val msg = MutableLiveData<String>()
+    val updateFavourite = MutableLiveData<String>()
 
     fun setFilter(remoteFilter: FilterData) {
         filters = remoteFilter

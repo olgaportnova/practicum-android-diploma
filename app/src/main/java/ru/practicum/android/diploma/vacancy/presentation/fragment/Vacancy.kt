@@ -98,6 +98,7 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 val vacancy = vacancyDetailsViewModel.currentVacancy.value
                 if (vacancy != null) {
                     vacancyDetailsViewModel.onFavoriteClicked(vacancy)
+                    // TODO: добавить изменение lifeData внутри sharedVM для обновления фрагмента избранных
                 }
             }
 
