@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +28,7 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.favorite.recycle_view.TopSpaceItemDecoration
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
@@ -36,6 +38,7 @@ import ru.practicum.android.diploma.search.presentation.view_model.SearchViewMod
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class Search : DefaultFragment<FragmentSearchBinding>() {
+    private val sharedViewModel: FilterSharedVm by activityViewModels()
 
     companion object {
         const val TOAST_DEBOUNCE_DELAY_ML = 10000L
@@ -107,6 +110,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
         initRecycler()
         getParamsFilter()
+
+        sharedViewModel.msg.observe(viewLifecycleOwner){
+            showToastMessage(it)
+            //binding.navigationBar.title = it
+        }
     }
 
     private fun openFragmentVacancy(vacancyToShow: Int) {

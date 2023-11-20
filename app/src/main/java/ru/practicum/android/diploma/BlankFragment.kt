@@ -12,14 +12,10 @@ import ru.practicum.android.diploma.favorite.presentation.fragment.Favourite
 import ru.practicum.android.diploma.search.presentation.fragment.Search
 import ru.practicum.android.diploma.team.presentation.Crew
 import ru.practicum.android.diploma.util.DefaultFragment
-import kotlin.collections.Map
-import kotlin.collections.elementAt
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
 
 class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
-
     // Хранение фрагментов внутри коллекции fragmentMap
     private val fragmentMap = mutableMapOf<String, Fragment>()
 
@@ -43,21 +39,21 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         adapter = DemoCollectionAdapter(requireActivity(), fragmentMap)
 
         binding.vp2.adapter = adapter
+
     }
 
-    private fun setCurrentFragment(num: Int): Boolean {
+    private fun navigateToFragment(num: Int): Boolean {
         binding.vp2.currentItem = num
         binding.rootNavBar.menu.getItem(num).isChecked = true
-
         return true
     }
 
     override fun setUiListeners() {
         binding.rootNavBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.crew -> setCurrentFragment(2)
-                R.id.favourite -> setCurrentFragment(1)
-                R.id.search -> setCurrentFragment(0)
+                R.id.crew -> navigateToFragment(2)
+                R.id.favourite -> navigateToFragment(1)
+                R.id.search -> navigateToFragment(0)
                 else -> false
             }
         }

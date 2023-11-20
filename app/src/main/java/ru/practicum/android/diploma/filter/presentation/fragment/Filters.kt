@@ -94,6 +94,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 vm.saveNewFilterSet()
                 sharedViewModel.deleteFilters()
                 setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
+                sharedViewModel.msg.value="Update Search now!"
                 exitExtraWhenSystemBackPushed()
             }
 
@@ -102,6 +103,8 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
 
                 // Загружаем прежние данные в sharedViewModel
                 sharedViewModel.setFilter(vm.getFilters())
+                sharedViewModel.msg.value="Update Search now!"
+
                 setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
             }
 
