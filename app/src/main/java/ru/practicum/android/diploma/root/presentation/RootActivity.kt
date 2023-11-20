@@ -24,24 +24,38 @@ class RootActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
 
-
-        //navView.setupWithNavController(navController)
-
-
-        binding.rootNavBar.setOnItemSelectedListener {
+        navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.search -> {
-                    navController.navigate(R.id.search, null, calculateAnimation(0,navigateCurrentLevel))
+                    if (navigateCurrentLevel != 0) {
+                        navController.navigate(
+                            R.id.search,
+                            null,
+                            calculateAnimation(0, navigateCurrentLevel)
+                        )
+                    }
                     true
                 }
 
                 R.id.favourite -> {
-                    navController.navigate(R.id.favourite, null, calculateAnimation(1,navigateCurrentLevel))
+                    if (navigateCurrentLevel != 1) {
+                        navController.navigate(
+                            R.id.favourite,
+                            null,
+                            calculateAnimation(1, navigateCurrentLevel)
+                        )
+                    }
                     true
                 }
 
                 R.id.crew -> {
-                    navController.navigate(R.id.crew, null, calculateAnimation(2,navigateCurrentLevel))
+                    if (navigateCurrentLevel != 2) {
+                        navController.navigate(
+                            R.id.crew,
+                            null,
+                            calculateAnimation(2, navigateCurrentLevel)
+                        )
+                    }
                     true
                 }
 
@@ -57,10 +71,7 @@ class RootActivity : AppCompatActivity() {
                     binding.divider.visibility = View.GONE
                 }
 
-                R.id.crew -> {
-                    navigateCurrentLevel = 3
-                    binding.rootNavBar.menu.findItem(destination.id).isChecked = true
-                }
+                R.id.crew -> navigateCurrentLevel = 2
                 R.id.favourite -> navigateCurrentLevel = 1
                 R.id.search -> navigateCurrentLevel = 0
 
@@ -72,8 +83,11 @@ class RootActivity : AppCompatActivity() {
         }
     }
 
-    private fun calculateAnimation(newDestinationLevel: Int,previousDestinationLevel:Int):NavOptions {
-        if(newDestinationLevel>previousDestinationLevel){
+    private fun calculateAnimation(
+        newDestinationLevel: Int,
+        previousDestinationLevel: Int
+    ): NavOptions {
+        if (newDestinationLevel > previousDestinationLevel) {
             // Листаем слайд справа налево (перелистываем)
             return NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_out_right) // анимация для входа во фрагмент
@@ -81,8 +95,7 @@ class RootActivity : AppCompatActivity() {
                 .setPopEnterAnim(R.anim.slide_out_right) // анимация для входа при возврате назад
                 .setPopExitAnim(R.anim.slide_in_left) // анимация для выхода при возврате назад
                 .build()
-        }
-        else{
+        } else {
             return NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_out_left) // анимация для входа во фрагмент
                 .setExitAnim(R.anim.slide_in_right) // анимация для выхода из фрагмента
