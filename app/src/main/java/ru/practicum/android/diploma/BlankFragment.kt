@@ -1,10 +1,10 @@
 package ru.practicum.android.diploma
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -20,11 +20,13 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
     // Хранение фрагментов внутри коллекции fragmentMap
     private val fragmentMap = mutableMapOf<String, Fragment>()
 
+    private lateinit var adapter: DemoCollectionAdapter
+
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentBlankBinding {
-        return FragmentBlankBinding.inflate(inflater,container,false)
+        return FragmentBlankBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,19 +37,24 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         fragmentMap[getString(R.string.favourite)] = Favourite()
         fragmentMap[getString(R.string.crew)] = Crew()
 
-        // Динамически создаем TabItems
-        fragmentMap.keys.forEach {
-            binding.tabs.addTab(binding.tabs.newTab().setText(it))
+        adapter = DemoCollectionAdapter(requireActivity(), fragmentMap)
+
+        binding.vp2.adapter = adapter
+
+        binding.rootNavBar.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.crew -> setCurrentFragment(2)
+                R.id.favourite -> setCurrentFragment(1)
+                R.id.search -> setCurrentFragment(0)
+                else -> false
+            }
+
         }
+    }
 
-        binding.vp2.adapter = DemoCollectionAdapter(requireActivity(),fragmentMap)
-
-        TabLayoutMediator(
-            binding.tabs,
-            binding.vp2
-        ) { tab, pos ->
-            tab.text = fragmentMap.keys.elementAt(pos)
-        }.attach()
+    private fun setCurrentFragment(num: Int): Boolean {
+        binding.vp2.currentItem = num
+        return true
     }
 
 
@@ -55,7 +62,10 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         //TODO("Not yet implemented")
     }
 
-    class DemoCollectionAdapter(activityFr: FragmentActivity, private val fragmentMap: Map<String, Fragment>) :
+    class DemoCollectionAdapter(
+        activityFr: FragmentActivity,
+        private val fragmentMap: Map<String, Fragment>
+    ) :
         FragmentStateAdapter(activityFr) {
         override fun getItemCount() = fragmentMap.size
         override fun createFragment(position: Int) = fragmentMap.values.elementAt(position)

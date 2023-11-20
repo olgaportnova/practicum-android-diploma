@@ -16,6 +16,4 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/job_pulse_nav" />
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
