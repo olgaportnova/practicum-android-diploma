@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayoutMediator
 import ru.practicum.android.diploma.databinding.FragmentBlankBinding
 import ru.practicum.android.diploma.favorite.presentation.fragment.Favourite
 import ru.practicum.android.diploma.search.presentation.fragment.Search
 import ru.practicum.android.diploma.team.presentation.Crew
 import ru.practicum.android.diploma.util.DefaultFragment
+import kotlin.collections.Map
+import kotlin.collections.elementAt
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 
 class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
@@ -40,7 +43,16 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         adapter = DemoCollectionAdapter(requireActivity(), fragmentMap)
 
         binding.vp2.adapter = adapter
+    }
 
+    private fun setCurrentFragment(num: Int): Boolean {
+        binding.vp2.currentItem = num
+        binding.rootNavBar.menu.getItem(num).isChecked = true
+
+        return true
+    }
+
+    override fun setUiListeners() {
         binding.rootNavBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.crew -> setCurrentFragment(2)
@@ -48,18 +60,7 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
                 R.id.search -> setCurrentFragment(0)
                 else -> false
             }
-
         }
-    }
-
-    private fun setCurrentFragment(num: Int): Boolean {
-        binding.vp2.currentItem = num
-        return true
-    }
-
-
-    override fun setUiListeners() {
-        //TODO("Not yet implemented")
     }
 
     class DemoCollectionAdapter(
