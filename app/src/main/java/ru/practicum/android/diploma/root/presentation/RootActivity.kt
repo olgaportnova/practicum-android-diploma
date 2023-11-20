@@ -11,7 +11,6 @@ import ru.practicum.android.diploma.databinding.ActivityRootBinding
 
 class RootActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRootBinding
-
     private var navigateCurrentLevel = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,15 +26,11 @@ class RootActivity : AppCompatActivity() {
         navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.search -> {
-                    if (navigateCurrentLevel != 0) {
-                        navController.navigate(
-                            R.id.search,
-                            null,
-                            calculateAnimation(0, navigateCurrentLevel)
-                        )
+                    if (navigateCurrentLevel != 0){
+                        navController.popBackStack(R.id.search,false)
                     }
                     true
-                }
+                    }
 
                 R.id.favourite -> {
                     if (navigateCurrentLevel != 1) {
@@ -75,16 +70,21 @@ class RootActivity : AppCompatActivity() {
                     navigateCurrentLevel = 2
                     navView.isVisible = true
                     binding.divider.visibility = View.VISIBLE
+                    binding.rootNavBar.menu.getItem(2).isChecked = true
+
                 }
                 R.id.favourite -> {
                     navigateCurrentLevel = 1
                     navView.isVisible = true
                     binding.divider.visibility = View.VISIBLE
+                    binding.rootNavBar.menu.getItem(1).isChecked = true
+
                 }
                 R.id.search -> {
                     navigateCurrentLevel = 0
                     navView.isVisible = true
                     binding.divider.visibility = View.VISIBLE
+                    binding.rootNavBar.menu.getItem(0).isChecked = true
                 }
 
                 else -> {

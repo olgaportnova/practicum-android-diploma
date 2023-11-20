@@ -72,7 +72,7 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
     }
 
     override fun exitExtraWhenSystemBackPushed() {
-        findNavController().popBackStack()
+        findNavController().popBackStack(R.id.search,false)
     }
 
     private fun updateUI(state: FavoriteState) {
