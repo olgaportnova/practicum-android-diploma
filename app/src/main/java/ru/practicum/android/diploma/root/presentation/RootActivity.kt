@@ -71,9 +71,21 @@ class RootActivity : AppCompatActivity() {
                     binding.divider.visibility = View.GONE
                 }
 
-                R.id.crew -> navigateCurrentLevel = 2
-                R.id.favourite -> navigateCurrentLevel = 1
-                R.id.search -> navigateCurrentLevel = 0
+                R.id.crew -> {
+                    navigateCurrentLevel = 2
+                    navView.isVisible = true
+                    binding.divider.visibility = View.VISIBLE
+                }
+                R.id.favourite -> {
+                    navigateCurrentLevel = 1
+                    navView.isVisible = true
+                    binding.divider.visibility = View.VISIBLE
+                }
+                R.id.search -> {
+                    navigateCurrentLevel = 0
+                    navView.isVisible = true
+                    binding.divider.visibility = View.VISIBLE
+                }
 
                 else -> {
                     navView.isVisible = true
