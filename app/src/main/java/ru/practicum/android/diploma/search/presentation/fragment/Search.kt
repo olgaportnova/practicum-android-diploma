@@ -78,7 +78,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_to_filter_fragment -> {
-                    findNavController().navigate(R.id.action_to_filters)
+                    findNavController().navigate(R.id.action_blankFragment_to_filters)
                     true
                 }
 
@@ -111,7 +111,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
-            R.id.action_search_to_vacancy,
+            R.id.action_blankFragment_to_vacancy,
             Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
