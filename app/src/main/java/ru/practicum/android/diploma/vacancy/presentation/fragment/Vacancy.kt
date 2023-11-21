@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.search.domain.models.Phone
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DefaultFragment
@@ -30,6 +32,7 @@ import ru.practicum.android.diploma.util.SalaryUtil
 import ru.practicum.android.diploma.vacancy.presentation.PhonesAdapter
 
 class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
+    private val sharedVm:FilterSharedVm by activityViewModels()
 
     private val vacancyDetailsViewModel by viewModel<VacancyDetailsViewModel>()
     private var paramVacancyId: String? = null
@@ -98,7 +101,6 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
                 val vacancy = vacancyDetailsViewModel.currentVacancy.value
                 if (vacancy != null) {
                     vacancyDetailsViewModel.onFavoriteClicked(vacancy)
-                    // TODO: добавить изменение lifeData внутри sharedVM для обновления фрагмента избранных
                 }
             }
 
@@ -162,6 +164,9 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
 
             if (isFavotite) ibFavorite.setImageResource(R.drawable.ic_vacancy_favorite_red)
             else ibFavorite.setImageResource(R.drawable.ic_vacancy_favorite)
+
+            // TODO: добавить изменение lifeData внутри sharedVM для обновления фрагмента избранных
+            sharedVm.updateFavourite.value = "update"
         }
     }
 

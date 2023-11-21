@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,12 +18,14 @@ import ru.practicum.android.diploma.databinding.FragmentFavouriteBinding
 import ru.practicum.android.diploma.favorite.domain.FavoriteState
 import ru.practicum.android.diploma.favorite.presentation.view_model.FavoriteViewModel
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
 
     private val viewModel: FavoriteViewModel by viewModel()
+    private val sharedVm: FilterSharedVm by activityViewModels()
     private lateinit var adapter: VacancyAdapter
     override fun bindingInflater(
         inflater: LayoutInflater,
@@ -44,7 +47,12 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
                 }
             }
         }
+
         viewModel.getAllFavoriteVacancies()
+
+        sharedVm.updateFavourite.observe(viewLifecycleOwner){
+            viewModel.getAllFavoriteVacancies()
+        }
     }
 
     private fun initRecyclerView() {

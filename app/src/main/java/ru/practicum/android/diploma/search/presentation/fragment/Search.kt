@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,7 +82,16 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_to_filter_fragment -> {
-                    findNavController().navigate(R.id.action_blankFragment_to_filters)
+                    try {
+                        findNavController().navigate(R.id.action_blankFragment_to_filters)
+                    }
+                    catch (e:Throwable){
+                        Snackbar.make(binding.navigationBar,"Ошибка навигации\n ${e.message}",Snackbar.LENGTH_INDEFINITE)
+                            .setTextMaxLines(20)
+                            .setAction("OK",null)
+                            .show()
+                    }
+
                     true
                 }
 
