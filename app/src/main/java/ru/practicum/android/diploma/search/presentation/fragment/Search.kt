@@ -84,11 +84,21 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 R.id.nav_to_filter_fragment -> {
                     try {
                         findNavController().navigate(R.id.action_blankFragment_to_filters)
-                    }
-                    catch (e:Throwable){
-                        Snackbar.make(binding.navigationBar,"Ошибка навигации\n ${e.message}",Snackbar.LENGTH_INDEFINITE)
+                    } catch (e: Throwable) {
+                        Snackbar.make(
+                            binding.navigationBar,
+                            "Ошибка навигации\n ${e.message}",
+                            Snackbar.LENGTH_INDEFINITE
+                        )
                             .setTextMaxLines(20)
-                            .setAction("OK",null)
+                            .setAction("OK") {
+                                findNavController().navigate(R.id.blankFragment)
+                                Snackbar.make(
+                                    binding.navigationBar,
+                                    "Теперь можно попробовать еще раз",
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
                             .show()
                     }
 
@@ -121,7 +131,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         initRecycler()
         getParamsFilter()
 
-        sharedViewModel.msg.observe(viewLifecycleOwner){
+        sharedViewModel.msg.observe(viewLifecycleOwner) {
             // TODO: Произвести обновленный поиск вакансий
             // Как я понял, это перезапускает поиск, но надо еще фильтры обновить
             isGetParamsFragment = true
@@ -135,20 +145,32 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
-    private fun renderSearchUi(state:StateSearch) {
+    private fun renderSearchUi(state: StateSearch) {
         checkFilterState()
         when (state) {
-            is StateSearch.Default -> {renderSearchDefaultUi()}
+            is StateSearch.Default -> {
+                renderSearchDefaultUi()
+            }
 
-            is StateSearch.Error -> {renderSearchErrorUi()}
+            is StateSearch.Error -> {
+                renderSearchErrorUi()
+            }
 
-            is StateSearch.Loading -> {renderSearchLoadingUi()}
+            is StateSearch.Loading -> {
+                renderSearchLoadingUi()
+            }
 
-            is StateSearch.NoConnecting -> {renderSearchNoConnectingUi()}
+            is StateSearch.NoConnecting -> {
+                renderSearchNoConnectingUi()
+            }
 
-            is StateSearch.Content -> {renderSearchContentUi(state.data)}
+            is StateSearch.Content -> {
+                renderSearchContentUi(state.data)
+            }
 
-            is StateSearch.EmptyContent -> {renderSearchEmptyUi()}
+            is StateSearch.EmptyContent -> {
+                renderSearchEmptyUi()
+            }
         }
     }
 
@@ -270,9 +292,9 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             if (data.currentPages == START_PAGE_INDEX) {
                 adapter!!.updateList(data.listVacancy, false)
             } else {
-                if(!data.listVacancy.equals(tempListVacancy)){
-                adapter!!.updateList(data.listVacancy, true)
-                tempListVacancy = data.listVacancy
+                if (!data.listVacancy.equals(tempListVacancy)) {
+                    adapter!!.updateList(data.listVacancy, true)
+                    tempListVacancy = data.listVacancy
                 }
             }
             isSearchRequest = true
@@ -285,11 +307,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun getParamsFilter(){
+    private fun getParamsFilter() {
         filterData = viewModel.getParamsFilters()
-        if(filterData != null){
+        if (filterData != null) {
             addFilterInModel(filterData!!)
-        }else{
+        } else {
             clearModel()
         }
     }
@@ -398,35 +420,36 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         binding.editTextSearch.isEnabled = true
     }
 
-    private fun showToastMessage(message:String){
-        if(isShowToast) {
+    private fun showToastMessage(message: String) {
+        if (isShowToast) {
             isShowToast = false
-            Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             lifecycleScope.launch {
                 delay(TOAST_DEBOUNCE_DELAY_ML)
                 isShowToast = true
-               }
             }
+        }
     }
-    private fun checkFilterState(){
-        if(filterData == null){
+
+    private fun checkFilterState() {
+        if (filterData == null) {
             binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
-        }else{
+        } else {
             binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
         }
     }
 
-    private fun clearModel(){
-       with(modelForQuery){
-           page = START_PAGE_INDEX
-           perPage = PER_PAGE
-           text = INIT_TEXT
-           area = null
-           parentArea = null
-           industry = null
-           currency = null
-           salary = null
-           onlyWithSalary = false
-       }
+    private fun clearModel() {
+        with(modelForQuery) {
+            page = START_PAGE_INDEX
+            perPage = PER_PAGE
+            text = INIT_TEXT
+            area = null
+            parentArea = null
+            industry = null
+            currency = null
+            salary = null
+            onlyWithSalary = false
+        }
     }
 }
