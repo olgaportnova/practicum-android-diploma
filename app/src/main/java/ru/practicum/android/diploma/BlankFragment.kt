@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import ru.practicum.android.diploma.databinding.FragmentBlankBinding
 import ru.practicum.android.diploma.favorite.presentation.fragment.Favourite
 import ru.practicum.android.diploma.search.presentation.fragment.Search
@@ -39,6 +40,13 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         adapter = DemoCollectionAdapter(requireActivity(), fragmentMap)
 
         binding.vp2.adapter = adapter
+
+        binding.vp2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.rootNavBar.menu.getItem(position).isChecked = true
+            }
+        })
 
     }
 
