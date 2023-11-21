@@ -102,6 +102,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
 
                 // Загружаем прежние данные в sharedViewModel
                 sharedViewModel.setFilter(vm.getFilters())
+                setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
             }
 
             btnClrWorkPlace.setOnClickListener {
