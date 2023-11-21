@@ -67,6 +67,16 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         }
     }
 
+    override fun exitExtraWhenSystemBackPushed() {
+        if (binding.vp2.currentItem != 0) navigateToFragment(0)
+        else {
+            showMsgDialog("exit?")
+            // TODO: add exit app fun
+        }
+
+
+    }
+
     class DemoCollectionAdapter(
         activityFr: FragmentActivity,
         private val fragmentMap: Map<String, Fragment>
