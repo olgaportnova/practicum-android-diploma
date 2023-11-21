@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,7 +29,6 @@ import ru.practicum.android.diploma.favorite.recycle_view.TopSpaceItemDecoration
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
-import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
@@ -82,6 +80,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_to_filter_fragment -> {
+                    //Блок try{} catch{} потом можно убрать.
                     try {
                         findNavController().navigate(R.id.action_blankFragment_to_filters)
                     } catch (e: Throwable) {
@@ -116,11 +115,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
-            isGetParamsFragment = true
-            binding.editTextSearch.setText(tempValueEditText)
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateSearch.collect {
@@ -132,8 +126,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         getParamsFilter()
 
         sharedViewModel.msg.observe(viewLifecycleOwner) {
-            // TODO: Произвести обновленный поиск вакансий
-            // Как я понял, это перезапускает поиск, но надо еще фильтры обновить
+            getParamsFilter()
+            checkFilterState()
             isGetParamsFragment = true
             binding.editTextSearch.setText(tempValueEditText)
         }
