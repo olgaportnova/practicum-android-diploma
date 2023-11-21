@@ -122,7 +122,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         getParamsFilter()
 
         sharedViewModel.msg.observe(viewLifecycleOwner){
-            //showToastMessage(it)
+            // TODO: Произвести обновленный поиск вакансий
             // Как я понял, это перезапускает поиск, но надо еще фильтры обновить
             isGetParamsFragment = true
             binding.editTextSearch.setText(tempValueEditText)
