@@ -131,6 +131,8 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             isGetParamsFragment = true
             binding.editTextSearch.setText(tempValueEditText)
         }
+
+        backPressedCallback.remove()
     }
 
     private fun openFragmentVacancy(vacancyToShow: Int) {

@@ -1,9 +1,9 @@
 package ru.practicum.android.diploma.team.presentation
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager2.widget.ViewPager2
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentCrewBinding
 import ru.practicum.android.diploma.util.DefaultFragment
 
@@ -12,13 +12,16 @@ class Crew : DefaultFragment<FragmentCrewBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentCrewBinding {
-        return FragmentCrewBinding.inflate(inflater,container,false)
+        return FragmentCrewBinding.inflate(inflater, container, false)
     }
-    override fun setUiListeners() {}
 
-    override fun exitExtraWhenSystemBackPushed() {
-        parentFragmentManager.primaryNavigationFragment?.requireView()
-            ?.findViewById<ViewPager2>(R.id.vp2)?.currentItem = 0
-      }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        backPressedCallback.remove()
     }
+
+    override fun setUiListeners() {}
+}
+
+
 

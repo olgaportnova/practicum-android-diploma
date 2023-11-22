@@ -53,6 +53,8 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
         sharedVm.updateFavourite.observe(viewLifecycleOwner){
             viewModel.getAllFavoriteVacancies()
         }
+
+        backPressedCallback.remove()
     }
 
     private fun initRecyclerView() {

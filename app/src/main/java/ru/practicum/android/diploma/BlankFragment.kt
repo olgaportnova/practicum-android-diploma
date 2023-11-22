@@ -58,7 +58,6 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
 
     override fun setUiListeners() {
         binding.rootNavBar.setOnItemSelectedListener {
-            //showStack()
             when (it.itemId) {
                 R.id.crew -> navigateToFragment(2)
                 R.id.favourite -> navigateToFragment(1)
@@ -75,12 +74,6 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
             // TODO: add exit app fun
         }
     }
-
-   /* private fun showStack() {
-        val stack = parentFragmentManager.backStackEntryCount
-        //val name  = parentFragmentManager.getBackStackEntryAt(0).name
-        // Snackbar.make(binding.rootNavBar,name.toString(),Snackbar.LENGTH_SHORT).show()
-    }*/
 
     class DemoCollectionAdapter(
         activityFr: FragmentActivity,
