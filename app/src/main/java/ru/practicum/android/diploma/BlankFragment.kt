@@ -73,10 +73,9 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
         else {
             // TODO: add exit app fun
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Exit")
-                .setMessage("Wanna exit?")
-                .setNegativeButton("NO", null)
-                .setPositiveButton("YES") { dialog, which ->
+                .setTitle(getString(R.string.title))
+                .setNegativeButton(getString(R.string.no), null)
+                .setPositiveButton(getString(R.string.yes)) { dialog, which ->
                     requireActivity().finish()
                 }
                 .show()
