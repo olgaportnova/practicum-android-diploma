@@ -111,7 +111,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
     }
 
     override fun exitExtraWhenSystemBackPushed() {
-        sharedViewModel.msg.value="Update Search now!"
+        if(vm.compareFilters()) sharedViewModel.msg.value="Update Search now!"
         findNavController().popBackStack()
     }
 
