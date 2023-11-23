@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,7 +28,7 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.favorite.recycle_view.TopSpaceItemDecoration
 import ru.practicum.android.diploma.favorite.recycle_view.VacancyAdapter
 import ru.practicum.android.diploma.filter.domain.models.FilterData
-import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
+import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.search.domain.models.AnswerVacancyList
 import ru.practicum.android.diploma.search.domain.models.QuerySearchMdl
 import ru.practicum.android.diploma.search.domain.models.Vacancy
@@ -36,6 +37,7 @@ import ru.practicum.android.diploma.search.presentation.view_model.SearchViewMod
 import ru.practicum.android.diploma.util.DefaultFragment
 
 class Search : DefaultFragment<FragmentSearchBinding>() {
+    private val sharedViewModel: FilterSharedVm by activityViewModels()
 
     companion object {
         const val TOAST_DEBOUNCE_DELAY_ML = 10000L
@@ -78,7 +80,27 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         binding.navigationBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_to_filter_fragment -> {
-                    findNavController().navigate(R.id.action_to_filters)
+                    //Блок try{} catch{} потом можно убрать.
+                    try {
+                        findNavController().navigate(R.id.action_blankFragment_to_filters)
+                    } catch (e: Throwable) {
+                        Snackbar.make(
+                            binding.navigationBar,
+                            "Ошибка навигации\n ${e.message}",
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setTextMaxLines(20)
+                            .setAction("OK") {
+                                findNavController().navigate(R.id.blankFragment)
+                                Snackbar.make(
+                                    binding.navigationBar,
+                                    "Теперь можно попробовать еще раз",
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
+                            .show()
+                    }
+
                     true
                 }
 
@@ -93,11 +115,6 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setFragmentResultListener(KEY_FILTERS_RESULT) { requestKey, bundle ->
-            isGetParamsFragment = true
-            binding.editTextSearch.setText(tempValueEditText)
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateSearch.collect {
@@ -107,28 +124,49 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
         initRecycler()
         getParamsFilter()
+
+        sharedViewModel.msg.observe(viewLifecycleOwner) {
+            getParamsFilter()
+            checkFilterState()
+            isGetParamsFragment = true
+            binding.editTextSearch.setText(tempValueEditText)
+        }
+
+        backPressedCallback.remove()
     }
 
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
-            R.id.action_search_to_vacancy,
+            R.id.action_blankFragment_to_vacancy,
             Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
-    private fun renderSearchUi(state:StateSearch) {
+    private fun renderSearchUi(state: StateSearch) {
         checkFilterState()
         when (state) {
-            is StateSearch.Default -> {renderSearchDefaultUi()}
+            is StateSearch.Default -> {
+                renderSearchDefaultUi()
+            }
 
-            is StateSearch.Error -> {renderSearchErrorUi()}
+            is StateSearch.Error -> {
+                renderSearchErrorUi()
+            }
 
-            is StateSearch.Loading -> {renderSearchLoadingUi()}
+            is StateSearch.Loading -> {
+                renderSearchLoadingUi()
+            }
 
-            is StateSearch.NoConnecting -> {renderSearchNoConnectingUi()}
+            is StateSearch.NoConnecting -> {
+                renderSearchNoConnectingUi()
+            }
 
-            is StateSearch.Content -> {renderSearchContentUi(state.data)}
+            is StateSearch.Content -> {
+                renderSearchContentUi(state.data)
+            }
 
-            is StateSearch.EmptyContent -> {renderSearchEmptyUi()}
+            is StateSearch.EmptyContent -> {
+                renderSearchEmptyUi()
+            }
         }
     }
 
@@ -250,9 +288,9 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
             if (data.currentPages == START_PAGE_INDEX) {
                 adapter!!.updateList(data.listVacancy, false)
             } else {
-                if(!data.listVacancy.equals(tempListVacancy)){
-                adapter!!.updateList(data.listVacancy, true)
-                tempListVacancy = data.listVacancy
+                if (!data.listVacancy.equals(tempListVacancy)) {
+                    adapter!!.updateList(data.listVacancy, true)
+                    tempListVacancy = data.listVacancy
                 }
             }
             isSearchRequest = true
@@ -265,11 +303,11 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun getParamsFilter(){
+    private fun getParamsFilter() {
         filterData = viewModel.getParamsFilters()
-        if(filterData != null){
+        if (filterData != null) {
             addFilterInModel(filterData!!)
-        }else{
+        } else {
             clearModel()
         }
     }
@@ -378,35 +416,36 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
         binding.editTextSearch.isEnabled = true
     }
 
-    private fun showToastMessage(message:String){
-        if(isShowToast) {
+    private fun showToastMessage(message: String) {
+        if (isShowToast) {
             isShowToast = false
-            Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             lifecycleScope.launch {
                 delay(TOAST_DEBOUNCE_DELAY_ML)
                 isShowToast = true
-               }
             }
+        }
     }
-    private fun checkFilterState(){
-        if(filterData == null){
+
+    private fun checkFilterState() {
+        if (filterData == null) {
             binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters)
-        }else{
+        } else {
             binding.navigationBar.menu.getItem(0).setIcon(R.drawable.ic_filters_selected)
         }
     }
 
-    private fun clearModel(){
-       with(modelForQuery){
-           page = START_PAGE_INDEX
-           perPage = PER_PAGE
-           text = INIT_TEXT
-           area = null
-           parentArea = null
-           industry = null
-           currency = null
-           salary = null
-           onlyWithSalary = false
-       }
+    private fun clearModel() {
+        with(modelForQuery) {
+            page = START_PAGE_INDEX
+            perPage = PER_PAGE
+            text = INIT_TEXT
+            area = null
+            parentArea = null
+            industry = null
+            currency = null
+            salary = null
+            onlyWithSalary = false
+        }
     }
 }

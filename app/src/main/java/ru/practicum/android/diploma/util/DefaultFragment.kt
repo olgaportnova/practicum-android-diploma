@@ -16,7 +16,7 @@ abstract class DefaultFragment<T : ViewBinding> : Fragment() {
 
     abstract fun bindingInflater(inflater: LayoutInflater, container: ViewGroup?): T
 
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
+    protected val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             exitExtraWhenSystemBackPushed()
         }
