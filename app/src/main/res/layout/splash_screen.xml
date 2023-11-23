@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?attr/colorSecondaryVariant">
 
     <ImageView
         android:id="@+id/pulse"
@@ -21,7 +21,7 @@
         android:id="@+id/splashImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/logo_splash"
+        android:src="@drawable/heart_hand_shake"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,9 +32,9 @@
         android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Job Pulse"
+        android:text="@string/app_name"
         android:textSize="40sp"
-        android:textColor="@color/black_text"
+        android:textColor="?attr/colorSecondary"
         android:fontFamily="@font/ys_display_regular"
         android:gravity="center"/>
 
