@@ -6,35 +6,6 @@
     app:startDestination="@id/blankFragment">
 
     <fragment
-        android:id="@+id/search"
-        android:name="ru.practicum.android.diploma.search.presentation.fragment.Search"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search">
-        <action
-            android:id="@+id/action_to_filters"
-            app:destination="@id/filters" />
-        <action
-            android:id="@+id/action_search_to_vacancy"
-            app:destination="@id/vacancy" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/favourite"
-        android:name="ru.practicum.android.diploma.favorite.presentation.fragment.Favourite"
-        android:label="FavouriteFragment"
-        tools:layout="@layout/fragment_favourite">
-        <action
-            android:id="@+id/action_favourite_to_vacancy"
-            app:destination="@id/vacancy" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/crew"
-        android:name="ru.practicum.android.diploma.team.presentation.Crew"
-        android:label="CrewFragment"
-        tools:layout="@layout/fragment_crew" />
-
-    <fragment
         android:id="@+id/filters"
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.Filters"
         android:label="Filters"
