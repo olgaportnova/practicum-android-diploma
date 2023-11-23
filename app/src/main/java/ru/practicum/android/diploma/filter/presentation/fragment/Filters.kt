@@ -6,10 +6,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -21,7 +19,6 @@ import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.filter.domain.models.FilterData
 import ru.practicum.android.diploma.filter.presentation.sharedviewmodel.FilterSharedVm
 import ru.practicum.android.diploma.filter.presentation.util.ARG_INDUSTRY_ID
-import ru.practicum.android.diploma.filter.presentation.util.KEY_FILTERS_RESULT
 import ru.practicum.android.diploma.filter.presentation.view_model.FiltersVm
 import ru.practicum.android.diploma.util.DefaultFragment
 
@@ -93,17 +90,15 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
             btnAcceptFilterSet.setOnClickListener {
                 vm.saveNewFilterSet()
                 sharedViewModel.deleteFilters()
-                setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
+                sharedViewModel.msg.value="Update Search now!"
                 exitExtraWhenSystemBackPushed()
             }
 
             btnDeclineFilterSet.setOnClickListener {
                 vm.abortFilters()
-
                 // Загружаем прежние данные в sharedViewModel
                 sharedViewModel.setFilter(vm.getFilters())
-                setFragmentResult(KEY_FILTERS_RESULT, bundleOf())
-            }
+           }
 
             btnClrWorkPlace.setOnClickListener {
                 vm.clearWorkPlace()
@@ -116,6 +111,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
     }
 
     override fun exitExtraWhenSystemBackPushed() {
+        sharedViewModel.msg.value="Update Search now!"
         findNavController().popBackStack()
     }
 
