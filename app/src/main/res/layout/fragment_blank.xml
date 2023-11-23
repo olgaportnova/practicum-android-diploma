@@ -6,12 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".BlankFragment">
 
-
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
         app:layout_constraintBottom_toTopOf="@id/root_nav_bar"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,5 +22,12 @@
         app:itemTextColor="@color/bottom_navigation_colors"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/root_menu" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/root_nav_bar"
+        style="@style/divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

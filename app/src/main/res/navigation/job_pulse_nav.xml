@@ -41,10 +41,18 @@
         tools:layout="@layout/fragment_filters">
         <action
             android:id="@+id/action_to_workPlace"
-            app:destination="@id/workPlace" />
+            app:destination="@id/workPlace"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_filters_to_industry"
-            app:destination="@id/industry" />
+            app:destination="@id/industry"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -54,10 +62,18 @@
         tools:layout="@layout/fragment_work_place">
         <action
             android:id="@+id/action_to_district"
-            app:destination="@id/district" />
+            app:destination="@id/district"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_to_country"
-            app:destination="@id/country" />
+            app:destination="@id/country"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -73,7 +89,11 @@
         tools:layout="@layout/fragment_vacancy">
         <action
             android:id="@+id/action_to_similar"
-            app:destination="@id/similar" />
+            app:destination="@id/similar"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -83,7 +103,11 @@
         tools:layout="@layout/fragment_similar">
         <action
             android:id="@+id/action_similar_to_vacancy"
-            app:destination="@id/vacancy" />
+            app:destination="@id/vacancy"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -97,17 +121,25 @@
         android:name="ru.practicum.android.diploma.filter.presentation.fragment.Industry"
         android:label="Industry"
         tools:layout="@layout/fragment_district" />
+
     <fragment
         android:id="@+id/blankFragment"
         android:name="ru.practicum.android.diploma.BlankFragment"
         android:label="fragment_blank"
-        tools:layout="@layout/fragment_blank" >
+        tools:layout="@layout/fragment_blank">
         <action
             android:id="@+id/action_blankFragment_to_filters"
             app:destination="@id/filters"
-            app:enterAnim="@anim/slide_in_from_right" />
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_blankFragment_to_vacancy"
-            app:destination="@id/vacancy" />
+            app:destination="@id/vacancy"
+            app:enterAnim="@anim/slide_in_from_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 </navigation>
