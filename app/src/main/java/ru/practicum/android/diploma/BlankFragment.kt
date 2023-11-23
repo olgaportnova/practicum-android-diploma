@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.practicum.android.diploma.databinding.FragmentBlankBinding
 import ru.practicum.android.diploma.favorite.presentation.fragment.Favourite
 import ru.practicum.android.diploma.search.presentation.fragment.Search
@@ -70,8 +71,14 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
     override fun exitExtraWhenSystemBackPushed() {
         if (binding.vp2.currentItem != 0) navigateToFragment(0)
         else {
-            showMsgDialog("exit?")
             // TODO: add exit app fun
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.title))
+                .setNegativeButton(getString(R.string.no), null)
+                .setPositiveButton(getString(R.string.yes)) { dialog, which ->
+                    requireActivity().finish()
+                }
+                .show()
         }
     }
 
