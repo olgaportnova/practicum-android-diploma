@@ -84,7 +84,7 @@ class FiltersVm(private val filtersController: FiltersController) : ViewModel() 
             ScreenFiltersState.Content(newFilterSet, compareFilters(), compareFiltersWithDefault())
     }
 
-    private fun compareFilters(): Boolean {
+    fun compareFilters(): Boolean {
         return oldFiltersSet != newFilterSet
     }
 
