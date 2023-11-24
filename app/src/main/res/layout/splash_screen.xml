@@ -21,7 +21,7 @@
         android:id="@+id/splashImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/heart_hand_shake"
+        android:src="@drawable/logo_splash"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
