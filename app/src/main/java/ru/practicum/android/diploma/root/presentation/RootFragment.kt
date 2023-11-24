@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma
+package ru.practicum.android.diploma.root.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import ru.practicum.android.diploma.databinding.FragmentBlankBinding
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.databinding.FragmentRootBinding
 import ru.practicum.android.diploma.favorite.presentation.fragment.Favourite
 import ru.practicum.android.diploma.search.presentation.fragment.Search
 import ru.practicum.android.diploma.team.presentation.Crew
@@ -17,7 +18,7 @@ import ru.practicum.android.diploma.util.DefaultFragment
 import kotlin.collections.set
 
 
-class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
+class RootFragment : DefaultFragment<FragmentRootBinding>() {
     // Хранение фрагментов внутри коллекции fragmentMap
     private val fragmentMap = mutableMapOf<String, Fragment>()
 
@@ -26,8 +27,8 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
     override fun bindingInflater(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentBlankBinding {
-        return FragmentBlankBinding.inflate(inflater, container, false)
+    ): FragmentRootBinding {
+        return FragmentRootBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +72,6 @@ class BlankFragment : DefaultFragment<FragmentBlankBinding>() {
     override fun exitExtraWhenSystemBackPushed() {
         if (binding.vp2.currentItem != 0) navigateToFragment(0)
         else {
-            // TODO: add exit app fun
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.title))
                 .setNegativeButton(getString(R.string.no), null)

@@ -165,7 +165,6 @@ class Vacancy : DefaultFragment<FragmentVacancyBinding>() {
             if (isFavotite) ibFavorite.setImageResource(R.drawable.ic_vacancy_favorite_red)
             else ibFavorite.setImageResource(R.drawable.ic_vacancy_favorite)
 
-            // TODO: добавить изменение lifeData внутри sharedVM для обновления фрагмента избранных
             sharedVm.updateFavourite.value = "update"
         }
     }

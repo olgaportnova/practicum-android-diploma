@@ -69,7 +69,7 @@ class Favourite : DefaultFragment<FragmentFavouriteBinding>() {
 
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
-            R.id.action_blankFragment_to_vacancy,
+            R.id.action_rootFragment_to_vacancy,
             Bundle().apply { putInt(ARG_VACANCY, vacancyToShow) })
     }
 

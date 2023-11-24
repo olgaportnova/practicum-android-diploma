@@ -82,7 +82,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                 R.id.nav_to_filter_fragment -> {
                     //Блок try{} catch{} потом можно убрать.
                     try {
-                        findNavController().navigate(R.id.action_blankFragment_to_filters)
+                        findNavController().navigate(R.id.action_rootFragment_to_filters)
                     } catch (e: Throwable) {
                         Snackbar.make(
                             binding.navigationBar,
@@ -91,7 +91,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
                         )
                             .setTextMaxLines(20)
                             .setAction("OK") {
-                                findNavController().navigate(R.id.blankFragment)
+                                findNavController().navigate(R.id.rootFragment)
                                 Snackbar.make(
                                     binding.navigationBar,
                                     "Теперь можно попробовать еще раз",
@@ -137,7 +137,7 @@ class Search : DefaultFragment<FragmentSearchBinding>() {
 
     private fun openFragmentVacancy(vacancyToShow: Int) {
         findNavController().navigate(
-            R.id.action_blankFragment_to_vacancy,
+            R.id.action_rootFragment_to_vacancy,
             Bundle().apply { putInt("vacancy_model", vacancyToShow) })
     }
 
