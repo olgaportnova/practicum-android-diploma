@@ -98,6 +98,7 @@ class Filters : DefaultFragment<FragmentFiltersBinding>() {
                 vm.abortFilters()
                 // Загружаем прежние данные в sharedViewModel
                 sharedViewModel.setFilter(vm.getFilters())
+                sharedViewModel.msg.value="Update Search now!"
            }
 
             btnClrWorkPlace.setOnClickListener {
